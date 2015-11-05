@@ -141,9 +141,10 @@ int main(int argc, char* argv[])
 {
 	SDLInit sdlInit;
 
-	TestWindow win("Test App", Dimentions(1024, 768), static_cast<SDL_WindowFlags>(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE));
+	TestWindow win("Test App", Dimentions(1024, 768), static_cast<SDL_WindowFlags>(SDL_WINDOW_RESIZABLE));
 
-	win.PumpMessages();
+	while (Window::ActiveWindows())
+		Window::DispatchEvents();
 
 	return 0;
 }

@@ -7,8 +7,10 @@
 #include <algorithm>
 #include <memory>
 
+std::vector<Window*> Window::s_windows;
+
 Window::Window(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
-	m_flags(State::None), m_dims(dimentions), m_pCtrlWithFocus(nullptr), m_subSystem(SDLSubSystem::Video), m_pFont(nullptr), m_pumpMessages(true)
+	m_flags(State::None), m_dims(dimentions), m_pCtrlWithFocus(nullptr), m_subSystem(SDLSubSystem::Video), m_pFont(nullptr)
 {
 	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		m_dims.W, m_dims.H, windowFlags);
@@ -16,12 +18,15 @@ Window::Window(const std::string& title, const Dimentions& dimentions, SDL_Windo
 	if (m_window == nullptr)
 		throw SDLException("SDL_CreateWindow failed with error '" + SDLGetError() + "'.");
 
+	m_id = SDL_GetWindowID(m_window);
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
 	if (m_renderer == nullptr)
 		throw SDLException("SDL_CreateRenderer failed with error '" + SDLGetError() + "'.");
 
 	if ((windowFlags & SDL_WINDOW_MINIMIZED) == SDL_WINDOW_MINIMIZED)
 		m_flags |= State::Minimized;
+	else if ((windowFlags & SDL_WINDOW_HIDDEN) == SDL_WINDOW_HIDDEN)
+		m_flags |= State::Closed;
 
 	// set default colors
 	m_bColor = SDLColor(0, 0, 0, 0);
@@ -32,12 +37,16 @@ Window::Window(const std::string& title, const Dimentions& dimentions, SDL_Windo
 
 	CursorManager::Initialize();
 	FontManager::Initialize();
+
 	SDL_StopTextInput();
 	m_pFont = FontManager::GetInstance()->GetOrLoadFont("consola", 16);
+
+	RegisterWindow(this);
 }
 
 Window::~Window()
 {
+	UnregisterWindow(this);
 	CursorManager::Destroy();
 	FontManager::Destroy();
 	SDL_DestroyRenderer(m_renderer);
@@ -234,6 +243,14 @@ void Window::OnMouseButton(SDL_MouseButtonEvent buttonEvent)
 
 void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
 {
+	if ((m_flags & State::EventsDisabled) == State::EventsDisabled)
+		return;
+
+	if ((m_flags & State::CursorHidden) == State::CursorHidden)
+	{
+		SDL_ShowCursor(SDL_ENABLE);
+		m_flags ^= State::CursorHidden;
+	}
 	// TODO: might make more sense for the Window class to track
 	// the controls the mouse enters and leaves and just set a bit
 	// on a control indicating either state.
@@ -257,71 +274,6 @@ void Window::OnWindowResized(SDL_WindowEvent windowEvent)
 	{
 		control->NotificationWindowChanged(this);
 		control->Invalidate();
-	}
-}
-
-void Window::PumpMessages()
-{
-	while (m_pumpMessages)
-	{
-		SDL_Event sdlEvent;
-		if (SDL_PollEvent(&sdlEvent))
-		{
-			switch (sdlEvent.type)
-			{
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-				OnMouseButton(sdlEvent.button);
-				break;
-			case SDL_MOUSEMOTION:
-				if ((m_flags & State::CursorHidden) == State::CursorHidden)
-				{
-					SDL_ShowCursor(SDL_ENABLE);
-					m_flags ^= State::CursorHidden;
-				}
-				OnMouseMotion(sdlEvent.motion);
-				break;
-			case SDL_WINDOWEVENT:
-				switch (sdlEvent.window.event)
-				{
-				case SDL_WINDOWEVENT_MINIMIZED:
-					m_flags |= State::Minimized;
-					break;
-				case SDL_WINDOWEVENT_MAXIMIZED:
-				case SDL_WINDOWEVENT_RESTORED:
-					m_flags ^= State::Minimized;
-					break;
-				case SDL_WINDOWEVENT_SIZE_CHANGED:
-					OnWindowResized(sdlEvent.window);
-					break;
-				}
-				break;
-			case SDL_QUIT:
-				m_pumpMessages = false;
-				break;
-			default:
-				if (m_pCtrlWithFocus != nullptr)
-					m_pCtrlWithFocus->NotificationEvent(sdlEvent);
-				break;
-			}
-		}
-
-		// notify any controls for elapsed time
-		for (auto& control : m_ctrlsElapsedTime)
-		{
-			auto timeRequested = std::get<1>(control);
-			auto timeElapsed = std::get<2>(control);
-			auto currentTime = SDL_GetTicks();
-			if (currentTime - timeElapsed >= timeRequested)
-			{
-				std::get<2>(control) = currentTime;
-				std::get<0>(control)->NotificationElapsedTime();
-			}
-		}
-
-		// only render if the window isn't minimized and only call present if any drawing was performed
-		if (((m_flags & State::Minimized) != State::Minimized) && Render())
-			SDL_RenderPresent(m_renderer);
 	}
 }
 
@@ -355,6 +307,77 @@ bool Window::Render()
 	return didRender;
 }
 
+void Window::Show()
+{
+	SDL_ShowWindow(m_window);
+}
+
+bool Window::ShouldRender()
+{
+	return ((m_flags & State::Minimized) != State::Minimized) &&
+		((m_flags & State::Closed) != State::Closed);
+}
+
+void Window::TranslateEvent(const SDL_Event& sdlEvent)
+{
+	switch (sdlEvent.type)
+	{
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		OnMouseButton(sdlEvent.button);
+		break;
+	case SDL_MOUSEMOTION:
+		OnMouseMotion(sdlEvent.motion);
+		break;
+	case SDL_WINDOWEVENT:
+		switch (sdlEvent.window.event)
+		{
+		case SDL_WINDOWEVENT_CLOSE:
+			m_flags |= State::Closed;
+			SDL_HideWindow(m_window);
+			break;
+		case SDL_WINDOWEVENT_MINIMIZED:
+			m_flags |= State::Minimized;
+			break;
+		case SDL_WINDOWEVENT_MAXIMIZED:
+		case SDL_WINDOWEVENT_RESTORED:
+			m_flags ^= State::Minimized;
+			break;
+		case SDL_WINDOWEVENT_SHOWN:
+			m_flags ^= State::Closed;
+			break;
+		case SDL_WINDOWEVENT_SIZE_CHANGED:
+			OnWindowResized(sdlEvent.window);
+			break;
+		}
+		break;
+	case SDL_QUIT:
+		m_flags |= State::Closed;
+		break;
+	default:
+		if (m_pCtrlWithFocus != nullptr)
+			m_pCtrlWithFocus->NotificationEvent(sdlEvent);
+		break;
+	}
+
+	// notify any controls for elapsed time
+	for (auto& control : m_ctrlsElapsedTime)
+	{
+		auto timeRequested = std::get<1>(control);
+		auto timeElapsed = std::get<2>(control);
+		auto currentTime = SDL_GetTicks();
+		if (currentTime - timeElapsed >= timeRequested)
+		{
+			std::get<2>(control) = currentTime;
+			std::get<0>(control)->NotificationElapsedTime();
+		}
+	}
+
+	// only render if the window is visible and only call present if any drawing was performed
+	if (ShouldRender() && Render())
+		SDL_RenderPresent(m_renderer);
+}
+
 void Window::UnregisterForElapsedTimeNotification(Control* pControl)
 {
 	for (auto iter = m_ctrlsElapsedTime.begin(); iter != m_ctrlsElapsedTime.end(); ++iter)
@@ -365,4 +388,51 @@ void Window::UnregisterForElapsedTimeNotification(Control* pControl)
 			break;
 		}
 	}
+}
+
+// static functions
+
+// returns true if at least one window is active
+bool Window::ActiveWindows()
+{
+	bool found = false;
+	for (const auto window : s_windows)
+	{
+		if (window->IsActive())
+		{
+			found = true;
+			break;
+		}
+	}
+	return found;
+}
+
+void Window::DispatchEvents()
+{
+	SDL_Event sdlEvent;
+	if (SDL_PollEvent(&sdlEvent))
+	{
+		if (sdlEvent.window.windowID > 0)
+			s_windows[sdlEvent.window.windowID - 1]->TranslateEvent(sdlEvent);
+	}
+}
+
+void Window::RegisterWindow(Window* window)
+{
+	// window IDs are one-based, convert to zero-base to use as the index
+	auto windowIndex = window->GetId() - 1;
+	if (windowIndex >= s_windows.size())
+	{
+		s_windows.push_back(window);
+	}
+	else
+	{
+		assert(s_windows[windowIndex] == nullptr);
+		s_windows[windowIndex] = window;
+	}
+}
+
+void Window::UnregisterWindow(Window* window)
+{
+	s_windows[window->GetId() - 1] = nullptr;
 }

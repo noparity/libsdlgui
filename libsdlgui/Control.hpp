@@ -39,7 +39,7 @@ protected:
 public:
 	Control(Window* pWindow, const SDL_Rect& location);
 	Control(Control* pParent, const SDL_Rect& location);
-	~Control();
+	virtual ~Control();
 
 	void AddControl(Control* pControl);
 

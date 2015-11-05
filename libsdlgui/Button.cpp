@@ -20,6 +20,7 @@ void Button::FocusAcquired()
 
 void Button::FocusLost()
 {
+	SetBackgroundColor(SDLColor(64, 64, 64, 0));
 	SetBorderColor(SDLColor(128, 128, 128, 0));
 }
 
