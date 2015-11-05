@@ -1,28 +1,28 @@
 #ifndef CURSORMANAGER_HPP
 #define CURSORMANAGER_HPP
 
+#include <atomic>
 #include "SDL_mouse.h"
+#include "Singleton.hpp"
 
-class CursorManager
+namespace detail
 {
-private:
-	static CursorManager* s_instance;
-	std::vector<SDL_Cursor*> m_sysCursors;
-
-public:
-	CursorManager();
-	~CursorManager();
-
-	static void Destroy();
-
-	SDL_Cursor* GetSystemCursor(SDL_SystemCursor systemCursor);
-
-	static CursorManager* GetInstance()
+	class CursorManager
 	{
-		assert(s_instance != nullptr);
-		return s_instance;
-	}
-	static void Initialize();
-};
+	private:
+		friend void Singleton<CursorManager>::Initialize();
+		friend void Singleton<CursorManager>::Destroy();
+
+		std::vector<SDL_Cursor*> m_sysCursors;
+
+		CursorManager();
+		~CursorManager();
+
+	public:
+		SDL_Cursor* GetSystemCursor(SDL_SystemCursor systemCursor);
+	};
+}
+
+using CursorManager = Singleton<detail::CursorManager>;
 
 #endif // CURSORMANAGER_HPP

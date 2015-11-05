@@ -151,6 +151,7 @@
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="SdlHelpers.hpp" />
     <ClInclude Include="Label.hpp" />
+    <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextAlignment.hpp" />
