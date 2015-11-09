@@ -17,6 +17,10 @@ private:
 	void SetDefaultColorScheme();
 	void SetMouseOverColorScheme();
 
+protected:
+	virtual void NotificationMouseEnter();
+	virtual void NotificationMouseExit();
+
 public:
 	Button(Window* pWindow, const SDL_Rect& location);
 	Button(Control* pParent, const SDL_Rect& location);
@@ -24,7 +28,6 @@ public:
 	virtual void FocusAcquired();
 	virtual void FocusLost();
 	virtual bool NotificationMouseButton(SDL_MouseButtonEvent buttonEvent);
-	virtual void NotificationMouseMotion(SDL_MouseMotionEvent motionEvent);
 
 	void RegisterForClickCallback(ButtonClickCallback callback);
 };

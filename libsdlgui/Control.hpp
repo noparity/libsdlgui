@@ -14,7 +14,8 @@ private:
 		HiddenPending    = 0x2,
 		Hidden           = 0x4,
 		MouseOverControl = 0x8,
-		Focused          = 0x10
+		Focused          = 0x10,
+		DisableEffects   = 0x20
 	};
 
 	Window* m_pWindow;
@@ -28,6 +29,7 @@ private:
 	uint8_t m_borderSize;
 
 protected:
+	bool EffectsDisabled() const { return (m_flags & State::DisableEffects) == State::DisableEffects; }
 	virtual void FocusAcquired();
 	virtual void FocusLost();
 	Control* GetParent() const { return m_pParent; }
@@ -35,6 +37,9 @@ protected:
 	bool HasFocus() const { return (m_flags & State::Focused) == State::Focused; }
 	bool IsMouseOverControl() const { return (m_flags & State::MouseOverControl) == State::MouseOverControl; }
 	virtual void RenderImpl() = 0;
+
+	virtual void NotificationMouseEnter();
+	virtual void NotificationMouseExit();
 
 public:
 	Control(Window* pWindow, const SDL_Rect& location);
@@ -50,6 +55,7 @@ public:
 	bool IsDirty() const { return (m_flags & State::Dirty) == State::Dirty; }
 
 	SDL_Color GetBackgroundColor() const { return m_bColor; }
+	uint8_t GetBorderSize() const { return m_borderSize; }
 	SDL_Color GetForegroundColor() const { return m_fColor; }
 	bool GetHidden() const { return (m_flags & State::Hidden) == State::Hidden; }
 
@@ -60,7 +66,7 @@ public:
 	virtual void NotificationElapsedTime();
 	virtual void NotificationEvent(const SDL_Event& event);
 	virtual bool NotificationMouseButton(SDL_MouseButtonEvent buttonEvent);
-	virtual void NotificationMouseMotion(SDL_MouseMotionEvent motionEvent);
+	void NotificationMouseMotion(SDL_MouseMotionEvent motionEvent);
 	virtual void NotificationWindowChanged(Window* pWindow);
 
 	void RemoveAllControls();
@@ -76,6 +82,7 @@ public:
 
 	virtual bool SetHidden(bool isHidden);
 	virtual bool SetLocation(const SDL_Rect& location);
+	void SetTransitionEffects(bool enabled);
 };
 
 #endif // CONTROL_HPP

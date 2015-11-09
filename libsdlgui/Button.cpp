@@ -50,12 +50,15 @@ bool Button::NotificationMouseButton(SDL_MouseButtonEvent buttonEvent)
 	return takeFocus;
 }
 
-void Button::NotificationMouseMotion(SDL_MouseMotionEvent motionEvent)
+void Button::NotificationMouseEnter()
 {
-	Control::NotificationMouseMotion(motionEvent);
-	if (IsMouseOverControl())
+	if (!EffectsDisabled())
 		SetMouseOverColorScheme();
-	else
+}
+
+void Button::NotificationMouseExit()
+{
+	if (!EffectsDisabled())
 		SetDefaultColorScheme();
 }
 

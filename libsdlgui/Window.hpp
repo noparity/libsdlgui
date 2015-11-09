@@ -63,6 +63,7 @@ private:
 	static void UnregisterWindow(Window* window);
 
 protected:
+	bool GetCursorHidden() const { return (m_flags & State::CursorHidden) == State::CursorHidden; }
 	SDL_Window* GetWindow() const { return m_window; }
 	virtual bool Render();
 	void Show();
@@ -89,6 +90,7 @@ public:
 
 	void RegisterForElapsedTimeNotification(Control* pControl, uint32_t ticks);
 
+	void SetCursorHidden(bool hidden);
 	void SetDefaultBackgroundColor(const SDL_Color& color) { m_bColor = color; }
 	void SetDefaultFont(Font* pFont) { m_pFont = pFont; }
 	void SetDefaultForegroundColor(const SDL_Color& color) { m_fColor = color; }

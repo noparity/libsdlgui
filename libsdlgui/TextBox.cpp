@@ -51,6 +51,7 @@ void TextBox::NotificationEvent(const SDL_Event& event)
 {
 	if (event.type == SDL_TEXTINPUT)
 	{
+		GetWindow()->SetCursorHidden(true);
 		m_caret.PauseAnimation();
 		m_text.append(event.text.text);
 		Invalidate();
@@ -67,25 +68,22 @@ void TextBox::NotificationEvent(const SDL_Event& event)
 	}
 }
 
-void TextBox::NotificationMouseMotion(SDL_MouseMotionEvent motionEvent)
+void TextBox::NotificationMouseEnter()
 {
-	Control::NotificationMouseMotion(motionEvent);
-	if (IsMouseOverControl())
+	// only switch once
+	if (m_pPrevCursor == nullptr)
 	{
-		// only switch once
-		if (m_pPrevCursor == nullptr)
-		{
-			// preserve old cursor then switch to I-beam
-			m_pPrevCursor = SDL_GetCursor();
-			SDL_SetCursor(CursorManager::GetInstance()->GetSystemCursor(SDL_SYSTEM_CURSOR_IBEAM));
-		}
+		// preserve old cursor then switch to I-beam
+		m_pPrevCursor = SDL_GetCursor();
+		SDL_SetCursor(CursorManager::GetInstance()->GetSystemCursor(SDL_SYSTEM_CURSOR_IBEAM));
 	}
-	else
-	{
-		// restore previous cursor
-		SDL_SetCursor(m_pPrevCursor);
-		m_pPrevCursor = nullptr;
-	}
+}
+
+void TextBox::NotificationMouseExit()
+{
+	// restore previous cursor
+	SDL_SetCursor(m_pPrevCursor);
+	m_pPrevCursor = nullptr;
 }
 
 void TextBox::RenderImpl()

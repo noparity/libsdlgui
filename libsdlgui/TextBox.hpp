@@ -16,6 +16,8 @@ private:
 	void Init();
 
 protected:
+	virtual void NotificationMouseEnter();
+	virtual void NotificationMouseExit();
 	virtual void RenderImpl();
 
 public:
@@ -27,7 +29,6 @@ public:
 
 	virtual void NotificationEvent(const SDL_Event& event);
 	virtual bool NotificationMouseButton(SDL_MouseButtonEvent buttonEvent);
-	virtual void NotificationMouseMotion(SDL_MouseMotionEvent motionEvent);
 };
 
 #endif // TEXTBOX_HPP

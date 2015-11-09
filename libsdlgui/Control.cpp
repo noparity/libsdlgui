@@ -84,14 +84,33 @@ bool Control::NotificationMouseButton(SDL_MouseButtonEvent)
 	return false;
 }
 
+void Control::NotificationMouseEnter()
+{
+	// empty
+}
+
+void Control::NotificationMouseExit()
+{
+	// empty
+}
+
 void Control::NotificationMouseMotion(SDL_MouseMotionEvent motionEvent)
 {
 	auto mouseRect = SDLRect(motionEvent.x, motionEvent.y, 1, 1);
 	SDL_Rect result;
 	if (SDL_IntersectRect(&mouseRect, &m_loc, &result) == SDL_TRUE)
-		m_flags |= State::MouseOverControl;
-	else
+	{
+		if (!IsMouseOverControl())
+		{
+			m_flags |= State::MouseOverControl;
+			NotificationMouseEnter();
+		}
+	}
+	else if (IsMouseOverControl())
+	{
 		m_flags ^= State::MouseOverControl;
+		NotificationMouseExit();
+	}
 }
 
 void Control::NotificationWindowChanged(Window*)
@@ -244,3 +263,10 @@ bool Control::SetLocation(const SDL_Rect& location)
 	return isDirty;
 }
 
+void Control::SetTransitionEffects(bool enabled)
+{
+	if (enabled)
+		m_flags ^= State::DisableEffects;
+	else
+		m_flags |= State::DisableEffects;
+}

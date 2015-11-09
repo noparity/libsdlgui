@@ -26,6 +26,7 @@ void Label::RenderImpl()
 {
 	DrawTextInfo dti;
 	dti.Alignment = m_alignment;
+	dti.Anchor = Anchor::Right;
 	dti.BackgroundColor = GetBackgroundColor();
 	dti.Font = m_pFont;
 	dti.ForegroundColor = GetForegroundColor();

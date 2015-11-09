@@ -220,6 +220,9 @@ void Window::OnMouseButton(SDL_MouseButtonEvent buttonEvent)
 {
 	for (auto control : m_controls)
 	{
+		if (control->GetHidden() == true)
+			continue;
+
 		// find the control that was clicked on then dispatch the event
 		auto clickLoc = SDLRect(buttonEvent.x, buttonEvent.y, 1, 1);
 		auto controlLoc = control->GetLocation();
@@ -246,17 +249,20 @@ void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
 	if ((m_flags & State::EventsDisabled) == State::EventsDisabled)
 		return;
 
-	if ((m_flags & State::CursorHidden) == State::CursorHidden)
+	if (GetCursorHidden())
 	{
 		SDL_ShowCursor(SDL_ENABLE);
-		m_flags ^= State::CursorHidden;
+		SetCursorHidden(false);
 	}
 	// TODO: might make more sense for the Window class to track
 	// the controls the mouse enters and leaves and just set a bit
 	// on a control indicating either state.
 
 	for (auto control : m_controls)
-		control->NotificationMouseMotion(motionEvent);
+	{
+		if (!control->GetHidden())
+			control->NotificationMouseMotion(motionEvent);
+	}
 }
 
 void Window::OnWindowResized(SDL_WindowEvent windowEvent)
@@ -305,6 +311,20 @@ bool Window::Render()
 		didRender |= control->Render();
 
 	return didRender;
+}
+
+void Window::SetCursorHidden(bool hidden)
+{
+	if (hidden && !GetCursorHidden())
+	{
+		SDL_ShowCursor(SDL_DISABLE);
+		m_flags = State::CursorHidden;
+	}
+	else if (!hidden && GetCursorHidden())
+	{
+		SDL_ShowCursor(SDL_ENABLE);
+		m_flags ^= State::CursorHidden;
+	}
 }
 
 void Window::Show()
