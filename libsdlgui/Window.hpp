@@ -65,7 +65,7 @@ private:
 protected:
 	bool GetCursorHidden() const { return (m_flags & State::CursorHidden) == State::CursorHidden; }
 	SDL_Window* GetWindow() const { return m_window; }
-	virtual bool Render();
+	bool RenderImpl();
 	void Show();
 	virtual void TranslateEvent(const SDL_Event& sdlEvent);
 
@@ -87,6 +87,7 @@ public:
 	bool IsActive() const { return (m_flags & State::Closed) != State::Closed; }
 	void RemoveAllControls();
 	void RemoveControl(Control* pControl);
+	void Render();
 
 	void RegisterForElapsedTimeNotification(Control* pControl, uint32_t ticks);
 

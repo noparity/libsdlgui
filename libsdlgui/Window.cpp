@@ -304,7 +304,27 @@ void Window::RemoveControl(Control* pControl)
 	}
 }
 
-bool Window::Render()
+void Window::Render()
+{
+	// notify any controls for elapsed time
+	for (auto& control : m_ctrlsElapsedTime)
+	{
+		auto timeRequested = std::get<1>(control);
+		auto timeElapsed = std::get<2>(control);
+		auto currentTime = SDL_GetTicks();
+		if (currentTime - timeElapsed >= timeRequested)
+		{
+			std::get<2>(control) = currentTime;
+			std::get<0>(control)->NotificationElapsedTime();
+		}
+	}
+
+	// only render if the window is visible and only call present if any drawing was performed
+	if (ShouldRender() && RenderImpl())
+		SDL_RenderPresent(m_renderer);
+}
+
+bool Window::RenderImpl()
 {
 	bool didRender = false;
 	for (auto control : m_controls)
@@ -375,27 +395,10 @@ void Window::TranslateEvent(const SDL_Event& sdlEvent)
 		m_flags |= State::Closed;
 		break;
 	default:
-		if (m_pCtrlWithFocus != nullptr)
+		if (m_pCtrlWithFocus != nullptr && !m_pCtrlWithFocus->GetHidden())
 			m_pCtrlWithFocus->NotificationEvent(sdlEvent);
 		break;
 	}
-
-	// notify any controls for elapsed time
-	for (auto& control : m_ctrlsElapsedTime)
-	{
-		auto timeRequested = std::get<1>(control);
-		auto timeElapsed = std::get<2>(control);
-		auto currentTime = SDL_GetTicks();
-		if (currentTime - timeElapsed >= timeRequested)
-		{
-			std::get<2>(control) = currentTime;
-			std::get<0>(control)->NotificationElapsedTime();
-		}
-	}
-
-	// only render if the window is visible and only call present if any drawing was performed
-	if (ShouldRender() && Render())
-		SDL_RenderPresent(m_renderer);
 }
 
 void Window::UnregisterForElapsedTimeNotification(Control* pControl)
@@ -421,7 +424,7 @@ bool Window::ActiveWindows()
 		if (window->IsActive())
 		{
 			found = true;
-			break;
+			window->Render();
 		}
 	}
 	return found;
