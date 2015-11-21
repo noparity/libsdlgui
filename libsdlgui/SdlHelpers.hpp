@@ -96,16 +96,21 @@ class SDLTexture
 {
 private:
 	SDL_Texture* m_pTexture;
+	int m_width;
+	int m_height;
 	SDLTexture(const SDLTexture&);
 
 	void Cleanup();
 public:
-	SDLTexture() : m_pTexture(nullptr) {}
-	SDLTexture(SDL_Texture* pTexture);
+	SDLTexture() : m_pTexture(nullptr), m_width(0), m_height(0) {}
+	SDLTexture(SDL_Texture* pTexture, int width, int height);
 	SDLTexture(SDLTexture&& other);
 	~SDLTexture();
 
+	int GetWidth() const { return m_width; }
+	int GetHeight() const { return m_height; }
 	operator SDL_Texture*() const { return m_pTexture; }
+	SDLTexture& operator=(SDLTexture&& rhs);
 };
 
 class TTFFont

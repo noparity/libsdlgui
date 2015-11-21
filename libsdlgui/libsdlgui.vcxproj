@@ -144,7 +144,6 @@
     <ClInclude Include="Control.hpp" />
     <ClInclude Include="CursorManager.hpp" />
     <ClInclude Include="Dialog.hpp" />
-    <ClInclude Include="DrawTextInfo.hpp" />
     <ClInclude Include="Exceptions.hpp" />
     <ClInclude Include="Flags.hpp" />
     <ClInclude Include="Font.hpp" />

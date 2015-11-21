@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CursorManager.hpp"
-#include "DrawTextInfo.hpp"
 #include "TextBox.hpp"
 
 TextBox::TextBox(Window* pWindow, const SDL_Rect& location) :
@@ -49,23 +48,29 @@ bool TextBox::NotificationMouseButton(SDL_MouseButtonEvent buttonEvent)
 
 void TextBox::NotificationEvent(const SDL_Event& event)
 {
+	bool createNewTexture = false;
 	if (event.type == SDL_TEXTINPUT)
 	{
 		GetWindow()->SetCursorHidden(true);
 		m_caret.PauseAnimation();
 		m_text.append(event.text.text);
+		createNewTexture = true;
 		Invalidate();
 	}
 	else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && m_text.length() > 0)
 	{
 		m_caret.PauseAnimation();
 		m_text.pop_back();
+		createNewTexture = true;
 		Invalidate();
 	}
 	else if (event.type == SDL_KEYUP)
 	{
 		m_caret.ResumeAnimation();
 	}
+
+	if (createNewTexture)
+		m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
 }
 
 void TextBox::NotificationMouseEnter()
@@ -88,21 +93,15 @@ void TextBox::NotificationMouseExit()
 
 void TextBox::RenderImpl()
 {
-	DrawTextInfo dti;
-	dti.Alignment = TextAlignment::MiddleLeft;
-	dti.Anchor = Anchor::Right;
-	dti.BackgroundColor = GetBackgroundColor();
-	dti.Font = GetWindow()->GetFont();
-	dti.ForegroundColor = GetForegroundColor();
-	dti.Location = GetLocation();
 	// create a buffer around the text
-	dti.Location.x += TextOffsetX;
-	dti.Location.w -= (TextOffsetX * 2);
-	dti.Text = m_text;
+	auto location = GetLocation();
+	location.x += TextOffsetX;
+	location.w -= (TextOffsetX * 2);
+	
+	GetWindow()->DrawText(location, m_texture, TextAlignment::MiddleLeft, Anchor::Right);
 
-	auto drawnDims = GetWindow()->DrawText(dti);
 	// move the caret with respect to our location
 	auto caretLoc = m_caret.GetLocation();
-	caretLoc.x = GetLocation().x + drawnDims.W + TextOffsetX;
+	caretLoc.x = GetLocation().x + m_texture.GetWidth() + TextOffsetX;
 	m_caret.SetLocation(caretLoc);
 }

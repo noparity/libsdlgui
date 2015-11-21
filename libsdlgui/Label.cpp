@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DrawTextInfo.hpp"
+#include "Anchor.hpp"
 #include "Label.hpp"
 
 Label::Label(Window* pWindow, const SDL_Rect& location) :
@@ -20,20 +20,13 @@ void Label::Init(Window* pWindow)
 	m_pFont = pWindow->GetFont();
 	assert(m_pFont != nullptr);
 	m_text = "label";
+	m_texture = pWindow->CreateTextureForText(m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
 }
 
 void Label::RenderImpl()
 {
-	DrawTextInfo dti;
-	dti.Alignment = m_alignment;
-	dti.Anchor = Anchor::Right;
-	dti.BackgroundColor = GetBackgroundColor();
-	dti.Font = m_pFont;
-	dti.ForegroundColor = GetForegroundColor();
-	dti.Location = GetLocation();
-	dti.Text = m_text;
-
-	GetWindow()->DrawText(dti);
+	GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
+	GetWindow()->DrawText(GetLocation(), m_texture, m_alignment, Anchor::Right);
 }
 
 bool Label::SetAlignment(TextAlignment alignment)
@@ -63,6 +56,7 @@ bool Label::SetText(const std::string& text)
 	if (text != m_text)
 	{
 		m_text = text;
+		m_texture = GetWindow()->CreateTextureForText(m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
 		Invalidate();
 	}
 

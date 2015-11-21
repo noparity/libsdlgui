@@ -108,15 +108,14 @@ void SDLSurface::Cleanup()
 		SDL_FreeSurface(m_pSurface);
 }
 
-SDLTexture::SDLTexture(SDL_Texture* pTexture) : m_pTexture(pTexture)
+SDLTexture::SDLTexture(SDL_Texture* pTexture, int width, int height) : m_pTexture(pTexture), m_width(width), m_height(height)
 {
 	assert(m_pTexture != nullptr);
 }
 
 SDLTexture::SDLTexture(SDLTexture&& other)
 {
-	m_pTexture = other.m_pTexture;
-	other.m_pTexture = nullptr;
+	*this = std::move(other);
 }
 
 SDLTexture::~SDLTexture()
@@ -128,6 +127,22 @@ void SDLTexture::Cleanup()
 {
 	if (m_pTexture != nullptr)
 		SDL_DestroyTexture(m_pTexture);
+}
+
+SDLTexture& SDLTexture::operator=(SDLTexture&& rhs)
+{
+	if (this != &rhs)
+	{
+		Cleanup();
+		m_pTexture = rhs.m_pTexture;
+		m_width = rhs.m_width;
+		m_height = rhs.m_height;
+		rhs.m_pTexture = nullptr;
+		rhs.m_width = 0;
+		rhs.m_height = 0;
+	}
+
+	return *this;
 }
 
 TTFFont::TTFFont(const boost::filesystem::path& fileName, int size)

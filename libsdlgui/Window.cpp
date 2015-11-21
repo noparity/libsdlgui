@@ -59,6 +59,22 @@ void Window::AddControl(Control* pControl)
 	m_controls.push_back(pControl);
 }
 
+SDLTexture Window::CreateTextureForText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor)
+{
+	// if there is no text then bail
+	if (text.length() == 0)
+		return SDLTexture();
+
+	auto currentStyle = static_cast<Font::Attributes>(TTF_GetFontStyle(font->GetTtf()));
+	if (currentStyle != font->GetAttributes())
+		TTF_SetFontStyle(font->GetTtf(), static_cast<int>(font->GetAttributes()));
+
+	auto textSurface = SDLSurface(TTF_RenderText_Shaded(font->GetTtf(), text.c_str(),
+		fgColor, bgColor));
+
+	return SDLTexture(SDL_CreateTextureFromSurface(m_renderer, textSurface), textSurface->w, textSurface->h);
+}
+
 void Window::DrawLine(const SDL_Point& p1, const SDL_Point& p2, const SDL_Color& color)
 {
 	SDLColorHolder colorHolder(m_renderer, color);
@@ -97,26 +113,8 @@ void Window::DrawRectangle(const SDL_Rect& location, const SDL_Color& color, uin
 	}
 }
 
-Dimentions Window::DrawText(const DrawTextInfo& drawTextInfo)
+void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextAlignment alignment, Anchor anchor)
 {
-	{
-		SDLColorHolder colorHolder(m_renderer, drawTextInfo.BackgroundColor);
-		SDL_RenderFillRect(m_renderer, &drawTextInfo.Location);
-	}
-
-	// if there is no text then bail
-	if (drawTextInfo.Text.length() == 0)
-		return Dimentions(0, 0);
-
-	auto currentStyle = static_cast<Font::Attributes>(TTF_GetFontStyle(drawTextInfo.Font->GetTtf()));
-	if (currentStyle != drawTextInfo.Font->GetAttributes())
-		TTF_SetFontStyle(drawTextInfo.Font->GetTtf(), static_cast<int>(drawTextInfo.Font->GetAttributes()));
-
-	auto textSurface = SDLSurface(TTF_RenderText_Shaded(drawTextInfo.Font->GetTtf(), drawTextInfo.Text.c_str(),
-		drawTextInfo.ForegroundColor, drawTextInfo.BackgroundColor));
-
-	auto textMessage = SDLTexture(SDL_CreateTextureFromSurface(m_renderer, textSurface));
-
 	// there are three possibilities
 	//   the size of location is equal to that of textSurface
 	//   the size of location is larger than that of textSurface
@@ -126,66 +124,66 @@ Dimentions Window::DrawText(const DrawTextInfo& drawTextInfo)
 	int yOffset = 0;
 
 	// calculate xOffset
-	switch (drawTextInfo.Alignment)
+	switch (alignment)
 	{
 	case TextAlignment::BottomCenter:
 	case TextAlignment::MiddleCenter:
 	case TextAlignment::TopCenter:
-		xOffset = (drawTextInfo.Location.w - textSurface->w) / 2;
+		xOffset = (location.w - texture.GetWidth()) / 2;
 		break;
 
 	case TextAlignment::BottomRight:
 	case TextAlignment::MiddleRight:
 	case TextAlignment::TopRight:
-		xOffset = drawTextInfo.Location.w - textSurface->w;
+		xOffset = location.w - texture.GetWidth();
 		break;
 	}
 
 	// calculate yOffset
-	switch (drawTextInfo.Alignment)
+	switch (alignment)
 	{
 	case TextAlignment::BottomCenter:
 	case TextAlignment::BottomLeft:
 	case TextAlignment::BottomRight:
-		yOffset = drawTextInfo.Location.h - textSurface->h;
+		yOffset = location.h - texture.GetHeight();
 		break;
 
 	case TextAlignment::MiddleCenter:
 	case TextAlignment::MiddleLeft:
 	case TextAlignment::MiddleRight:
-		yOffset = (drawTextInfo.Location.h - textSurface->h) / 2;
+		yOffset = (location.h - texture.GetHeight()) / 2;
 		break;
 	}
 
-	if (textSurface->w == drawTextInfo.Location.w && textSurface->h == drawTextInfo.Location.h)
+	if (texture.GetWidth() == location.w && texture.GetHeight() == location.h)
 	{
-		SDL_RenderCopy(m_renderer, textMessage, nullptr, &drawTextInfo.Location);
+		SDL_RenderCopy(m_renderer, texture, nullptr, &location);
 	}
-	else if (textSurface->w < drawTextInfo.Location.w && textSurface->h < drawTextInfo.Location.h)
+	else if (texture.GetWidth() < location.w && texture.GetHeight() < location.h)
 	{
-		SDL_Rect myLoc = { drawTextInfo.Location.x + xOffset, drawTextInfo.Location.y + yOffset, textSurface->w, textSurface->h };
-		SDL_RenderCopy(m_renderer, textMessage, nullptr, &myLoc);
+		SDL_Rect myLoc = { location.x + xOffset, location.y + yOffset, texture.GetWidth(), texture.GetHeight() };
+		SDL_RenderCopy(m_renderer, texture, nullptr, &myLoc);
 	}
 	else
 	{
 		// at least one dimension of the size of location is smaller than
 		// textSurface so we need to compute the appropriate clipping rect.
 
-		SDL_Rect myLoc = drawTextInfo.Location;
+		SDL_Rect myLoc = location;
 		SDL_Rect clip = { 0, 0 };
 
-		if (textSurface->w > drawTextInfo.Location.w)
+		if (texture.GetWidth() > location.w)
 		{
-			if (drawTextInfo.Anchor == Anchor::Left)
+			if (anchor == Anchor::Left)
 			{
 				// clip off the right side of the text
-				clip.w = drawTextInfo.Location.w;
+				clip.w = location.w;
 			}
-			else if (drawTextInfo.Anchor == Anchor::Right)
+			else if (anchor == Anchor::Right)
 			{
 				// clip off the left side of the text
-				clip.w = drawTextInfo.Location.w;
-				clip.x = textSurface->w - drawTextInfo.Location.w;
+				clip.w = location.w;
+				clip.x = texture.GetWidth() - location.w;
 			}
 			else
 			{
@@ -194,26 +192,24 @@ Dimentions Window::DrawText(const DrawTextInfo& drawTextInfo)
 		}
 		else
 		{
-			clip.w = textSurface->w;
+			clip.w = texture.GetWidth();
 			myLoc.x += xOffset;
-			myLoc.w = textSurface->w;
+			myLoc.w = texture.GetWidth();
 		}
 
-		if (textSurface->h > drawTextInfo.Location.h)
+		if (texture.GetHeight() > location.h)
 		{
-			clip.h = drawTextInfo.Location.h;
+			clip.h = location.h;
 		}
 		else
 		{
-			clip.h = textSurface->h;
+			clip.h = texture.GetHeight();
 			myLoc.y += yOffset;
-			myLoc.h = textSurface->h;
+			myLoc.h = texture.GetHeight();
 		}
 
-		SDL_RenderCopy(m_renderer, textMessage, &clip, &myLoc);
+		SDL_RenderCopy(m_renderer, texture, &clip, &myLoc);
 	}
-
-	return Dimentions(textSurface->w, textSurface->h);
 }
 
 void Window::OnMouseButton(SDL_MouseButtonEvent buttonEvent)

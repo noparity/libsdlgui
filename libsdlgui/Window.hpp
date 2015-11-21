@@ -1,11 +1,12 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
+#include "Anchor.hpp"
 #include <boost/filesystem.hpp>
-#include "DrawTextInfo.hpp"
 #include "Flags.hpp"
 #include "Font.hpp"
 #include "SdlHelpers.hpp"
+#include "TextAlignment.hpp"
 #include <functional>
 #include <SDL_events.h>
 #include <SDL_pixels.h>
@@ -74,11 +75,12 @@ public:
 	virtual ~Window();
 
 	void AddControl(Control* pControl);
+	SDLTexture CreateTextureForText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
 	void DisableEvents() { m_flags |= State::EventsDisabled; }
 	void EnableEvents() { m_flags ^= State::EventsDisabled; }
 	void DrawLine(const SDL_Point& p1, const SDL_Point& p2, const SDL_Color& color);
 	void DrawRectangle(const SDL_Rect& location, const SDL_Color& color, uint8_t thickness);
-	Dimentions DrawText(const DrawTextInfo& drawTextInfo);
+	void DrawText(const SDL_Rect& location, const SDLTexture& texture, TextAlignment alignment, Anchor anchor);
 	SDL_Color GetBackgroundColor() const { return m_bColor; }
 	Dimentions GetDimentions() const { return m_dims; }
 	Font* GetFont() const { return m_pFont; }

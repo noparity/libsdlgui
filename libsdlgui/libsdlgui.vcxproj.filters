@@ -39,9 +39,6 @@
     <ClInclude Include="TextAlignment.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DrawTextInfo.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SdlHelpers.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -3,6 +3,7 @@
 
 #include "Caret.hpp"
 #include "Control.hpp"
+#include "SdlHelpers.hpp"
 #include "SDL_mouse.h"
 
 class TextBox : public Control
@@ -12,6 +13,7 @@ private:
 	Caret m_caret;
 	SDL_Cursor* m_pPrevCursor;
 	std::string m_text;
+	SDLTexture m_texture;
 
 	void Init();
 

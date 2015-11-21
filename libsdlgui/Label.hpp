@@ -3,11 +3,14 @@
 
 #include "Control.hpp"
 #include "Font.hpp"
+#include "SdlHelpers.hpp"
+#include "TextAlignment.hpp"
 
 class Label : public Control
 {
 private:
 	std::string m_text;
+	SDLTexture m_texture;
 	Font* m_pFont;
 	TextAlignment m_alignment;
 
