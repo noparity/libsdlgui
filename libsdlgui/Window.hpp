@@ -66,7 +66,6 @@ private:
 protected:
 	bool GetCursorHidden() const { return (m_flags & State::CursorHidden) == State::CursorHidden; }
 	SDL_Window* GetWindow() const { return m_window; }
-	bool RenderImpl();
 	void Show();
 	virtual void TranslateEvent(const SDL_Event& sdlEvent);
 

@@ -3,7 +3,7 @@
 #include "SdlHelpers.hpp"
 
 Control::Control(Window* pWindow, const SDL_Rect& location) :
-	m_pWindow(pWindow), m_pParent(nullptr), m_flags(State::Dirty), m_loc(location), m_borderSize(0)
+	m_pWindow(pWindow), m_pParent(nullptr), m_flags(State::None), m_loc(location), m_borderSize(0)
 {
 	assert(m_pWindow != nullptr);
 	m_borderColor = { 0, 0, 0, 0 };
@@ -55,18 +55,6 @@ void Control::FocusAcquired()
 void Control::FocusLost()
 {
 	// TODO: standardize on default color and set it here
-}
-
-void Control::Invalidate()
-{
-	if (!IsDirty())
-	{
-		m_pWindow->DrawRectangle(GetLocation(), m_bColor, UINT8_MAX);
-		m_flags |= State::Dirty;
-
-		for (auto control : m_controls)
-			control->Invalidate();
-	}
 }
 
 void Control::NotificationElapsedTime()
@@ -130,12 +118,13 @@ void Control::RemoveControl(Control* pControl)
 	m_controls.erase(controlIter);
 }
 
-bool Control::Render()
+void Control::Render()
 {
-	if (IsDirty() && !GetHidden())
+	if (!GetHidden())
 	{
 		if (m_flags & State::HiddenPending)
 		{
+			m_pWindow->DrawRectangle(GetLocation(), m_pWindow->GetBackgroundColor(), UINT8_MAX);
 			// transition from hidden pending to hidden
 			m_flags ^= State::HiddenPending;
 			m_flags |= State::Hidden;
@@ -148,102 +137,72 @@ bool Control::Render()
 			if (m_borderSize > 0)
 				m_pWindow->DrawRectangle(GetLocation(), m_borderColor, m_borderSize);
 		}
-
-		m_flags ^= State::Dirty;
 	}
-
-	return !IsDirty();
 }
 
-bool Control::SetBackgroundColor(const SDL_Color& color)
+void Control::SetBackgroundColor(const SDL_Color& color)
 {
-	if (color != m_bColor)
-		Invalidate();
-
 	m_bColor = color;
-	return IsDirty();
 }
 
-bool Control::SetBorderColor(const SDL_Color& color)
+void Control::SetBorderColor(const SDL_Color& color)
 {
-	if (color != m_borderColor)
-		Invalidate();
-
 	m_borderColor = color;
-	return IsDirty();
 }
 
-bool Control::SetBorderSize(uint8_t size)
+void Control::SetBorderSize(uint8_t size)
 {
-	if (size != m_borderSize)
-		Invalidate();
-
 	m_borderSize = size;
-	return IsDirty();
 }
 
-bool Control::SetFocus(bool hasFocus)
+void Control::SetFocus(bool hasFocus)
 {
 	if (((m_flags & State::Focused) != State::Focused) && hasFocus)
 	{
 		// set focused state
 		m_flags |= State::Focused;
 		FocusAcquired();
-		Invalidate();
 	}
 	else if (((m_flags & State::Focused) == State::Focused) && !hasFocus)
 	{
 		// clear focused state
 		m_flags ^= State::Focused;
 		FocusLost();
-		Invalidate();
 	}
-
-	return IsDirty();
 }
 
-bool Control::SetForegroundColor(const SDL_Color& color)
+void Control::SetForegroundColor(const SDL_Color& color)
 {
-	if (color != m_fColor)
-		Invalidate();
-
 	m_fColor = color;
-	return IsDirty();
 }
 
-bool Control::SetHidden(bool isHidden)
+void Control::SetHidden(bool isHidden)
 {
+	bool changed = false;
 	if (isHidden && (m_flags & State::Hidden) != State::Hidden)
 	{
 		// must set hidden pending instead of hidden so
 		// that the control can be rendered hidden.
 		m_flags |= State::HiddenPending;
-		Invalidate();
+		changed = true;
 	}
 	else if (!isHidden && (m_flags & State::Hidden) == State::Hidden)
 	{
 		m_flags ^= State::Hidden;
-		Invalidate();
+		changed = true;
 	}
 
-	auto isDirty = IsDirty();
-	if (isDirty)
+	if (changed)
 	{
 		for (auto control : m_controls)
 			control->SetHidden(isHidden);
 	}
-
-	return isDirty;
 }
 
-bool Control::SetLocation(const SDL_Rect& location)
+void Control::SetLocation(const SDL_Rect& location)
 {
 	// TODO: validate that location is within bounds of parent?
 	if (location != m_loc)
-		Invalidate();
-
-	auto isDirty = IsDirty();
-	if (isDirty)
 	{
 		for (auto control : m_controls)
 		{
@@ -256,11 +215,9 @@ bool Control::SetLocation(const SDL_Rect& location)
 			controlLoc.y += deltay;
 			control->SetLocation(controlLoc);
 		}
+
+		m_loc = location;
 	}
-
-	m_loc = location;
-
-	return isDirty;
 }
 
 void Control::SetTransitionEffects(bool enabled)

@@ -29,36 +29,25 @@ void Label::RenderImpl()
 	GetWindow()->DrawText(GetLocation(), m_texture, m_alignment, Anchor::Right);
 }
 
-bool Label::SetAlignment(TextAlignment alignment)
+void Label::SetAlignment(TextAlignment alignment)
 {
-	if (m_alignment != alignment)
-	{
-		m_alignment = alignment;
-		Invalidate();
-	}
-
-	return IsDirty();
+	m_alignment = alignment;
 }
 
-bool Label::SetFont(Font* pFont)
+void Label::SetFont(Font* pFont)
 {
-	if (m_pFont != pFont)
+	if (pFont != m_pFont)
 	{
 		m_pFont = pFont;
-		Invalidate();
+		m_texture = GetWindow()->CreateTextureForText(m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
 	}
-
-	return IsDirty();
 }
 
-bool Label::SetText(const std::string& text)
+void Label::SetText(const std::string& text)
 {
 	if (text != m_text)
 	{
 		m_text = text;
 		m_texture = GetWindow()->CreateTextureForText(m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
-		Invalidate();
 	}
-
-	return IsDirty();
 }

@@ -55,14 +55,12 @@ void TextBox::NotificationEvent(const SDL_Event& event)
 		m_caret.PauseAnimation();
 		m_text.append(event.text.text);
 		createNewTexture = true;
-		Invalidate();
 	}
 	else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && m_text.length() > 0)
 	{
 		m_caret.PauseAnimation();
 		m_text.pop_back();
 		createNewTexture = true;
-		Invalidate();
 	}
 	else if (event.type == SDL_KEYUP)
 	{
@@ -98,6 +96,7 @@ void TextBox::RenderImpl()
 	location.x += TextOffsetX;
 	location.w -= (TextOffsetX * 2);
 	
+	GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
 	GetWindow()->DrawText(location, m_texture, TextAlignment::MiddleLeft, Anchor::Right);
 
 	// move the caret with respect to our location

@@ -18,7 +18,7 @@ public:
 	virtual void NotificationElapsedTime();
 	void PauseAnimation();
 	void ResumeAnimation();
-	virtual bool SetLocation(const SDL_Rect& location);
+	virtual void SetLocation(const SDL_Rect& location);
 	void StartAnimation();
 	void StopAnimation();
 };

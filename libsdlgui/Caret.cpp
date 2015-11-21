@@ -34,14 +34,14 @@ void Caret::ResumeAnimation()
 	m_pause = false;
 }
 
-bool Caret::SetLocation(const SDL_Rect& location)
+void Caret::SetLocation(const SDL_Rect& location)
 {
 	SDL_Rect myLoc = location;
 	auto parentLoc = GetParent()->GetLocation();
 	if (myLoc.x > (parentLoc.x + parentLoc.w) - (m_offset + (myLoc.w - 1)))
 		myLoc.x = (parentLoc.x + parentLoc.w) - (m_offset + (myLoc.w - 1));
 
-	return Control::SetLocation(myLoc);
+	Control::SetLocation(myLoc);
 }
 
 void Caret::StartAnimation()

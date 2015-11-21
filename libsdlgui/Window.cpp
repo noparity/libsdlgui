@@ -275,7 +275,6 @@ void Window::OnWindowResized(SDL_WindowEvent windowEvent)
 	for (auto control : m_controls)
 	{
 		control->NotificationWindowChanged(this);
-		control->Invalidate();
 	}
 }
 
@@ -316,17 +315,13 @@ void Window::Render()
 	}
 
 	// only render if the window is visible and only call present if any drawing was performed
-	if (ShouldRender() && RenderImpl())
+	if (ShouldRender())
+	{
+		for (auto control : m_controls)
+			control->Render();
+
 		SDL_RenderPresent(m_renderer);
-}
-
-bool Window::RenderImpl()
-{
-	bool didRender = false;
-	for (auto control : m_controls)
-		didRender |= control->Render();
-
-	return didRender;
+	}
 }
 
 void Window::SetCursorHidden(bool hidden)

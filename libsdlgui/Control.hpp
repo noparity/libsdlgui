@@ -10,12 +10,11 @@ private:
 	enum State
 	{
 		None             = 0,
-		Dirty            = 0x1,
-		HiddenPending    = 0x2,
-		Hidden           = 0x4,
-		MouseOverControl = 0x8,
-		Focused          = 0x10,
-		DisableEffects   = 0x20
+		HiddenPending    = 0x1,
+		Hidden           = 0x2,
+		MouseOverControl = 0x4,
+		Focused          = 0x8,
+		DisableEffects   = 0x10
 	};
 
 	Window* m_pWindow;
@@ -48,12 +47,6 @@ public:
 
 	void AddControl(Control* pControl);
 
-	// indicates that this control should be rendered on the next frame
-	void Invalidate();
-
-	// returns true if the control's state has changed
-	bool IsDirty() const { return (m_flags & State::Dirty) == State::Dirty; }
-
 	SDL_Color GetBackgroundColor() const { return m_bColor; }
 	uint8_t GetBorderSize() const { return m_borderSize; }
 	SDL_Color GetForegroundColor() const { return m_fColor; }
@@ -73,15 +66,15 @@ public:
 	void RemoveControl(Control* pControl);
 
 	// render the control
-	bool Render();
-	bool SetBackgroundColor(const SDL_Color& color);
-	bool SetBorderColor(const SDL_Color& color);
-	bool SetBorderSize(uint8_t size);
-	bool SetFocus(bool hasFocus);
-	bool SetForegroundColor(const SDL_Color& color);
+	void Render();
+	void SetBackgroundColor(const SDL_Color& color);
+	void SetBorderColor(const SDL_Color& color);
+	void SetBorderSize(uint8_t size);
+	void SetFocus(bool hasFocus);
+	void SetForegroundColor(const SDL_Color& color);
 
-	virtual bool SetHidden(bool isHidden);
-	virtual bool SetLocation(const SDL_Rect& location);
+	virtual void SetHidden(bool isHidden);
+	virtual void SetLocation(const SDL_Rect& location);
 	void SetTransitionEffects(bool enabled);
 };
 

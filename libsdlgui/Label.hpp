@@ -24,9 +24,9 @@ public:
 	Label(Control* pParent, const SDL_Rect& location);
 
 	Font const* GetFont() const { return m_pFont; }
-	bool SetAlignment(TextAlignment alignment);
-	bool SetFont(Font* pFont);
-	bool SetText(const std::string& text);
+	void SetAlignment(TextAlignment alignment);
+	void SetFont(Font* pFont);
+	void SetText(const std::string& text);
 };
 
 #endif // LABEL_HPP
