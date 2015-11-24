@@ -35,6 +35,8 @@ void TextBox::Init()
 	m_pPrevCursor = nullptr;
 	SetBorderColor(SDLColor(128, 128, 128, 0));
 	SetBorderSize(1);
+	// place the caret above the text box
+	m_caret.SetZOrder(GetZOrder() + 1);
 }
 
 bool TextBox::NotificationMouseButton(SDL_MouseButtonEvent buttonEvent)

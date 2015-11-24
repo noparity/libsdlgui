@@ -57,6 +57,12 @@ void Window::AddControl(Control* pControl)
 {
 	assert(std::find(m_controls.begin(), m_controls.end(), pControl) == m_controls.end());
 	m_controls.push_back(pControl);
+
+	// sort the list by descending z-order
+	std::sort(m_controls.begin(), m_controls.end(), [](Control* lhs, Control* rhs)
+	{
+		return lhs->GetZOrder() > rhs->GetZOrder();
+	});
 }
 
 SDLTexture Window::CreateTextureForText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor)
@@ -214,24 +220,23 @@ void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextA
 
 void Window::OnMouseButton(SDL_MouseButtonEvent buttonEvent)
 {
-	for (auto control : m_controls)
+	for (size_t i = 0; i < m_controls.size(); ++i)
 	{
-		if (control->GetHidden() == true)
+		if (m_occlusionMap[i] == 1 || m_controls[i]->GetHidden())
 			continue;
 
 		// find the control that was clicked on then dispatch the event
-		auto clickLoc = SDLRect(buttonEvent.x, buttonEvent.y, 1, 1);
-		auto controlLoc = control->GetLocation();
-		SDL_Rect result;
-		if (SDL_IntersectRect(&clickLoc, &controlLoc, &result) == SDL_TRUE)
+		auto clickPoint = SDLPoint(buttonEvent.x, buttonEvent.y);
+		auto controlLoc = m_controls[i]->GetLocation();
+		if (SDLPointInRect(clickPoint, controlLoc))
 		{
-			if (control->NotificationMouseButton(buttonEvent))
+			if (m_controls[i]->NotificationMouseButton(buttonEvent))
 			{
 				// remove focus from the previous control and give it to the selected one
 				if (m_pCtrlWithFocus != nullptr)
 					m_pCtrlWithFocus->SetFocus(false);
 
-				m_pCtrlWithFocus = control;
+				m_pCtrlWithFocus = m_controls[i];
 				m_pCtrlWithFocus->SetFocus(true);
 			}
 
@@ -250,14 +255,22 @@ void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
 		SDL_ShowCursor(SDL_ENABLE);
 		SetCursorHidden(false);
 	}
+
+	if (motionEvent.state == SDL_PRESSED && m_pCtrlWithFocus != nullptr)
+	{
+		auto controlLoc = m_pCtrlWithFocus->GetLocation();
+		controlLoc.x += motionEvent.xrel;
+		controlLoc.y += motionEvent.yrel;
+		m_pCtrlWithFocus->SetLocation(controlLoc);
+	}
 	// TODO: might make more sense for the Window class to track
 	// the controls the mouse enters and leaves and just set a bit
 	// on a control indicating either state.
 
-	for (auto control : m_controls)
+	for (size_t i = 0; i < m_controls.size(); ++i)
 	{
-		if (!control->GetHidden())
-			control->NotificationMouseMotion(motionEvent);
+		if (m_occlusionMap[i] == 0 && !m_controls[i]->GetHidden())
+			m_controls[i]->NotificationMouseMotion(motionEvent);
 	}
 }
 
@@ -314,11 +327,89 @@ void Window::Render()
 		}
 	}
 
-	// only render if the window is visible and only call present if any drawing was performed
+	// only render if the window is visible
 	if (ShouldRender())
 	{
-		for (auto control : m_controls)
-			control->Render();
+		// resize occlusion map as required
+		if (m_occlusionMap.size() != m_controls.size())
+			m_occlusionMap.resize(m_controls.size());
+
+		// calculate all of the z-order partitions.  each tuple
+		// represents a range of descending z-orders [beginning, end).
+		std::vector<std::tuple<size_t, size_t>> partitions;
+		size_t beginning = 0;
+		uint8_t currentZ = 0;
+		for (size_t i = beginning; i < m_controls.size(); ++i)
+		{
+			auto zOrder = m_controls[i]->GetZOrder();
+			if (zOrder > currentZ)
+			{
+				currentZ = m_controls[i]->GetZOrder();
+			}
+			else if (zOrder < currentZ)
+			{
+				partitions.push_back(std::tuple<size_t, size_t>(beginning, i));
+				beginning = i;
+				currentZ = m_controls[i]->GetZOrder();
+			}
+		
+			// if we hit zero no need to process any further
+			if (currentZ == 0)
+				break;
+		}
+		// don't add the last partition as it can't occlude anything
+		//partitions.push_back(std::tuple<size_t, size_t>(beginning, m_controls.size()));
+
+		if (partitions.size() > 1)
+		{
+			// iterate over the partitions finding all occluded controls
+			for (auto partition : partitions)
+			{
+				auto beginning = std::get<0>(partition);
+				auto end = std::get<1>(partition);
+				assert(beginning < end);
+				
+				// for each control in the partition check if it
+				// occludes any controls in the lower partitions
+				for (auto top = beginning; top < end; ++top)
+				{
+					// don't skip hidden controls, it prevents us from
+					// properly clearing the occlusion bit when a control
+					// was occluded but no longer is.
+					//if (m_controls[top]->GetHidden())
+					//	continue;
+					
+					// if this control is occluded then don't bother testing if it
+					// occludes any controls; the control that occluded it would have
+					// occluded any controls under this one.
+					if (m_occlusionMap[top] == 1)
+						continue;
+					
+					auto topControlLoc = m_controls[top]->GetLocation();
+					for (auto bottom = end; bottom < m_controls.size(); ++bottom)
+					{
+						auto bottomControlLoc = m_controls[bottom]->GetLocation();
+
+						// if the bottom control is fully occluded then set the bit
+						// in the map else clear it.  this handles the case when the
+						// control was occluded but now isn't.
+						if (SDLRectOcclusion(topControlLoc, bottomControlLoc) && !m_controls[top]->GetHidden())
+							m_occlusionMap[bottom] = 1;
+						else
+							m_occlusionMap[bottom] = 0;
+					}
+				}
+			}
+		}
+
+		SDL_RenderClear(m_renderer);
+
+		// render controls in ascending z-order
+		for (size_t i = m_controls.size() - 1; i < m_controls.size(); --i)
+		{
+			if (m_occlusionMap[i] == 0)
+				m_controls[i]->Render();
+		}
 
 		SDL_RenderPresent(m_renderer);
 	}

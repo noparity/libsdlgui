@@ -3,7 +3,7 @@
 #include "SdlHelpers.hpp"
 
 Control::Control(Window* pWindow, const SDL_Rect& location) :
-	m_pWindow(pWindow), m_pParent(nullptr), m_flags(State::None), m_loc(location), m_borderSize(0)
+	m_pWindow(pWindow), m_pParent(nullptr), m_flags(State::None), m_loc(location), m_borderSize(0), m_zOrder(0)
 {
 	assert(m_pWindow != nullptr);
 	m_borderColor = { 0, 0, 0, 0 };
@@ -124,7 +124,6 @@ void Control::Render()
 	{
 		if (m_flags & State::HiddenPending)
 		{
-			m_pWindow->DrawRectangle(GetLocation(), m_pWindow->GetBackgroundColor(), UINT8_MAX);
 			// transition from hidden pending to hidden
 			m_flags ^= State::HiddenPending;
 			m_flags |= State::Hidden;
@@ -226,4 +225,9 @@ void Control::SetTransitionEffects(bool enabled)
 		m_flags ^= State::DisableEffects;
 	else
 		m_flags |= State::DisableEffects;
+}
+
+void Control::SetZOrder(uint8_t zOrder)
+{
+	m_zOrder = zOrder;
 }

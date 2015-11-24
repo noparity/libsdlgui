@@ -2,6 +2,7 @@
 #define TESTAPP_HPP
 
 #include "Button.hpp"
+#include "Dialog.hpp"
 #include "Label.hpp"
 #include "TextBox.hpp"
 #include "Window.hpp"
@@ -27,9 +28,11 @@ class TestWindow : public Window
 private:
 	//std::unique_ptr<TestControl> m_panel;
 	//std::unique_ptr<Label> m_label1;
-	std::unique_ptr<Button> m_button;
+	std::unique_ptr<Button> m_button1;
+	std::unique_ptr<Button> m_button2;
 	std::unique_ptr<Control> m_frame;
 	std::unique_ptr<TextBox> m_textBox;
+	std::unique_ptr<Dialog> m_dialog;
 
 	int m_frameNumber;
 

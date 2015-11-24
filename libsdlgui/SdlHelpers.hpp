@@ -187,4 +187,17 @@ public:
 	~SDLColorHolder();
 };
 
+inline bool SDLRectOcclusion(const SDL_Rect& top, const SDL_Rect& bottom)
+{
+	return (bottom.x >= top.x && bottom.y >= top.y &&
+		(bottom.x + bottom.w) <= (top.x + top.w) &&
+		(bottom.y + bottom.h) <= (top.y + top.h));
+}
+
+inline bool SDLPointInRect(const SDL_Point& point, const SDL_Rect& rect)
+{
+	return (point.x >= rect.x && point.x <= (rect.x + rect.w) &&
+		point.y >= rect.y && point.y <= (rect.y + rect.h));
+}
+
 #endif // SDLHELPERS_HPP

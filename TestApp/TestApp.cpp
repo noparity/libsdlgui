@@ -76,8 +76,15 @@ auto labelPtr = m_panel.get();
 TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
 	m_frameNumber(0), Window(title, dimentions, windowFlags)
 {
-	m_button = std::make_unique<Button>(this, SDLRect(32, 32, 64, 32));
-	m_button->RegisterForClickCallback([this]()
+	m_dialog = std::make_unique<Dialog>(this, "Test Dialog", SDLRect(48, 34, 640, 480));
+	m_button1 = std::make_unique<Button>(this, SDLRect(32, 32, 64, 32));
+	m_button1->RegisterForClickCallback([this]()
+	{
+		this->m_dialog->SetHidden(false);
+	});
+
+	m_button2 = std::make_unique<Button>(this, SDLRect(128, 64, 64, 32));
+	m_button2->RegisterForClickCallback([this]()
 	{
 		this->NextFrame();
 	});

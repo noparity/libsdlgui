@@ -26,6 +26,7 @@ private:
 	SDL_Color m_fColor;
 	SDL_Color m_borderColor;
 	uint8_t m_borderSize;
+	uint8_t m_zOrder;
 
 protected:
 	bool EffectsDisabled() const { return (m_flags & State::DisableEffects) == State::DisableEffects; }
@@ -54,6 +55,7 @@ public:
 
 	// gets the location of the control with respect to its parent
 	SDL_Rect GetLocation() const { return m_loc; }
+	uint8_t GetZOrder() const { return m_zOrder; }
 
 	// TODO: would be nice to take these out of public surface area
 	virtual void NotificationElapsedTime();
@@ -76,6 +78,7 @@ public:
 	virtual void SetHidden(bool isHidden);
 	virtual void SetLocation(const SDL_Rect& location);
 	void SetTransitionEffects(bool enabled);
+	void SetZOrder(uint8_t zOrder);
 };
 
 #endif // CONTROL_HPP

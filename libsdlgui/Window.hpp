@@ -2,6 +2,7 @@
 #define WINDOW_HPP
 
 #include "Anchor.hpp"
+#include <boost/dynamic_bitset.hpp>
 #include <boost/filesystem.hpp>
 #include "Flags.hpp"
 #include "Font.hpp"
@@ -50,6 +51,7 @@ private:
 	SDLSubSystem m_subSystem;
 	Font* m_pFont;
 	std::vector<ControlElapsedTime> m_ctrlsElapsedTime;
+	boost::dynamic_bitset<> m_occlusionMap;
 
 	// static fields
 	static std::vector<Window*> s_windows;
