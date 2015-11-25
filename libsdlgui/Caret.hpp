@@ -6,19 +6,16 @@
 class Caret : public Control
 {
 private:
-	uint16_t m_offset;
 	bool m_pause;
 
-protected:
-	void RenderImpl();
+	virtual void OnElapsedTime();
+	virtual void RenderImpl();
 
 public:
 	Caret(Control* pParent, const SDL_Rect& location);
 
-	virtual void NotificationElapsedTime();
 	void PauseAnimation();
 	void ResumeAnimation();
-	virtual void SetLocation(const SDL_Rect& location);
 	void StartAnimation();
 	void StopAnimation();
 };

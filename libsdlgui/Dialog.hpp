@@ -17,13 +17,11 @@ private:
 	SDL_Rect GetCloseButtonLoc() const;
 	SDL_Rect GetTitleBarLoc() const;
 
-protected:
+	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	virtual void RenderImpl();
 
 public:
 	Dialog(Window* pWindow, const std::string& title, const SDL_Rect& location);
-
-	virtual bool NotificationMouseButton(SDL_MouseButtonEvent buttonEvent);
 };
 
 #endif // DIALOG_HPP

@@ -10,7 +10,7 @@
 std::vector<Window*> Window::s_windows;
 
 Window::Window(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
-	m_flags(State::None), m_dims(dimentions), m_pCtrlWithFocus(nullptr), m_subSystem(SDLSubSystem::Video), m_pFont(nullptr)
+	m_flags(State::None), m_dims(dimentions), m_pCtrlWithFocus(nullptr), m_pCtrlUnderMouse(nullptr), m_subSystem(SDLSubSystem::Video), m_pFont(nullptr)
 {
 	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		m_dims.W, m_dims.H, windowFlags);
@@ -233,11 +233,15 @@ void Window::OnMouseButton(SDL_MouseButtonEvent buttonEvent)
 			if (m_controls[i]->NotificationMouseButton(buttonEvent))
 			{
 				// remove focus from the previous control and give it to the selected one
-				if (m_pCtrlWithFocus != nullptr)
-					m_pCtrlWithFocus->SetFocus(false);
+				if (m_pCtrlWithFocus != nullptr && m_controls[i] != m_pCtrlWithFocus)
+					m_pCtrlWithFocus->NotificationFocusLost();
 
-				m_pCtrlWithFocus = m_controls[i];
-				m_pCtrlWithFocus->SetFocus(true);
+				// if this control already has focus don't notify it again
+				if (m_controls[i] != m_pCtrlWithFocus)
+				{
+					m_pCtrlWithFocus = m_controls[i];
+					m_pCtrlWithFocus->NotificationFocusAcquired();
+				}
 			}
 
 			break;
@@ -247,9 +251,6 @@ void Window::OnMouseButton(SDL_MouseButtonEvent buttonEvent)
 
 void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
 {
-	if ((m_flags & State::EventsDisabled) == State::EventsDisabled)
-		return;
-
 	if (GetCursorHidden())
 	{
 		SDL_ShowCursor(SDL_ENABLE);
@@ -263,14 +264,42 @@ void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
 		controlLoc.y += motionEvent.yrel;
 		m_pCtrlWithFocus->SetLocation(controlLoc);
 	}
-	// TODO: might make more sense for the Window class to track
-	// the controls the mouse enters and leaves and just set a bit
-	// on a control indicating either state.
-
+	
+	bool isOverControl = false;
+	// must iterate in descending z-order
 	for (size_t i = 0; i < m_controls.size(); ++i)
 	{
-		if (m_occlusionMap[i] == 0 && !m_controls[i]->GetHidden())
-			m_controls[i]->NotificationMouseMotion(motionEvent);
+		if (m_occlusionMap[i] == 1 || m_controls[i]->GetHidden())
+			continue;
+
+		auto clickPoint = SDLPoint(motionEvent.x, motionEvent.y);
+		auto controlLoc = m_controls[i]->GetLocation();
+		if (SDLPointInRect(clickPoint, controlLoc))
+		{
+			// notify the previous control the mouse has left it
+			if (m_pCtrlUnderMouse != nullptr && m_pCtrlUnderMouse != m_controls[i])
+				m_pCtrlUnderMouse->NotificationMouseExit();
+
+			// if this control is already under the mouse don't notify it again
+			if (m_pCtrlUnderMouse != m_controls[i])
+			{
+				m_pCtrlUnderMouse = m_controls[i];
+				m_pCtrlUnderMouse->NotificationMouseEnter();
+			}
+
+			isOverControl = true;
+
+			// mouse can't be over more than one control so exit
+			break;
+		}
+	}
+
+	// mouse is no longer over any control, if it was earlier
+	// then notify that control that it has exited it.
+	if (!isOverControl && m_pCtrlUnderMouse != nullptr)
+	{
+		m_pCtrlUnderMouse->NotificationMouseExit();
+		m_pCtrlUnderMouse = nullptr;
 	}
 }
 
@@ -337,28 +366,30 @@ void Window::Render()
 		// calculate all of the z-order partitions.  each tuple
 		// represents a range of descending z-orders [beginning, end).
 		std::vector<std::tuple<size_t, size_t>> partitions;
-		size_t beginning = 0;
-		uint8_t currentZ = 0;
-		for (size_t i = beginning; i < m_controls.size(); ++i)
 		{
-			auto zOrder = m_controls[i]->GetZOrder();
-			if (zOrder > currentZ)
+			size_t beginning = 0;
+			uint8_t currentZ = 0;
+			for (size_t i = beginning; i < m_controls.size(); ++i)
 			{
-				currentZ = m_controls[i]->GetZOrder();
+				auto zOrder = m_controls[i]->GetZOrder();
+				if (zOrder > currentZ)
+				{
+					currentZ = m_controls[i]->GetZOrder();
+				}
+				else if (zOrder < currentZ)
+				{
+					partitions.push_back(std::tuple<size_t, size_t>(beginning, i));
+					beginning = i;
+					currentZ = m_controls[i]->GetZOrder();
+				}
+
+				// if we hit zero no need to process any further
+				if (currentZ == 0)
+					break;
 			}
-			else if (zOrder < currentZ)
-			{
-				partitions.push_back(std::tuple<size_t, size_t>(beginning, i));
-				beginning = i;
-				currentZ = m_controls[i]->GetZOrder();
-			}
-		
-			// if we hit zero no need to process any further
-			if (currentZ == 0)
-				break;
+			// don't add the last partition as it can't occlude anything
+			//partitions.push_back(std::tuple<size_t, size_t>(beginning, m_controls.size()));
 		}
-		// don't add the last partition as it can't occlude anything
-		//partitions.push_back(std::tuple<size_t, size_t>(beginning, m_controls.size()));
 
 		if (partitions.size() > 1)
 		{

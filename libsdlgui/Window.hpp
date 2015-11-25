@@ -35,8 +35,7 @@ private:
 		None           = 0,
 		Minimized      = 0x1,
 		CursorHidden   = 0x2,
-		Closed         = 0x4,
-		EventsDisabled = 0x8
+		Closed         = 0x4
 	};
 
 	uint32_t m_id;
@@ -48,6 +47,7 @@ private:
 	Dimentions m_dims;
 	std::vector<Control*> m_controls;
 	Control* m_pCtrlWithFocus;
+	Control* m_pCtrlUnderMouse;
 	SDLSubSystem m_subSystem;
 	Font* m_pFont;
 	std::vector<ControlElapsedTime> m_ctrlsElapsedTime;
@@ -77,8 +77,6 @@ public:
 
 	void AddControl(Control* pControl);
 	SDLTexture CreateTextureForText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
-	void DisableEvents() { m_flags |= State::EventsDisabled; }
-	void EnableEvents() { m_flags ^= State::EventsDisabled; }
 	void DrawLine(const SDL_Point& p1, const SDL_Point& p2, const SDL_Color& color);
 	void DrawRectangle(const SDL_Rect& location, const SDL_Color& color, uint8_t thickness);
 	void DrawText(const SDL_Rect& location, const SDLTexture& texture, TextAlignment alignment, Anchor anchor);

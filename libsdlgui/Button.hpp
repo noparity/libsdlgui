@@ -14,20 +14,19 @@ private:
 	ButtonClickCallback m_onClick;
 
 	void Init();
+
+	virtual void OnFocusAcquired();
+	virtual void OnFocusLost();
+	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+	virtual void OnMouseEnter();
+	virtual void OnMouseExit();
+
 	void SetDefaultColorScheme();
 	void SetMouseOverColorScheme();
-
-protected:
-	virtual void NotificationMouseEnter();
-	virtual void NotificationMouseExit();
 
 public:
 	Button(Window* pWindow, const SDL_Rect& location);
 	Button(Control* pParent, const SDL_Rect& location);
-
-	virtual void FocusAcquired();
-	virtual void FocusLost();
-	virtual bool NotificationMouseButton(SDL_MouseButtonEvent buttonEvent);
 
 	void RegisterForClickCallback(ButtonClickCallback callback);
 };

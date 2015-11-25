@@ -47,61 +47,84 @@ void Control::AddControl(Control* pControl)
 	m_controls.push_back(pControl);
 }
 
-void Control::FocusAcquired()
-{
-	// TODO: standardize on focus color and set it here
-}
-
-void Control::FocusLost()
-{
-	// TODO: standardize on default color and set it here
-}
-
 void Control::NotificationElapsedTime()
 {
-	// empty
+	OnElapsedTime();
 }
 
-void Control::NotificationEvent(const SDL_Event&)
+void Control::NotificationEvent(const SDL_Event& event)
 {
-	// empty
+	OnSdlEvent(event);
 }
 
-bool Control::NotificationMouseButton(SDL_MouseButtonEvent)
+void Control::NotificationFocusAcquired()
 {
-	return false;
+	m_flags |= State::Focused;
+	OnFocusAcquired();
+}
+
+void Control::NotificationFocusLost()
+{
+	m_flags ^= State::Focused;
+	OnFocusLost();
+}
+
+bool Control::NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent)
+{
+	return OnMouseButton(buttonEvent);
 }
 
 void Control::NotificationMouseEnter()
 {
-	// empty
+	OnMouseEnter();
 }
 
 void Control::NotificationMouseExit()
 {
+	OnMouseExit();
+}
+
+void Control::NotificationWindowChanged(Window* pWindow)
+{
+	OnWindowChanged(pWindow);
+}
+
+void Control::OnElapsedTime()
+{
 	// empty
 }
 
-void Control::NotificationMouseMotion(SDL_MouseMotionEvent motionEvent)
+void Control::OnSdlEvent(const SDL_Event&)
 {
-	auto mouseRect = SDLRect(motionEvent.x, motionEvent.y, 1, 1);
-	SDL_Rect result;
-	if (SDL_IntersectRect(&mouseRect, &m_loc, &result) == SDL_TRUE)
-	{
-		if (!IsMouseOverControl())
-		{
-			m_flags |= State::MouseOverControl;
-			NotificationMouseEnter();
-		}
-	}
-	else if (IsMouseOverControl())
-	{
-		m_flags ^= State::MouseOverControl;
-		NotificationMouseExit();
-	}
+	// empty
 }
 
-void Control::NotificationWindowChanged(Window*)
+void Control::OnFocusAcquired()
+{
+	// empty
+}
+
+void Control::OnFocusLost()
+{
+	// empty
+}
+
+bool Control::OnMouseButton(const SDL_MouseButtonEvent&)
+{
+	return false;
+}
+
+void Control::OnMouseEnter()
+{
+	// empty
+}
+
+void Control::OnMouseExit()
+{
+	// empty
+}
+
+void Control::OnWindowChanged(Window*)
 {
 	// empty
 }
@@ -154,22 +177,6 @@ void Control::SetBorderSize(uint8_t size)
 	m_borderSize = size;
 }
 
-void Control::SetFocus(bool hasFocus)
-{
-	if (((m_flags & State::Focused) != State::Focused) && hasFocus)
-	{
-		// set focused state
-		m_flags |= State::Focused;
-		FocusAcquired();
-	}
-	else if (((m_flags & State::Focused) == State::Focused) && !hasFocus)
-	{
-		// clear focused state
-		m_flags ^= State::Focused;
-		FocusLost();
-	}
-}
-
 void Control::SetForegroundColor(const SDL_Color& color)
 {
 	m_fColor = color;
@@ -217,14 +224,6 @@ void Control::SetLocation(const SDL_Rect& location)
 
 		m_loc = location;
 	}
-}
-
-void Control::SetTransitionEffects(bool enabled)
-{
-	if (enabled)
-		m_flags ^= State::DisableEffects;
-	else
-		m_flags |= State::DisableEffects;
 }
 
 void Control::SetZOrder(uint8_t zOrder)

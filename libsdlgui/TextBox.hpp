@@ -17,20 +17,17 @@ private:
 
 	void Init();
 
-protected:
-	virtual void NotificationMouseEnter();
-	virtual void NotificationMouseExit();
+	virtual void OnFocusAcquired();
+	virtual void OnFocusLost();
+	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+	virtual void OnMouseEnter();
+	virtual void OnMouseExit();
+	virtual void OnSdlEvent(const SDL_Event& event);
 	virtual void RenderImpl();
 
 public:
 	TextBox(Window* pWindow, const SDL_Rect& location);
 	TextBox(Control* pParent, const SDL_Rect& location);
-
-	virtual void FocusAcquired();
-	virtual void FocusLost();
-
-	virtual void NotificationEvent(const SDL_Event& event);
-	virtual bool NotificationMouseButton(SDL_MouseButtonEvent buttonEvent);
 };
 
 #endif // TEXTBOX_HPP

@@ -2,13 +2,13 @@
 #include "Caret.hpp"
 
 Caret::Caret(Control* pParent, const SDL_Rect& location) :
-	m_offset(static_cast<uint16_t>(location.x)), m_pause(false), Control(pParent, location)
+	m_pause(false), Control(pParent, location)
 {
 	// caret is hidden until its containing control has focus
 	SetHidden(true);
 }
 
-void Caret::NotificationElapsedTime()
+void Caret::OnElapsedTime()
 {
 	if (!m_pause)
 		SetHidden(!GetHidden());
@@ -32,16 +32,6 @@ void Caret::RenderImpl()
 void Caret::ResumeAnimation()
 {
 	m_pause = false;
-}
-
-void Caret::SetLocation(const SDL_Rect& location)
-{
-	SDL_Rect myLoc = location;
-	auto parentLoc = GetParent()->GetLocation();
-	if (myLoc.x > (parentLoc.x + parentLoc.w) - (m_offset + (myLoc.w - 1)))
-		myLoc.x = (parentLoc.x + parentLoc.w) - (m_offset + (myLoc.w - 1));
-
-	Control::SetLocation(myLoc);
 }
 
 void Caret::StartAnimation()

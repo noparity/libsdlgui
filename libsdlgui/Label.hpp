@@ -15,8 +15,6 @@ private:
 	TextAlignment m_alignment;
 
 	void Init(Window* pWindow);
-
-protected:
 	virtual void RenderImpl();
 
 public:

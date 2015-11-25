@@ -13,17 +13,6 @@ Button::Button(Control* pParent, const SDL_Rect& location) :
 	Init();
 }
 
-void Button::FocusAcquired()
-{
-	SetBorderColor(SDLColor(64, 64, 128, 0));
-}
-
-void Button::FocusLost()
-{
-	SetBackgroundColor(SDLColor(64, 64, 64, 0));
-	SetBorderColor(SDLColor(128, 128, 128, 0));
-}
-
 void Button::Init()
 {
 	SetDefaultColorScheme();
@@ -31,7 +20,18 @@ void Button::Init()
 	SetText("button");
 }
 
-bool Button::NotificationMouseButton(SDL_MouseButtonEvent buttonEvent)
+void Button::OnFocusAcquired()
+{
+	SetBorderColor(SDLColor(64, 64, 128, 0));
+}
+
+void Button::OnFocusLost()
+{
+	SetBackgroundColor(SDLColor(64, 64, 64, 0));
+	SetBorderColor(SDLColor(128, 128, 128, 0));
+}
+
+bool Button::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
 	bool takeFocus = false;
 	if (buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT)
@@ -50,16 +50,14 @@ bool Button::NotificationMouseButton(SDL_MouseButtonEvent buttonEvent)
 	return takeFocus;
 }
 
-void Button::NotificationMouseEnter()
+void Button::OnMouseEnter()
 {
-	if (!EffectsDisabled())
-		SetMouseOverColorScheme();
+	SetMouseOverColorScheme();
 }
 
-void Button::NotificationMouseExit()
+void Button::OnMouseExit()
 {
-	if (!EffectsDisabled())
-		SetDefaultColorScheme();
+	SetDefaultColorScheme();
 }
 
 void Button::RegisterForClickCallback(ButtonClickCallback callback)

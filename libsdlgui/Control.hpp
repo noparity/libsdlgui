@@ -12,9 +12,7 @@ private:
 		None             = 0,
 		HiddenPending    = 0x1,
 		Hidden           = 0x2,
-		MouseOverControl = 0x4,
-		Focused          = 0x8,
-		DisableEffects   = 0x10
+		Focused          = 0x4
 	};
 
 	Window* m_pWindow;
@@ -28,18 +26,21 @@ private:
 	uint8_t m_borderSize;
 	uint8_t m_zOrder;
 
+	virtual void OnElapsedTime();
+	virtual void OnSdlEvent(const SDL_Event&);
+	virtual void OnFocusAcquired();
+	virtual void OnFocusLost();
+	virtual bool OnMouseButton(const SDL_MouseButtonEvent&);
+	virtual void OnMouseEnter();
+	virtual void OnMouseExit();
+	virtual void OnWindowChanged(Window*);
+
+	virtual void RenderImpl() = 0;
+
 protected:
-	bool EffectsDisabled() const { return (m_flags & State::DisableEffects) == State::DisableEffects; }
-	virtual void FocusAcquired();
-	virtual void FocusLost();
 	Control* GetParent() const { return m_pParent; }
 	Window* GetWindow() const { return m_pWindow; }
 	bool HasFocus() const { return (m_flags & State::Focused) == State::Focused; }
-	bool IsMouseOverControl() const { return (m_flags & State::MouseOverControl) == State::MouseOverControl; }
-	virtual void RenderImpl() = 0;
-
-	virtual void NotificationMouseEnter();
-	virtual void NotificationMouseExit();
 
 public:
 	Control(Window* pWindow, const SDL_Rect& location);
@@ -57,12 +58,14 @@ public:
 	SDL_Rect GetLocation() const { return m_loc; }
 	uint8_t GetZOrder() const { return m_zOrder; }
 
-	// TODO: would be nice to take these out of public surface area
-	virtual void NotificationElapsedTime();
-	virtual void NotificationEvent(const SDL_Event& event);
-	virtual bool NotificationMouseButton(SDL_MouseButtonEvent buttonEvent);
-	void NotificationMouseMotion(SDL_MouseMotionEvent motionEvent);
-	virtual void NotificationWindowChanged(Window* pWindow);
+	void NotificationElapsedTime();
+	void NotificationEvent(const SDL_Event& event);
+	void NotificationFocusAcquired();
+	void NotificationFocusLost();
+	bool NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+	void NotificationMouseEnter();
+	void NotificationMouseExit();
+	void NotificationWindowChanged(Window* pWindow);
 
 	void RemoveAllControls();
 	void RemoveControl(Control* pControl);
@@ -72,12 +75,10 @@ public:
 	void SetBackgroundColor(const SDL_Color& color);
 	void SetBorderColor(const SDL_Color& color);
 	void SetBorderSize(uint8_t size);
-	void SetFocus(bool hasFocus);
 	void SetForegroundColor(const SDL_Color& color);
 
-	virtual void SetHidden(bool isHidden);
-	virtual void SetLocation(const SDL_Rect& location);
-	void SetTransitionEffects(bool enabled);
+	void SetHidden(bool isHidden);
+	void SetLocation(const SDL_Rect& location);
 	void SetZOrder(uint8_t zOrder);
 };
 

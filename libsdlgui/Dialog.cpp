@@ -31,23 +31,7 @@ SDL_Rect Dialog::GetTitleBarLoc() const
 	return titleBarLoc;
 }
 
-void Dialog::RenderImpl()
-{
-	auto window = GetWindow();
-	
-	// draw the background
-	auto dialogLoc = GetLocation();
-	window->DrawRectangle(dialogLoc, GetBackgroundColor(), UINT8_MAX);
-	
-	// draw the title bar
-	window->DrawRectangle(GetTitleBarLoc(), SDLColor(255, 255, 255, 0), UINT8_MAX);
-	window->DrawText(GetTitleBarLoc(), m_titleTexture, TextAlignment::MiddleCenter, Anchor::Left);
-	
-	// draw the close button
-	window->DrawRectangle(GetCloseButtonLoc(), SDLColor(255, 0, 0, 0), UINT8_MAX);
-}
-
-bool Dialog::NotificationMouseButton(SDL_MouseButtonEvent buttonEvent)
+bool Dialog::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
 	bool takeFocus = false;
 	if (buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT)
@@ -64,4 +48,20 @@ bool Dialog::NotificationMouseButton(SDL_MouseButtonEvent buttonEvent)
 	}
 
 	return takeFocus;
+}
+
+void Dialog::RenderImpl()
+{
+	auto window = GetWindow();
+	
+	// draw the background
+	auto dialogLoc = GetLocation();
+	window->DrawRectangle(dialogLoc, GetBackgroundColor(), UINT8_MAX);
+	
+	// draw the title bar
+	window->DrawRectangle(GetTitleBarLoc(), SDLColor(255, 255, 255, 0), UINT8_MAX);
+	window->DrawText(GetTitleBarLoc(), m_titleTexture, TextAlignment::MiddleCenter, Anchor::Left);
+	
+	// draw the close button
+	window->DrawRectangle(GetCloseButtonLoc(), SDLColor(255, 0, 0, 0), UINT8_MAX);
 }
