@@ -2,7 +2,7 @@
 #include "Dialog.hpp"
 
 Dialog::Dialog(Window* pWindow, const std::string& title, const SDL_Rect& location) :
-	Control(pWindow, location), m_title(title)
+	Control(pWindow, location), m_title(title), m_canDrag(false)
 {
 	m_titleTexture = pWindow->CreateTextureForText(m_title, pWindow->GetFont(), SDLColor(0, 0, 0, 0), SDLColor(255, 255, 255, 0));
 	SetBackgroundColor(SDLColor(128, 128, 128, 0));
@@ -10,6 +10,11 @@ Dialog::Dialog(Window* pWindow, const std::string& title, const SDL_Rect& locati
 	SetBorderSize(1);
 	SetHidden(true);
 	SetZOrder(128);
+}
+
+bool Dialog::CanDragImpl() const
+{
+	return m_canDrag;
 }
 
 SDL_Rect Dialog::GetCloseButtonLoc() const
@@ -34,17 +39,25 @@ SDL_Rect Dialog::GetTitleBarLoc() const
 bool Dialog::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
 	bool takeFocus = false;
+	auto clickLoc = SDLPoint(buttonEvent.x, buttonEvent.y);
+	auto closeLoc = GetCloseButtonLoc();
+
 	if (buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT)
 	{
 		takeFocus = true;
+		auto titleLoc = GetTitleBarLoc();
+		if (SDLPointInRect(clickLoc, titleLoc) && !SDLPointInRect(clickLoc, closeLoc))
+			m_canDrag = true;
 	}
-	else if (buttonEvent.state == SDL_RELEASED && buttonEvent.button == SDL_BUTTON_LEFT)
+	else if (buttonEvent.state == SDL_RELEASED)
 	{
-		auto clickLoc = SDLRect(buttonEvent.x, buttonEvent.y, 1, 1);
-		auto closeLoc = GetCloseButtonLoc();
-		SDL_Rect result;
-		if (SDL_IntersectRect(&clickLoc, &closeLoc, &result) == SDL_TRUE)
-			SetHidden(true);
+		if (buttonEvent.button == SDL_BUTTON_LEFT)
+		{
+			if (SDLPointInRect(clickLoc, closeLoc))
+				SetHidden(true);
+		}
+
+		m_canDrag = false;
 	}
 
 	return takeFocus;

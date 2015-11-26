@@ -13,10 +13,12 @@ class Dialog : public Control
 private:
 	std::string m_title;
 	SDLTexture m_titleTexture;
+	bool m_canDrag;
 
 	SDL_Rect GetCloseButtonLoc() const;
 	SDL_Rect GetTitleBarLoc() const;
 
+	virtual bool CanDragImpl() const;
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	virtual void RenderImpl();
 

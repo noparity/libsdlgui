@@ -257,7 +257,7 @@ void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
 		SetCursorHidden(false);
 	}
 
-	if (motionEvent.state == SDL_PRESSED && m_pCtrlWithFocus != nullptr)
+	if (motionEvent.state == SDL_PRESSED && m_pCtrlWithFocus != nullptr && m_pCtrlWithFocus->CanDrag())
 	{
 		auto controlLoc = m_pCtrlWithFocus->GetLocation();
 		controlLoc.x += motionEvent.xrel;

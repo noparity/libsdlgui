@@ -26,6 +26,7 @@ private:
 	uint8_t m_borderSize;
 	uint8_t m_zOrder;
 
+	virtual bool CanDragImpl() const;
 	virtual void OnElapsedTime();
 	virtual void OnSdlEvent(const SDL_Event&);
 	virtual void OnFocusAcquired();
@@ -49,6 +50,7 @@ public:
 
 	void AddControl(Control* pControl);
 
+	bool CanDrag() const;
 	SDL_Color GetBackgroundColor() const { return m_bColor; }
 	uint8_t GetBorderSize() const { return m_borderSize; }
 	SDL_Color GetForegroundColor() const { return m_fColor; }

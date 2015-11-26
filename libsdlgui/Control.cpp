@@ -47,6 +47,16 @@ void Control::AddControl(Control* pControl)
 	m_controls.push_back(pControl);
 }
 
+bool Control::CanDrag() const
+{
+	return CanDragImpl();
+}
+
+bool Control::CanDragImpl() const
+{
+	return false;
+}
+
 void Control::NotificationElapsedTime()
 {
 	OnElapsedTime();
