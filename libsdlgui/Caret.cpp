@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Caret.hpp"
 
-Caret::Caret(Control* pParent, const SDL_Rect& location) :
-	m_pause(false), Control(pParent, location)
+Caret::Caret(Window* pWindow, const SDL_Rect& location) :
+	m_pause(false), Control(pWindow, location)
 {
 	// caret is hidden until its containing control has focus
 	SetHidden(true);

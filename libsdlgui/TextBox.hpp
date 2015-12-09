@@ -15,8 +15,6 @@ private:
 	std::string m_text;
 	SDLTexture m_texture;
 
-	void Init();
-
 	virtual void OnFocusAcquired();
 	virtual void OnFocusLost();
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
@@ -27,7 +25,6 @@ private:
 
 public:
 	TextBox(Window* pWindow, const SDL_Rect& location);
-	TextBox(Control* pParent, const SDL_Rect& location);
 
 	std::string GetText() const { return m_text; }
 };

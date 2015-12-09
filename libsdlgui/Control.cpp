@@ -3,7 +3,7 @@
 #include "SdlHelpers.hpp"
 
 Control::Control(Window* pWindow, const SDL_Rect& location) :
-	m_pWindow(pWindow), m_pParent(nullptr), m_flags(State::None), m_loc(location), m_borderSize(0), m_zOrder(0)
+	m_pWindow(pWindow), m_flags(State::None), m_loc(location), m_borderSize(0), m_zOrder(0)
 {
 	assert(m_pWindow != nullptr);
 	m_borderColor = { 0, 0, 0, 0 };
@@ -15,36 +15,9 @@ Control::Control(Window* pWindow, const SDL_Rect& location) :
 	m_pWindow->AddControl(this);
 }
 
-Control::Control(Control* pParent, const SDL_Rect& location) :
-	Control(pParent->m_pWindow, location)
-{
-	assert(m_pParent == nullptr);
-	m_pParent = pParent;
-	m_pParent->AddControl(this);
-}
-
 Control::~Control()
 {
-	if (m_pParent != nullptr)
-		m_pParent->RemoveControl(this);
-
 	m_pWindow->RemoveControl(this);
-}
-
-void Control::AddControl(Control* pControl)
-{
-	// a control's location is relative to the panel
-	// so ensure that it's within its bounds.
-	auto panelLoc = GetLocation();
-	auto controlLoc = pControl->GetLocation();
-	if (controlLoc.x + controlLoc.w > panelLoc.w ||
-		controlLoc.y + controlLoc.h > panelLoc.h)
-		throw std::runtime_error("Control is out of bounds.");
-
-	controlLoc.x += panelLoc.x;
-	controlLoc.y += panelLoc.y;
-	pControl->SetLocation(controlLoc);
-	m_controls.push_back(pControl);
 }
 
 bool Control::CanDrag() const
@@ -149,18 +122,6 @@ void Control::OnWindowChanged(Window*)
 	// empty
 }
 
-void Control::RemoveAllControls()
-{
-	m_controls.clear();
-}
-
-void Control::RemoveControl(Control* pControl)
-{
-	auto controlIter = std::find(m_controls.begin(), m_controls.end(), pControl);
-	assert(controlIter != m_controls.end());
-	m_controls.erase(controlIter);
-}
-
 void Control::Render()
 {
 	if (!GetHidden())
@@ -206,33 +167,11 @@ void Control::SetHidden(bool isHidden)
 		m_flags ^= State::Hidden;
 		changed = true;
 	}
-
-	if (changed)
-	{
-		for (auto control : m_controls)
-			control->SetHidden(isHidden);
-	}
 }
 
 void Control::SetLocation(const SDL_Rect& location)
 {
-	// TODO: validate that location is within bounds of parent?
-	if (location != m_loc)
-	{
-		for (auto control : m_controls)
-		{
-			auto controlLoc = control->GetLocation();
-			// calculate delta x and y for the panel
-			int deltax = location.x - m_loc.x;
-			int deltay = location.y - m_loc.y;
-			// adjust by delta x and y
-			controlLoc.x += deltax;
-			controlLoc.y += deltay;
-			control->SetLocation(controlLoc);
-		}
-
-		m_loc = location;
-	}
+	m_loc = location;
 }
 
 void Control::SetZOrder(uint8_t zOrder)

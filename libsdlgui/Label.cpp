@@ -3,23 +3,11 @@
 #include "Label.hpp"
 
 Label::Label(Window* pWindow, const SDL_Rect& location) :
-	Control(pWindow, location)
-{
-	Init(pWindow);
-}
-
-Label::Label(Control* pParent, const SDL_Rect& location) :
-	Control(pParent, location)
-{
-	Init(GetWindow());
-}
-
-void Label::Init(Window* pWindow)
+	Control(pWindow, location), m_text("label")
 {
 	// default font is inherited from the window
 	m_pFont = pWindow->GetFont();
 	assert(m_pFont != nullptr);
-	m_text = "label";
 	m_texture = pWindow->CreateTextureForText(m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
 }
 

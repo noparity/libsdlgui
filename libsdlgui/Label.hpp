@@ -14,12 +14,10 @@ private:
 	Font* m_pFont;
 	TextAlignment m_alignment;
 
-	void Init(Window* pWindow);
 	virtual void RenderImpl();
 
 public:
 	Label(Window* pWindow, const SDL_Rect& location);
-	Label(Control* pParent, const SDL_Rect& location);
 
 	Font const* GetFont() const { return m_pFont; }
 	void SetAlignment(TextAlignment alignment);

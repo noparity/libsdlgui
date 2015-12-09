@@ -15,8 +15,6 @@ private:
 	};
 
 	Window* m_pWindow;
-	Control* m_pParent;
-	std::vector<Control*> m_controls;
 	Flags<State> m_flags;
 	SDL_Rect m_loc;
 	SDL_Color m_bColor;
@@ -39,16 +37,12 @@ private:
 	virtual void RenderImpl() = 0;
 
 protected:
-	Control* GetParent() const { return m_pParent; }
 	Window* GetWindow() const { return m_pWindow; }
 	bool HasFocus() const { return (m_flags & State::Focused) == State::Focused; }
 
 public:
 	Control(Window* pWindow, const SDL_Rect& location);
-	Control(Control* pParent, const SDL_Rect& location);
 	virtual ~Control();
-
-	void AddControl(Control* pControl);
 
 	bool CanDrag() const;
 	SDL_Color GetBackgroundColor() const { return m_bColor; }
@@ -69,9 +63,6 @@ public:
 	void NotificationMouseExit();
 	void NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent);
 	void NotificationWindowChanged(Window* pWindow);
-
-	void RemoveAllControls();
-	void RemoveControl(Control* pControl);
 
 	// render the control
 	void Render();

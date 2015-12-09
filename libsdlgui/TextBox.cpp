@@ -3,20 +3,8 @@
 #include "TextBox.hpp"
 
 TextBox::TextBox(Window* pWindow, const SDL_Rect& location) :
-	m_caret(this, SDLRect(TextOffsetX, 8, 1, location.h - 16)), Control(pWindow, location)
+	m_caret(pWindow, SDLRect(location.x + TextOffsetX, location.y + 8, 1, location.h - 16)), Control(pWindow, location), m_pPrevCursor(nullptr)
 {
-	Init();
-}
-
-TextBox::TextBox(Control* pParent, const SDL_Rect& location) :
-	m_caret(this, SDLRect(TextOffsetX, 8, 1, location.h - 16)), Control(pParent, location)
-{
-	Init();
-}
-
-void TextBox::Init()
-{
-	m_pPrevCursor = nullptr;
 	SetBorderColor(SDLColor(128, 128, 128, 0));
 	SetBorderSize(1);
 	// place the caret above the text box

@@ -7,26 +7,26 @@
 TestControl::TestControl(Window* pWindow, const SDL_Rect& location) :
 	Control(pWindow, location)
 {
-	m_label1 = std::make_unique<Label>(this, SDLRect(0, 0, 64, 32));
+	m_label1 = std::make_unique<Label>(pWindow, SDLRect(0, 0, 64, 32));
 	m_label1->SetBorderColor(SDLColor(255, 0, 0, 0));
 	m_label1->SetBorderSize(1);
 
-	m_label2 = std::make_unique<Label>(this, SDLRect(location.w - 64, 0, 64, 32));
+	m_label2 = std::make_unique<Label>(pWindow, SDLRect(location.w - 64, 0, 64, 32));
 	m_label2->SetBorderColor(SDLColor(0, 0, 255, 0));
 	m_label2->SetBorderSize(1);
 	m_label2->SetAlignment(TextAlignment::TopRight);
 
-	m_label3 = std::make_unique<Label>(this, SDLRect((location.w / 2) - 32, ((location.h / 2) - 32), 64, 32));
+	m_label3 = std::make_unique<Label>(pWindow, SDLRect((location.w / 2) - 32, ((location.h / 2) - 32), 64, 32));
 	m_label3->SetBorderColor(SDLColor(0, 255, 255, 0));
 	m_label3->SetBorderSize(1);
 	m_label3->SetAlignment(TextAlignment::MiddleCenter);
 
-	m_label4 = std::make_unique<Label>(this, SDLRect(0, location.h - 64, 64, 32));
+	m_label4 = std::make_unique<Label>(pWindow, SDLRect(0, location.h - 64, 64, 32));
 	m_label4->SetBorderColor(SDLColor(255, 0, 0, 0));
 	m_label4->SetBorderSize(1);
 	m_label4->SetAlignment(TextAlignment::BottomLeft);
 
-	m_label5 = std::make_unique<Label>(this, SDLRect(location.w - 64, location.h - 64, 64, 32));
+	m_label5 = std::make_unique<Label>(pWindow, SDLRect(location.w - 64, location.h - 64, 64, 32));
 	m_label5->SetBorderColor(SDLColor(0, 0, 255, 0));
 	m_label5->SetBorderSize(1);
 	m_label5->SetAlignment(TextAlignment::BottomRight);

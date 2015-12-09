@@ -4,17 +4,6 @@
 Button::Button(Window* pWindow, const SDL_Rect& location) :
 	Label(pWindow, location)
 {
-	Init();
-}
-
-Button::Button(Control* pParent, const SDL_Rect& location) :
-	Label(pParent, location)
-{
-	Init();
-}
-
-void Button::Init()
-{
 	SetDefaultColorScheme();
 	SetAlignment(TextAlignment::MiddleCenter);
 	SetText("button");

@@ -12,7 +12,7 @@ private:
 	virtual void RenderImpl();
 
 public:
-	Caret(Control* pParent, const SDL_Rect& location);
+	Caret(Window* pWindow, const SDL_Rect& location);
 
 	void PauseAnimation();
 	void ResumeAnimation();
