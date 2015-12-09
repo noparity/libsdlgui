@@ -56,9 +56,9 @@ private:
 	// static fields
 	static std::vector<Window*> s_windows;
 
-	void OnMouseButton(SDL_MouseButtonEvent buttonEvent);
-	void OnMouseMotion(SDL_MouseMotionEvent motionEvent);
-	void OnWindowResized(SDL_WindowEvent windowEvent);
+	void OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+	void OnMouseMotion(const SDL_MouseMotionEvent& motionEvent);
+	void OnWindowResized(const SDL_WindowEvent& windowEvent);
 	bool ShouldRender();
 
 	// static functions

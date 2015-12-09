@@ -28,7 +28,7 @@ public:
 	Button(Window* pWindow, const SDL_Rect& location);
 	Button(Control* pParent, const SDL_Rect& location);
 
-	void RegisterForClickCallback(ButtonClickCallback callback);
+	void RegisterForClickCallback(const ButtonClickCallback& callback);
 };
 
 #endif // BUTTON_HPP

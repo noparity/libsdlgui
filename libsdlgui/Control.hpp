@@ -10,9 +10,8 @@ private:
 	enum State
 	{
 		None             = 0,
-		HiddenPending    = 0x1,
-		Hidden           = 0x2,
-		Focused          = 0x4
+		Hidden           = 0x1,
+		Focused          = 0x2
 	};
 
 	Window* m_pWindow;
@@ -34,6 +33,7 @@ private:
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent&);
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();
+	virtual void OnMouseMotion(const SDL_MouseMotionEvent&);
 	virtual void OnWindowChanged(Window*);
 
 	virtual void RenderImpl() = 0;
@@ -67,6 +67,7 @@ public:
 	bool NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	void NotificationMouseEnter();
 	void NotificationMouseExit();
+	void NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent);
 	void NotificationWindowChanged(Window* pWindow);
 
 	void RemoveAllControls();

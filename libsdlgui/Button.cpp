@@ -38,7 +38,6 @@ bool Button::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 	{
 		takeFocus = true;
 		SetBackgroundColor(SDLColor(32, 32, 64, 0));
-		SetBorderColor(SDLColor(64, 64, 128, 0));
 	}
 	else if (buttonEvent.state == SDL_RELEASED && buttonEvent.button == SDL_BUTTON_LEFT)
 	{
@@ -60,7 +59,7 @@ void Button::OnMouseExit()
 	SetDefaultColorScheme();
 }
 
-void Button::RegisterForClickCallback(ButtonClickCallback callback)
+void Button::RegisterForClickCallback(const ButtonClickCallback& callback)
 {
 	m_onClick = callback;
 }

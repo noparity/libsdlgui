@@ -94,6 +94,11 @@ void Control::NotificationMouseExit()
 	OnMouseExit();
 }
 
+void Control::NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent)
+{
+	OnMouseMotion(motionEvent);
+}
+
 void Control::NotificationWindowChanged(Window* pWindow)
 {
 	OnWindowChanged(pWindow);
@@ -134,6 +139,11 @@ void Control::OnMouseExit()
 	// empty
 }
 
+void Control::OnMouseMotion(const SDL_MouseMotionEvent&)
+{
+	// empty
+}
+
 void Control::OnWindowChanged(Window*)
 {
 	// empty
@@ -155,20 +165,11 @@ void Control::Render()
 {
 	if (!GetHidden())
 	{
-		if (m_flags & State::HiddenPending)
-		{
-			// transition from hidden pending to hidden
-			m_flags ^= State::HiddenPending;
-			m_flags |= State::Hidden;
-		}
-		else
-		{
-			RenderImpl();
+		RenderImpl();
 
-			// border drawn last so it overlays the control's content
-			if (m_borderSize > 0)
-				m_pWindow->DrawRectangle(GetLocation(), m_borderColor, m_borderSize);
-		}
+		// border drawn last so it overlays the control's content
+		if (m_borderSize > 0)
+			m_pWindow->DrawRectangle(GetLocation(), m_borderColor, m_borderSize);
 	}
 }
 
@@ -197,9 +198,7 @@ void Control::SetHidden(bool isHidden)
 	bool changed = false;
 	if (isHidden && (m_flags & State::Hidden) != State::Hidden)
 	{
-		// must set hidden pending instead of hidden so
-		// that the control can be rendered hidden.
-		m_flags |= State::HiddenPending;
+		m_flags |= State::Hidden;
 		changed = true;
 	}
 	else if (!isHidden && (m_flags & State::Hidden) == State::Hidden)

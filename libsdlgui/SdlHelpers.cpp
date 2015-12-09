@@ -113,7 +113,7 @@ SDLTexture::SDLTexture(SDL_Texture* pTexture, int width, int height) : m_pTextur
 	assert(m_pTexture != nullptr);
 }
 
-SDLTexture::SDLTexture(SDLTexture&& other)
+SDLTexture::SDLTexture(SDLTexture&& other) : m_pTexture(nullptr), m_width(0), m_height(0)
 {
 	*this = std::move(other);
 }

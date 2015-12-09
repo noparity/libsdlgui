@@ -28,6 +28,8 @@ private:
 public:
 	TextBox(Window* pWindow, const SDL_Rect& location);
 	TextBox(Control* pParent, const SDL_Rect& location);
+
+	std::string GetText() const { return m_text; }
 };
 
 #endif // TEXTBOX_HPP

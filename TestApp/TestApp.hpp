@@ -3,6 +3,7 @@
 
 #include "Button.hpp"
 #include "Dialog.hpp"
+#include "DropdownBox.hpp"
 #include "Label.hpp"
 #include "TextBox.hpp"
 #include "Window.hpp"
@@ -33,6 +34,7 @@ private:
 	std::unique_ptr<Control> m_frame;
 	std::unique_ptr<TextBox> m_textBox;
 	std::unique_ptr<Dialog> m_dialog;
+	std::unique_ptr<DropdownBox> m_dropDown;
 
 	int m_frameNumber;
 

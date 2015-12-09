@@ -98,23 +98,16 @@ void Window::DrawRectangle(const SDL_Rect& location, const SDL_Color& color, uin
 	}
 	else
 	{
-		if (thickness == 1)
+		// create a copy of location so we can modify it
+		auto myLoc = location;
+		for (uint8_t i = 0; i < thickness; ++i)
 		{
-			SDL_RenderDrawRect(m_renderer, &location);
-		}
-		else
-		{
-			// create an array of nested rectangles
-			auto rects = std::make_unique<SDL_Rect[]>(thickness);
-			for (uint8_t i = 0; i < thickness && (i < location.w / 2) && (i < location.h / 2); ++i)
-			{
-				rects[i].x = location.x + i;
-				rects[i].y = location.y + i;
-				rects[i].w = location.w - i * 2;
-				rects[i].h = location.h - i * 2;
-			}
+			myLoc.x = myLoc.x + i;
+			myLoc.y = myLoc.y + i;
+			myLoc.w = myLoc.w - i * 2;
+			myLoc.h = myLoc.h - i * 2;
 
-			SDL_RenderDrawRects(m_renderer, rects.get(), thickness);
+			SDL_RenderDrawRect(m_renderer, &myLoc);
 		}
 	}
 }
@@ -218,7 +211,7 @@ void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextA
 	}
 }
 
-void Window::OnMouseButton(SDL_MouseButtonEvent buttonEvent)
+void Window::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
 	for (size_t i = 0; i < m_controls.size(); ++i)
 	{
@@ -249,7 +242,7 @@ void Window::OnMouseButton(SDL_MouseButtonEvent buttonEvent)
 	}
 }
 
-void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
+void Window::OnMouseMotion(const SDL_MouseMotionEvent& motionEvent)
 {
 	if (GetCursorHidden())
 	{
@@ -287,6 +280,7 @@ void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
 				m_pCtrlUnderMouse->NotificationMouseEnter();
 			}
 
+			m_pCtrlUnderMouse->NotificationMouseMotion(motionEvent);
 			isOverControl = true;
 
 			// mouse can't be over more than one control so exit
@@ -303,7 +297,7 @@ void Window::OnMouseMotion(SDL_MouseMotionEvent motionEvent)
 	}
 }
 
-void Window::OnWindowResized(SDL_WindowEvent windowEvent)
+void Window::OnWindowResized(const SDL_WindowEvent& windowEvent)
 {
 	// resizing the window creates a new rendering context
 	// which requires the rendering surface to be cleared.

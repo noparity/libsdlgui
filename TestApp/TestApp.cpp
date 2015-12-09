@@ -90,6 +90,11 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
 	});
 
 	m_textBox = std::make_unique<TextBox>(this, SDLRect(32, 128, 128, 32));
+	m_dropDown = std::make_unique<DropdownBox>(this, SDLRect(256, 128, 128, 32));
+
+	m_dropDown->AddItem("One");
+	m_dropDown->AddItem("Two");
+	m_dropDown->AddItem("Three");
 
 	FrameOne();
 }
