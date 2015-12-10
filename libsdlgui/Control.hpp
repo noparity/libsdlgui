@@ -11,7 +11,8 @@ private:
 	{
 		None             = 0,
 		Hidden           = 0x1,
-		Focused          = 0x2
+		Focused          = 0x2,
+		MouseDown        = 0x4
 	};
 
 	Window* m_pWindow;
@@ -25,13 +26,16 @@ private:
 
 	virtual bool CanDragImpl() const;
 	virtual void OnElapsedTime();
-	virtual void OnSdlEvent(const SDL_Event&);
 	virtual void OnFocusAcquired();
 	virtual void OnFocusLost();
+	virtual void OnLeftClick();
+	virtual void OnMiddleClick();
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent&);
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();
 	virtual void OnMouseMotion(const SDL_MouseMotionEvent&);
+	virtual void OnRightClick();
+	virtual void OnSdlEvent(const SDL_Event&);
 	virtual void OnWindowChanged(Window*);
 
 	virtual void RenderImpl() = 0;
@@ -39,6 +43,7 @@ private:
 protected:
 	Window* GetWindow() const { return m_pWindow; }
 	bool HasFocus() const { return (m_flags & State::Focused) == State::Focused; }
+	bool LeftMouseButtonDown(const SDL_MouseButtonEvent& buttonEvent);
 
 public:
 	Control(Window* pWindow, const SDL_Rect& location);

@@ -1,11 +1,9 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 
-#include "Label.hpp"
+#include "Control.hpp"
 
-// TODO: probably shouldn't subclass from label
-
-class Button : public Label
+class Button : public Control
 {
 public:
 	using ButtonClickCallback = std::function<void()>;
@@ -15,9 +13,11 @@ private:
 
 	virtual void OnFocusAcquired();
 	virtual void OnFocusLost();
+	virtual void OnLeftClick();
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();
+	virtual void RenderImpl();
 
 	void SetDefaultColorScheme();
 	void SetMouseOverColorScheme();

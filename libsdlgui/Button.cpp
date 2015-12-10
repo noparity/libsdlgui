@@ -2,11 +2,9 @@
 #include "Button.hpp"
 
 Button::Button(Window* pWindow, const SDL_Rect& location) :
-	Label(pWindow, location)
+	Control(pWindow, location)
 {
 	SetDefaultColorScheme();
-	SetAlignment(TextAlignment::MiddleCenter);
-	SetText("button");
 }
 
 void Button::OnFocusAcquired()
@@ -20,22 +18,20 @@ void Button::OnFocusLost()
 	SetBorderColor(SDLColor(128, 128, 128, 0));
 }
 
+void Button::OnLeftClick()
+{
+	SetMouseOverColorScheme();
+	if (m_onClick != nullptr)
+		m_onClick();
+}
+
 bool Button::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
-	bool takeFocus = false;
-	if (buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT)
-	{
-		takeFocus = true;
+	auto result = LeftMouseButtonDown(buttonEvent);
+	if (result)
 		SetBackgroundColor(SDLColor(32, 32, 64, 0));
-	}
-	else if (buttonEvent.state == SDL_RELEASED && buttonEvent.button == SDL_BUTTON_LEFT)
-	{
-		SetMouseOverColorScheme();
-		if (m_onClick != nullptr)
-			m_onClick();
-	}
 
-	return takeFocus;
+	return result;
 }
 
 void Button::OnMouseEnter()
@@ -46,6 +42,11 @@ void Button::OnMouseEnter()
 void Button::OnMouseExit()
 {
 	SetDefaultColorScheme();
+}
+
+void Button::RenderImpl()
+{
+	GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
 }
 
 void Button::RegisterForClickCallback(const ButtonClickCallback& callback)

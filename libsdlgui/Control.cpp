@@ -30,6 +30,12 @@ bool Control::CanDragImpl() const
 	return false;
 }
 
+bool Control::LeftMouseButtonDown(const SDL_MouseButtonEvent& buttonEvent)
+{
+	// if the left mouse button was pressed return true
+	return buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT;
+}
+
 void Control::NotificationElapsedTime()
 {
 	OnElapsedTime();
@@ -54,7 +60,26 @@ void Control::NotificationFocusLost()
 
 bool Control::NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
-	return OnMouseButton(buttonEvent);
+	// raise the mouse button event before the click event
+	auto result = OnMouseButton(buttonEvent);
+
+	if (buttonEvent.state == SDL_PRESSED)
+	{
+		m_flags |= State::MouseDown;
+	}
+	else if (m_flags & State::MouseDown && buttonEvent.state == SDL_RELEASED)
+	{
+		if (buttonEvent.button == SDL_BUTTON_LEFT)
+			OnLeftClick();
+		else if (buttonEvent.button == SDL_BUTTON_RIGHT)
+			OnRightClick();
+		else if (buttonEvent.button == SDL_BUTTON_MIDDLE)
+			OnMiddleClick();
+
+		m_flags ^= State::MouseDown;
+	}
+
+	return result;
 }
 
 void Control::NotificationMouseEnter()
@@ -64,6 +89,17 @@ void Control::NotificationMouseEnter()
 
 void Control::NotificationMouseExit()
 {
+	// if the mouse leaves the control while a button is down
+	// clear the button down flag.  this prevents clicks from
+	// being triggered in the following scenario
+	// 
+	// button A has the mouse button down then the mouse is moved out
+	// mouse is pressed down someplace else then moved back over button A
+	// mouse button is released over button A
+	//
+	// this behavior is slightly different from desktop window managers
+	// but IMO is a reasonable compromise.
+	m_flags ^= State::MouseDown;
 	OnMouseExit();
 }
 
@@ -82,17 +118,22 @@ void Control::OnElapsedTime()
 	// empty
 }
 
-void Control::OnSdlEvent(const SDL_Event&)
-{
-	// empty
-}
-
 void Control::OnFocusAcquired()
 {
 	// empty
 }
 
 void Control::OnFocusLost()
+{
+	// empty
+}
+
+void Control::OnLeftClick()
+{
+	// empty
+}
+
+void Control::OnMiddleClick()
 {
 	// empty
 }
@@ -113,6 +154,16 @@ void Control::OnMouseExit()
 }
 
 void Control::OnMouseMotion(const SDL_MouseMotionEvent&)
+{
+	// empty
+}
+
+void Control::OnRightClick()
+{
+	// empty
+}
+
+void Control::OnSdlEvent(const SDL_Event&)
 {
 	// empty
 }
