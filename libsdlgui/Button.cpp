@@ -18,7 +18,7 @@ void Button::OnFocusLost()
 	SetBorderColor(SDLColor(128, 128, 128, 0));
 }
 
-void Button::OnLeftClick()
+void Button::OnLeftClick(const SDL_Point&)
 {
 	SetMouseOverColorScheme();
 	if (m_onClick != nullptr)

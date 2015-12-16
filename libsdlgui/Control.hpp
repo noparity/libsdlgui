@@ -28,13 +28,14 @@ private:
 	virtual void OnElapsedTime();
 	virtual void OnFocusAcquired();
 	virtual void OnFocusLost();
-	virtual void OnLeftClick();
-	virtual void OnMiddleClick();
+	virtual void OnHiddenChanged(bool);
+	virtual void OnLeftClick(const SDL_Point&);
+	virtual void OnMiddleClick(const SDL_Point&);
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent&);
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();
 	virtual void OnMouseMotion(const SDL_MouseMotionEvent&);
-	virtual void OnRightClick();
+	virtual void OnRightClick(const SDL_Point&);
 	virtual void OnSdlEvent(const SDL_Event&);
 	virtual void OnWindowChanged(Window*);
 

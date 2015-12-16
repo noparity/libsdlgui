@@ -76,6 +76,9 @@ auto labelPtr = m_panel.get();
 TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
 	m_frameNumber(0), Window(title, dimentions, windowFlags)
 {
+	m_label1 = std::make_unique<Label>(this, SDLRect(420, 128, 150, 32));
+	m_label1->SetText("Nothing selected");
+	m_label1->SetAlignment(TextAlignment::MiddleCenter);
 	m_dialog = std::make_unique<Dialog>(this, "Test Dialog", SDLRect(48, 34, 640, 480));
 	m_button1 = std::make_unique<Button>(this, SDLRect(32, 32, 64, 32));
 	m_button1->RegisterForClickCallback([this]()
@@ -95,6 +98,10 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
 	m_dropDown->AddItem("One");
 	m_dropDown->AddItem("Two");
 	m_dropDown->AddItem("Three");
+	m_dropDown->RegisterForSelectionChangedCallback([this](const std::string& item)
+	{
+		m_label1->SetText(std::string("Selected ") + item);
+	});
 
 	FrameOne();
 }

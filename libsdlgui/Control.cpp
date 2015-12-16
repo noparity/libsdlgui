@@ -69,12 +69,13 @@ bool Control::NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 	}
 	else if (m_flags & State::MouseDown && buttonEvent.state == SDL_RELEASED)
 	{
+		auto clickLoc = SDLPoint(buttonEvent.x, buttonEvent.y);
 		if (buttonEvent.button == SDL_BUTTON_LEFT)
-			OnLeftClick();
+			OnLeftClick(clickLoc);
 		else if (buttonEvent.button == SDL_BUTTON_RIGHT)
-			OnRightClick();
+			OnRightClick(clickLoc);
 		else if (buttonEvent.button == SDL_BUTTON_MIDDLE)
-			OnMiddleClick();
+			OnMiddleClick(clickLoc);
 
 		m_flags ^= State::MouseDown;
 	}
@@ -128,12 +129,17 @@ void Control::OnFocusLost()
 	// empty
 }
 
-void Control::OnLeftClick()
+void Control::OnHiddenChanged(bool)
 {
 	// empty
 }
 
-void Control::OnMiddleClick()
+void Control::OnLeftClick(const SDL_Point&)
+{
+	// empty
+}
+
+void Control::OnMiddleClick(const SDL_Point&)
 {
 	// empty
 }
@@ -158,7 +164,7 @@ void Control::OnMouseMotion(const SDL_MouseMotionEvent&)
 	// empty
 }
 
-void Control::OnRightClick()
+void Control::OnRightClick(const SDL_Point&)
 {
 	// empty
 }
@@ -207,16 +213,15 @@ void Control::SetForegroundColor(const SDL_Color& color)
 
 void Control::SetHidden(bool isHidden)
 {
-	bool changed = false;
 	if (isHidden && (m_flags & State::Hidden) != State::Hidden)
 	{
 		m_flags |= State::Hidden;
-		changed = true;
+		OnHiddenChanged(true);
 	}
 	else if (!isHidden && (m_flags & State::Hidden) == State::Hidden)
 	{
 		m_flags ^= State::Hidden;
-		changed = true;
+		OnHiddenChanged(false);
 	}
 }
 

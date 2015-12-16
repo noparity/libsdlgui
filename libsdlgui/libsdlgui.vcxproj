@@ -144,10 +144,12 @@
     <ClInclude Include="Control.hpp" />
     <ClInclude Include="CursorManager.hpp" />
     <ClInclude Include="Dialog.hpp" />
+    <ClInclude Include="DropdownBox.hpp" />
     <ClInclude Include="Exceptions.hpp" />
     <ClInclude Include="Flags.hpp" />
     <ClInclude Include="Font.hpp" />
     <ClInclude Include="Helpers.hpp" />
+    <ClInclude Include="ListBox.hpp" />
     <ClInclude Include="SdlHelpers.hpp" />
     <ClInclude Include="Label.hpp" />
     <ClInclude Include="Singleton.hpp" />
@@ -164,8 +166,10 @@
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="CursorManager.cpp" />
     <ClCompile Include="Dialog.cpp" />
+    <ClCompile Include="DropdownBox.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="ListBox.cpp" />
     <ClCompile Include="SdlHelpers.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="stdafx.cpp">

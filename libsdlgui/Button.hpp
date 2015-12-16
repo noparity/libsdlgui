@@ -13,7 +13,7 @@ private:
 
 	virtual void OnFocusAcquired();
 	virtual void OnFocusLost();
-	virtual void OnLeftClick();
+	virtual void OnLeftClick(const SDL_Point&);
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();
