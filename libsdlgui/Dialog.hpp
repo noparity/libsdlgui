@@ -19,6 +19,7 @@ private:
 	SDL_Rect GetTitleBarLoc() const;
 
 	virtual bool CanDragImpl() const;
+	virtual void OnLeftClick(const SDL_Point& clickLoc);
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	virtual void RenderImpl();
 

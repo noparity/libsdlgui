@@ -36,6 +36,12 @@ SDL_Rect Dialog::GetTitleBarLoc() const
 	return titleBarLoc;
 }
 
+void Dialog::OnLeftClick(const SDL_Point& clickLoc)
+{
+	if (SDLPointInRect(clickLoc, GetCloseButtonLoc()))
+		SetHidden(true);
+}
+
 bool Dialog::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
 	bool takeFocus = false;
@@ -51,12 +57,6 @@ bool Dialog::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 	}
 	else if (buttonEvent.state == SDL_RELEASED)
 	{
-		if (buttonEvent.button == SDL_BUTTON_LEFT)
-		{
-			if (SDLPointInRect(clickLoc, closeLoc))
-				SetHidden(true);
-		}
-
 		m_canDrag = false;
 	}
 
