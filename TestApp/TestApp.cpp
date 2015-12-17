@@ -103,6 +103,9 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
 		m_label1->SetText(std::string("Selected ") + item);
 	});
 
+	m_checkBox1 = std::make_unique<CheckBox>(this, SDLRect(32, 178, 128, 32));
+	m_checkBox1->Text()->SetText("Check me!");
+
 	FrameOne();
 }
 

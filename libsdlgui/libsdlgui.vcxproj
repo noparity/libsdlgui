@@ -141,6 +141,7 @@
     <ClInclude Include="Anchor.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="Caret.hpp" />
+    <ClInclude Include="CheckBox.hpp" />
     <ClInclude Include="Control.hpp" />
     <ClInclude Include="CursorManager.hpp" />
     <ClInclude Include="Dialog.hpp" />
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Caret.cpp" />
+    <ClCompile Include="CheckBox.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="CursorManager.cpp" />
     <ClCompile Include="Dialog.cpp" />

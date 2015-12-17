@@ -2,6 +2,7 @@
 #define TESTAPP_HPP
 
 #include "Button.hpp"
+#include "CheckBox.hpp"
 #include "Dialog.hpp"
 #include "DropdownBox.hpp"
 #include "Label.hpp"
@@ -35,6 +36,7 @@ private:
 	std::unique_ptr<TextBox> m_textBox;
 	std::unique_ptr<Dialog> m_dialog;
 	std::unique_ptr<DropdownBox> m_dropDown;
+	std::unique_ptr<CheckBox> m_checkBox1;
 
 	int m_frameNumber;
 
