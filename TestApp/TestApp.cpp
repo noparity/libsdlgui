@@ -165,8 +165,15 @@ int main(int argc, char* argv[])
 
 	TestWindow win("Test App", Dimentions(1024, 768), static_cast<SDL_WindowFlags>(SDL_WINDOW_RESIZABLE));
 
-	while (Window::ActiveWindows())
-		Window::DispatchEvents();
+	bool quit = false;
+	while (!quit)
+	{
+		SDL_Event event;
+		if (SDL_PollEvent(&event))
+			quit = win.TranslateEvent(event);
+
+		win.Render();
+	}
 
 	return 0;
 }

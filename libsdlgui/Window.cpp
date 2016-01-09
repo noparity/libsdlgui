@@ -7,8 +7,6 @@
 #include <algorithm>
 #include <memory>
 
-std::vector<Window*> Window::s_windows;
-
 Window::Window(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
 	m_flags(State::None), m_dims(dimentions), m_pCtrlWithFocus(nullptr), m_pCtrlUnderMouse(nullptr), m_subSystem(SDLSubSystem::Video), m_pFont(nullptr)
 {
@@ -25,8 +23,6 @@ Window::Window(const std::string& title, const Dimentions& dimentions, SDL_Windo
 
 	if ((windowFlags & SDL_WINDOW_MINIMIZED) == SDL_WINDOW_MINIMIZED)
 		m_flags |= State::Minimized;
-	else if ((windowFlags & SDL_WINDOW_HIDDEN) == SDL_WINDOW_HIDDEN)
-		m_flags |= State::Closed;
 
 	// set default colors
 	m_bColor = SDLColor(0, 0, 0, 0);
@@ -40,13 +36,10 @@ Window::Window(const std::string& title, const Dimentions& dimentions, SDL_Windo
 
 	SDL_StopTextInput();
 	m_pFont = FontManager::GetInstance()->GetOrLoadFont("consola", 16);
-
-	RegisterWindow(this);
 }
 
 Window::~Window()
 {
-	UnregisterWindow(this);
 	CursorManager::Destroy();
 	FontManager::Destroy();
 	SDL_DestroyRenderer(m_renderer);
@@ -461,12 +454,13 @@ void Window::Show()
 
 bool Window::ShouldRender()
 {
-	return ((m_flags & State::Minimized) != State::Minimized) &&
-		((m_flags & State::Closed) != State::Closed);
+	return ((m_flags & State::Minimized) != State::Minimized);
 }
 
-void Window::TranslateEvent(const SDL_Event& sdlEvent)
+bool Window::TranslateEvent(const SDL_Event& sdlEvent)
 {
+	bool quit = false;
+
 	switch (sdlEvent.type)
 	{
 	case SDL_MOUSEBUTTONDOWN:
@@ -479,10 +473,6 @@ void Window::TranslateEvent(const SDL_Event& sdlEvent)
 	case SDL_WINDOWEVENT:
 		switch (sdlEvent.window.event)
 		{
-		case SDL_WINDOWEVENT_CLOSE:
-			m_flags |= State::Closed;
-			SDL_HideWindow(m_window);
-			break;
 		case SDL_WINDOWEVENT_MINIMIZED:
 			m_flags |= State::Minimized;
 			break;
@@ -490,22 +480,21 @@ void Window::TranslateEvent(const SDL_Event& sdlEvent)
 		case SDL_WINDOWEVENT_RESTORED:
 			m_flags ^= State::Minimized;
 			break;
-		case SDL_WINDOWEVENT_SHOWN:
-			m_flags ^= State::Closed;
-			break;
 		case SDL_WINDOWEVENT_SIZE_CHANGED:
 			OnWindowResized(sdlEvent.window);
 			break;
 		}
 		break;
 	case SDL_QUIT:
-		m_flags |= State::Closed;
+		quit = true;
 		break;
 	default:
 		if (m_pCtrlWithFocus != nullptr && !m_pCtrlWithFocus->GetHidden())
 			m_pCtrlWithFocus->NotificationEvent(sdlEvent);
 		break;
 	}
+
+	return quit;
 }
 
 void Window::UnregisterForElapsedTimeNotification(Control* pControl)
@@ -518,51 +507,4 @@ void Window::UnregisterForElapsedTimeNotification(Control* pControl)
 			break;
 		}
 	}
-}
-
-// static functions
-
-// returns true if at least one window is active
-bool Window::ActiveWindows()
-{
-	bool found = false;
-	for (const auto window : s_windows)
-	{
-		if (window->IsActive())
-		{
-			found = true;
-			window->Render();
-		}
-	}
-	return found;
-}
-
-void Window::DispatchEvents()
-{
-	SDL_Event sdlEvent;
-	if (SDL_PollEvent(&sdlEvent))
-	{
-		if (sdlEvent.window.windowID > 0)
-			s_windows[sdlEvent.window.windowID - 1]->TranslateEvent(sdlEvent);
-	}
-}
-
-void Window::RegisterWindow(Window* window)
-{
-	// window IDs are one-based, convert to zero-base to use as the index
-	auto windowIndex = window->GetId() - 1;
-	if (windowIndex >= s_windows.size())
-	{
-		s_windows.push_back(window);
-	}
-	else
-	{
-		assert(s_windows[windowIndex] == nullptr);
-		s_windows[windowIndex] = window;
-	}
-}
-
-void Window::UnregisterWindow(Window* window)
-{
-	s_windows[window->GetId() - 1] = nullptr;
 }

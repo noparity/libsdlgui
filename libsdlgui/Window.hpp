@@ -34,8 +34,7 @@ private:
 	{
 		None           = 0,
 		Minimized      = 0x1,
-		CursorHidden   = 0x2,
-		Closed         = 0x4
+		CursorHidden   = 0x2
 	};
 
 	uint32_t m_id;
@@ -53,23 +52,15 @@ private:
 	std::vector<ControlElapsedTime> m_ctrlsElapsedTime;
 	boost::dynamic_bitset<> m_occlusionMap;
 
-	// static fields
-	static std::vector<Window*> s_windows;
-
 	void OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	void OnMouseMotion(const SDL_MouseMotionEvent& motionEvent);
 	void OnWindowResized(const SDL_WindowEvent& windowEvent);
 	bool ShouldRender();
 
-	// static functions
-	static void RegisterWindow(Window* window);
-	static void UnregisterWindow(Window* window);
-
 protected:
 	bool GetCursorHidden() const { return (m_flags & State::CursorHidden) == State::CursorHidden; }
 	SDL_Window* GetWindow() const { return m_window; }
 	void Show();
-	virtual void TranslateEvent(const SDL_Event& sdlEvent);
 
 public:
 	Window(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags);
@@ -85,7 +76,6 @@ public:
 	Font* GetFont() const { return m_pFont; }
 	SDL_Color GetForegroundColor() const { return m_fColor; }
 	uint32_t GetId() const { return m_id; }
-	bool IsActive() const { return (m_flags & State::Closed) != State::Closed; }
 	void RemoveAllControls();
 	void RemoveControl(Control* pControl);
 	void Render();
@@ -97,12 +87,8 @@ public:
 	void SetDefaultFont(Font* pFont) { m_pFont = pFont; }
 	void SetDefaultForegroundColor(const SDL_Color& color) { m_fColor = color; }
 
+	bool TranslateEvent(const SDL_Event& sdlEvent);
 	void UnregisterForElapsedTimeNotification(Control* pControl);
-
-	// static functions
-
-	static bool ActiveWindows();
-	static void DispatchEvents();
 };
 
 #endif // WINDOW_HPP
