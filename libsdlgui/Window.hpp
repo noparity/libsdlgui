@@ -52,8 +52,10 @@ private:
 	std::vector<ControlElapsedTime> m_ctrlsElapsedTime;
 	boost::dynamic_bitset<> m_occlusionMap;
 
+	void OnKeyboard(const SDL_KeyboardEvent& keyboardEvent);
 	void OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	void OnMouseMotion(const SDL_MouseMotionEvent& motionEvent);
+	void OnTextInput(const SDL_TextInputEvent& textEvent);
 	void OnWindowResized(const SDL_WindowEvent& windowEvent);
 	bool ShouldRender();
 

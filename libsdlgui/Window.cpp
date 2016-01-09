@@ -204,6 +204,12 @@ void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextA
 	}
 }
 
+void Window::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
+{
+	if (m_pCtrlWithFocus != nullptr)
+		m_pCtrlWithFocus->NotificationKeyboard(keyboardEvent);
+}
+
 void Window::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
 	for (size_t i = 0; i < m_controls.size(); ++i)
@@ -288,6 +294,13 @@ void Window::OnMouseMotion(const SDL_MouseMotionEvent& motionEvent)
 		m_pCtrlUnderMouse->NotificationMouseExit();
 		m_pCtrlUnderMouse = nullptr;
 	}
+}
+
+void Window::OnTextInput(const SDL_TextInputEvent& textEvent)
+{
+	// should have a control with focus (e.g. a text box)
+	assert(m_pCtrlWithFocus != nullptr);
+	m_pCtrlWithFocus->NotificationTextInput(textEvent);
 }
 
 void Window::OnWindowResized(const SDL_WindowEvent& windowEvent)
@@ -463,12 +476,19 @@ bool Window::TranslateEvent(const SDL_Event& sdlEvent)
 
 	switch (sdlEvent.type)
 	{
+	case SDL_KEYDOWN:
+	case SDL_KEYUP:
+		OnKeyboard(sdlEvent.key);
+		break;
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
 		OnMouseButton(sdlEvent.button);
 		break;
 	case SDL_MOUSEMOTION:
 		OnMouseMotion(sdlEvent.motion);
+		break;
+	case SDL_TEXTINPUT:
+		OnTextInput(sdlEvent.text);
 		break;
 	case SDL_WINDOWEVENT:
 		switch (sdlEvent.window.event)
@@ -487,10 +507,6 @@ bool Window::TranslateEvent(const SDL_Event& sdlEvent)
 		break;
 	case SDL_QUIT:
 		quit = true;
-		break;
-	default:
-		if (m_pCtrlWithFocus != nullptr && !m_pCtrlWithFocus->GetHidden())
-			m_pCtrlWithFocus->NotificationEvent(sdlEvent);
 		break;
 	}
 

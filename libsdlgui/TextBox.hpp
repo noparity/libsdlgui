@@ -17,10 +17,11 @@ private:
 
 	virtual void OnFocusAcquired();
 	virtual void OnFocusLost();
+	virtual void OnKeyboard(const SDL_KeyboardEvent& keyboardEvent);
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();
-	virtual void OnSdlEvent(const SDL_Event& event);
+	virtual void OnTextInput(const SDL_TextInputEvent& textEvent);
 	virtual void RenderImpl();
 
 public:

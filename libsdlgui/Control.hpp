@@ -29,6 +29,7 @@ private:
 	virtual void OnFocusAcquired();
 	virtual void OnFocusLost();
 	virtual void OnHiddenChanged(bool);
+	virtual void OnKeyboard(const SDL_KeyboardEvent&);
 	virtual void OnLeftClick(const SDL_Point&);
 	virtual void OnMiddleClick(const SDL_Point&);
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent&);
@@ -36,7 +37,7 @@ private:
 	virtual void OnMouseExit();
 	virtual void OnMouseMotion(const SDL_MouseMotionEvent&);
 	virtual void OnRightClick(const SDL_Point&);
-	virtual void OnSdlEvent(const SDL_Event&);
+	virtual void OnTextInput(const SDL_TextInputEvent&);
 	virtual void OnWindowChanged(Window*);
 
 	virtual void RenderImpl() = 0;
@@ -61,13 +62,14 @@ public:
 	uint8_t GetZOrder() const { return m_zOrder; }
 
 	void NotificationElapsedTime();
-	void NotificationEvent(const SDL_Event& event);
 	void NotificationFocusAcquired();
 	void NotificationFocusLost();
+	void NotificationKeyboard(const SDL_KeyboardEvent& keyboardEvent);
 	bool NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	void NotificationMouseEnter();
 	void NotificationMouseExit();
 	void NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent);
+	void NotificationTextInput(const SDL_TextInputEvent& textEvent);
 	void NotificationWindowChanged(Window* pWindow);
 
 	// render the control

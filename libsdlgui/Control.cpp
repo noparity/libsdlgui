@@ -41,11 +41,6 @@ void Control::NotificationElapsedTime()
 	OnElapsedTime();
 }
 
-void Control::NotificationEvent(const SDL_Event& event)
-{
-	OnSdlEvent(event);
-}
-
 void Control::NotificationFocusAcquired()
 {
 	m_flags |= State::Focused;
@@ -56,6 +51,11 @@ void Control::NotificationFocusLost()
 {
 	m_flags ^= State::Focused;
 	OnFocusLost();
+}
+
+void Control::NotificationKeyboard(const SDL_KeyboardEvent& keyboardEvent)
+{
+	OnKeyboard(keyboardEvent);
 }
 
 bool Control::NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent)
@@ -109,6 +109,11 @@ void Control::NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent)
 	OnMouseMotion(motionEvent);
 }
 
+void Control::NotificationTextInput(const SDL_TextInputEvent& textEvent)
+{
+	OnTextInput(textEvent);
+}
+
 void Control::NotificationWindowChanged(Window* pWindow)
 {
 	OnWindowChanged(pWindow);
@@ -130,6 +135,11 @@ void Control::OnFocusLost()
 }
 
 void Control::OnHiddenChanged(bool)
+{
+	// empty
+}
+
+void Control::OnKeyboard(const SDL_KeyboardEvent&)
 {
 	// empty
 }
@@ -169,7 +179,7 @@ void Control::OnRightClick(const SDL_Point&)
 	// empty
 }
 
-void Control::OnSdlEvent(const SDL_Event&)
+void Control::OnTextInput(const SDL_TextInputEvent&)
 {
 	// empty
 }

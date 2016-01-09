@@ -27,6 +27,24 @@ void TextBox::OnFocusLost()
 	SDL_StopTextInput();
 }
 
+void TextBox::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
+{
+	if (keyboardEvent.state == SDL_PRESSED)
+	{
+		m_caret.PauseAnimation();
+
+		if (keyboardEvent.keysym.sym == SDLK_BACKSPACE && m_text.length() > 0)
+		{
+			m_text.pop_back();
+			m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+		}
+	}
+	else if (keyboardEvent.state == SDL_RELEASED)
+	{
+		m_caret.ResumeAnimation();
+	}
+}
+
 bool TextBox::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
 	bool takeFocus = false;
@@ -54,29 +72,11 @@ void TextBox::OnMouseExit()
 	m_pPrevCursor = nullptr;
 }
 
-void TextBox::OnSdlEvent(const SDL_Event& event)
+void TextBox::OnTextInput(const SDL_TextInputEvent& textEvent)
 {
-	bool createNewTexture = false;
-	if (event.type == SDL_TEXTINPUT)
-	{
-		GetWindow()->SetCursorHidden(true);
-		m_caret.PauseAnimation();
-		m_text.append(event.text.text);
-		createNewTexture = true;
-	}
-	else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && m_text.length() > 0)
-	{
-		m_caret.PauseAnimation();
-		m_text.pop_back();
-		createNewTexture = true;
-	}
-	else if (event.type == SDL_KEYUP)
-	{
-		m_caret.ResumeAnimation();
-	}
-
-	if (createNewTexture)
-		m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+	GetWindow()->SetCursorHidden(true);
+	m_text.append(textEvent.text);
+	m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
 }
 
 void TextBox::RenderImpl()
