@@ -17,6 +17,11 @@ void CheckBox::OnLeftClick(const SDL_Point&)
 		m_callback(m_checked);
 }
 
+bool CheckBox::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
+{
+	return LeftMouseButtonDown(buttonEvent);
+}
+
 void CheckBox::RegisterForCheckedChangedCallback(const CheckedChangedCallback& callback)
 {
 	m_callback = callback;

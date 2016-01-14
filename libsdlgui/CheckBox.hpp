@@ -16,6 +16,7 @@ private:
 	bool m_checked;
 
 	virtual void OnLeftClick(const SDL_Point&);
+	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
 	virtual void RenderImpl();
 
 public:
