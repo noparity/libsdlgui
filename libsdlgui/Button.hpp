@@ -3,6 +3,7 @@
 
 #include "Control.hpp"
 
+// represents a button control
 class Button : public Control
 {
 public:
@@ -25,6 +26,7 @@ private:
 public:
 	Button(Window* pWindow, const SDL_Rect& location);
 
+	// registers a callback to be invoked when the button is clicked
 	void RegisterForClickCallback(const ButtonClickCallback& callback);
 };
 

@@ -8,6 +8,7 @@
 #include <SDL_video.h>
 #include "Window.hpp"
 
+// represents a dialog control
 class Dialog : public Control
 {
 private:

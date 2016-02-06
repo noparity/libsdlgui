@@ -114,9 +114,9 @@ void Control::NotificationTextInput(const SDL_TextInputEvent& textEvent)
 	OnTextInput(textEvent);
 }
 
-void Control::NotificationWindowChanged(Window* pWindow)
+void Control::NotificationWindowChanged()
 {
-	OnWindowChanged(pWindow);
+	OnWindowChanged();
 }
 
 void Control::OnElapsedTime()
@@ -156,6 +156,7 @@ void Control::OnMiddleClick(const SDL_Point&)
 
 bool Control::OnMouseButton(const SDL_MouseButtonEvent&)
 {
+	// don't acquire focus by default
 	return false;
 }
 
@@ -184,7 +185,7 @@ void Control::OnTextInput(const SDL_TextInputEvent&)
 	// empty
 }
 
-void Control::OnWindowChanged(Window*)
+void Control::OnWindowChanged()
 {
 	// empty
 }

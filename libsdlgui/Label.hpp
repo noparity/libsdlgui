@@ -19,9 +19,13 @@ private:
 public:
 	Label(Window* pWindow, const SDL_Rect& location);
 
-	Font const* GetFont() const { return m_pFont; }
+	// sets the text alignment for the label
 	void SetAlignment(TextAlignment alignment);
+
+	// sets the font to use for the text
 	void SetFont(Font* pFont);
+
+	// sets the text to display
 	void SetText(const std::string& text);
 };
 

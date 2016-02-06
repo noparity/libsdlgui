@@ -4,6 +4,7 @@
 #include "Flags.hpp"
 #include "Window.hpp"
 
+// base class from which all controls must derive
 class Control
 {
 private:
@@ -24,6 +25,8 @@ private:
 	uint8_t m_borderSize;
 	uint8_t m_zOrder;
 
+	// extensibility points for derived classes (template method pattern)
+
 	virtual bool CanDragImpl() const;
 	virtual void OnElapsedTime();
 	virtual void OnFocusAcquired();
@@ -38,49 +41,95 @@ private:
 	virtual void OnMouseMotion(const SDL_MouseMotionEvent&);
 	virtual void OnRightClick(const SDL_Point&);
 	virtual void OnTextInput(const SDL_TextInputEvent&);
-	virtual void OnWindowChanged(Window*);
+	virtual void OnWindowChanged();
 
 	virtual void RenderImpl() = 0;
 
 protected:
+	// returns the window that owns the control
 	Window* GetWindow() const { return m_pWindow; }
+
+	// returns true if the control has focus
 	bool HasFocus() const { return (m_flags & State::Focused) == State::Focused; }
+
+	// returns true if the left mouse button was pressed on the control
 	bool LeftMouseButtonDown(const SDL_MouseButtonEvent& buttonEvent);
 
 public:
 	Control(Window* pWindow, const SDL_Rect& location);
 	virtual ~Control();
 
+	// returns true if the control can be dragged
 	bool CanDrag() const;
+
+	// gets the background color for the control
 	SDL_Color GetBackgroundColor() const { return m_bColor; }
-	uint8_t GetBorderSize() const { return m_borderSize; }
+
+	// gets the foreground color for the control
 	SDL_Color GetForegroundColor() const { return m_fColor; }
+
+	// returns true if the control is hidden and thus should not be rendered
 	bool GetHidden() const { return (m_flags & State::Hidden) == State::Hidden; }
 
-	// gets the location of the control with respect to its parent
+	// gets the location of the control
 	SDL_Rect GetLocation() const { return m_loc; }
+
+	// gets the Z-order of the control.  controls are rendered in ascending Z-order
 	uint8_t GetZOrder() const { return m_zOrder; }
 
+	// notifies the control that its timer has elapsed
 	void NotificationElapsedTime();
+
+	// notifies the control that it has acquired focus
 	void NotificationFocusAcquired();
+
+	// notifies the control that it has lost focus
 	void NotificationFocusLost();
+
+	// sends keyboard event data to the control
 	void NotificationKeyboard(const SDL_KeyboardEvent& keyboardEvent);
+
+	// sends mouse button event data to the control (e.g. was clicked).  if
+	// the function returns true it means the control should acquire focus.
 	bool NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+
+	// notifies the control that the mouse has entered its bounding area
 	void NotificationMouseEnter();
+
+	// notifies the control that the mouse has left its bounding area
 	void NotificationMouseExit();
+
+	// sends mouse motion event data to the control (e.g. mouse is moving within the control)
 	void NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent);
+
+	// sends text input events to the control (e.g. typing in a text box)
 	void NotificationTextInput(const SDL_TextInputEvent& textEvent);
-	void NotificationWindowChanged(Window* pWindow);
+
+	// notifies the control that its owning window has changed (e.g. was resized)
+	void NotificationWindowChanged();
 
 	// render the control
 	void Render();
+
+	// sets the control's background color
 	void SetBackgroundColor(const SDL_Color& color);
+
+	// sets the control's border color
 	void SetBorderColor(const SDL_Color& color);
+
+	// sets the size of the control's border (zero for no border)
 	void SetBorderSize(uint8_t size);
+
+	// sets the control's foreground color
 	void SetForegroundColor(const SDL_Color& color);
 
+	// sets the control's hidden state
 	void SetHidden(bool isHidden);
+
+	// sets the control's location with respect to its owning window
 	void SetLocation(const SDL_Rect& location);
+
+	// sets the control's z-order. zero is the bottom and is the default value
 	void SetZOrder(uint8_t zOrder);
 };
 

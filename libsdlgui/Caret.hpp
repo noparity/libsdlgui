@@ -3,6 +3,7 @@
 
 #include "Control.hpp"
 
+// represents a caret control
 class Caret : public Control
 {
 private:
@@ -14,9 +15,16 @@ private:
 public:
 	Caret(Window* pWindow, const SDL_Rect& location);
 
+	// pauses the caret animation
 	void PauseAnimation();
+
+	// resumes the caret animation
 	void ResumeAnimation();
+
+	// starts the caret animation
 	void StartAnimation();
+
+	// stops the caret animation
 	void StopAnimation();
 };
 

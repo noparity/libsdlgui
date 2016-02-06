@@ -6,6 +6,7 @@
 #include "SdlHelpers.hpp"
 #include "SDL_mouse.h"
 
+// represents a text box control
 class TextBox : public Control
 {
 private:
@@ -36,6 +37,7 @@ private:
 public:
 	TextBox(Window* pWindow, const SDL_Rect& location);
 
+	// gets the text that was entered
 	std::string GetText() const { return m_text; }
 };
 

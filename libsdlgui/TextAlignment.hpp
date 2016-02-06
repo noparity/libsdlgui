@@ -3,6 +3,7 @@
 
 #include "stdint.h"
 
+// specifies how text should be aligned with respect to its container
 enum class TextAlignment : uint8_t
 {
 	TopLeft,

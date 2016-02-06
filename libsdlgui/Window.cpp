@@ -16,7 +16,6 @@ Window::Window(const std::string& title, const Dimentions& dimentions, SDL_Windo
 	if (m_window == nullptr)
 		throw SDLException("SDL_CreateWindow failed with error '" + SDLGetError() + "'.");
 
-	m_id = SDL_GetWindowID(m_window);
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
 	if (m_renderer == nullptr)
 		throw SDLException("SDL_CreateRenderer failed with error '" + SDLGetError() + "'.");
@@ -82,6 +81,7 @@ void Window::DrawLine(const SDL_Point& p1, const SDL_Point& p2, const SDL_Color&
 
 void Window::DrawRectangle(const SDL_Rect& location, const SDL_Color& color, uint8_t thickness)
 {
+	assert(thickness > 0);
 	// must preserve previous draw color
 	SDLColorHolder colorHolder(m_renderer, color);
 
@@ -305,11 +305,9 @@ void Window::OnWindowResized(const SDL_WindowEvent& windowEvent)
 	m_dims.W = windowEvent.data1;
 	m_dims.H = windowEvent.data2;
 
-	// notify all controls of the change then invalidate them
+	// notify all controls of the change
 	for (auto control : m_controls)
-	{
-		control->NotificationWindowChanged(this);
-	}
+		control->NotificationWindowChanged();
 }
 
 void Window::RegisterForElapsedTimeNotification(Control* pControl, uint32_t ticks)
@@ -326,6 +324,7 @@ void Window::RemoveAllControls()
 void Window::RemoveControl(Control* pControl)
 {
 	auto controlIter = std::find(m_controls.begin(), m_controls.end(), pControl);
+	assert(controlIter != m_controls.end());
 	if (controlIter != m_controls.end())
 	{
 		UnregisterForElapsedTimeNotification(*controlIter);
@@ -452,11 +451,6 @@ void Window::SetCursorHidden(bool hidden)
 	}
 }
 
-void Window::Show()
-{
-	SDL_ShowWindow(m_window);
-}
-
 bool Window::ShouldRender()
 {
 	return ((m_flags & State::Minimized) != State::Minimized);
@@ -507,12 +501,16 @@ bool Window::TranslateEvent(const SDL_Event& sdlEvent)
 
 void Window::UnregisterForElapsedTimeNotification(Control* pControl)
 {
+	bool found = false;
 	for (auto iter = m_ctrlsElapsedTime.begin(); iter != m_ctrlsElapsedTime.end(); ++iter)
 	{
 		if (std::get<0>(*iter) == pControl)
 		{
 			m_ctrlsElapsedTime.erase(iter);
+			found = true;
 			break;
 		}
 	}
+
+	assert(found);
 }

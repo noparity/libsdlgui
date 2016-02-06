@@ -10,6 +10,7 @@ Caret::Caret(Window* pWindow, const SDL_Rect& location) :
 
 void Caret::OnElapsedTime()
 {
+	// oscillate between hidden/visible for blinking effect
 	if (!m_pause)
 		SetHidden(!GetHidden());
 }
@@ -37,6 +38,7 @@ void Caret::ResumeAnimation()
 void Caret::StartAnimation()
 {
 	SetHidden(false);
+	// blink every second
 	GetWindow()->RegisterForElapsedTimeNotification(this, 1000);
 }
 
