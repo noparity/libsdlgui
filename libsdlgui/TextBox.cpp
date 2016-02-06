@@ -3,16 +3,125 @@
 #include "TextBox.hpp"
 
 TextBox::TextBox(Window* pWindow, const SDL_Rect& location) :
-	m_caret(pWindow, SDLRect(location.x + TextOffsetX, location.y + 8, 1, location.h - 16)), Control(pWindow, location), m_pPrevCursor(nullptr)
+	Control(pWindow, location),
+	m_caret(pWindow, SDLRect(location.x + TextOffsetX, location.y + 8, CaretWidth, location.h - 16)),
+	m_pPrevCursor(nullptr),
+	m_position(0),
+	m_clipOffset(0)
 {
 	SetBorderColor(SDLColor(128, 128, 128, 0));
 	SetBorderSize(1);
+
 	// place the caret above the text box
 	m_caret.SetZOrder(GetZOrder() + 1);
 }
 
+void TextBox::KeydownBackspace()
+{
+	if (m_position == 0)
+		return;
+
+	auto charWidth = static_cast<int>(GetWindow()->GetFont()->GetCharSize(m_text[m_position - 1]));
+	assert(charWidth > 0);
+
+	if (m_position == m_text.size())
+		m_text.pop_back();
+	else
+		m_text.erase(m_position - 1, 1);
+
+	m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+	--m_position;
+
+	// don't move the caret if the string is bigger than the text box
+	if (m_texture.GetWidth() < GetLocation().w - (TextOffsetX * 2) + CaretWidth)
+	{
+		MoveCaret(-charWidth);
+	}
+	else if (m_clipOffset > 0)
+	{
+		if (m_clipOffset < charWidth)
+		{
+			// if there is a single character being clipped
+			// move the caret by the number of visible pixels.
+			MoveCaret(-(charWidth - m_clipOffset));
+			m_clipOffset = 0;
+		}
+		else
+		{
+			m_clipOffset -= charWidth;
+		}
+	}
+}
+
+void TextBox::KeydownDelete()
+{
+	if (m_position < m_text.size())
+	{
+		m_text.erase(m_position, 1);
+		m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+	}
+}
+
+void TextBox::KeydownLeft()
+{
+	if (m_position > 0)
+	{
+		--m_position;
+		auto charWidth = static_cast<int>(GetWindow()->GetFont()->GetCharSize(m_text[m_position]));
+		assert(charWidth > 0);
+		MoveCaret(-charWidth);
+	}
+}
+
+void TextBox::KeydownRight()
+{
+	if (m_position < m_text.size())
+	{
+		auto charWidth = GetWindow()->GetFont()->GetCharSize(m_text[m_position]);
+		++m_position;
+		MoveCaret(charWidth);
+	}
+}
+
+void TextBox::MoveCaret(int offset)
+{
+	auto caretLoc = m_caret.GetLocation();
+	caretLoc.x += offset;
+	assert(caretLoc.x >= 0);
+
+	// ensure the caret stays within bounds
+	// the delta is the number of pixels past the boundary
+	// of the text box.  if it's less than offset it means
+	// there is part of a char being clipped, so instead of
+	// adjusting m_clipOffset by the full offset adjust it
+	// by the number of pixels being clipped.
+
+	auto location = GetLocation();
+	if (caretLoc.x > (location.x + location.w) - (TextOffsetX + (CaretWidth - 1)))
+	{
+		// caret tried to move past the right bound, adjust the offset based on the delta
+		offset = caretLoc.x - ((location.x + location.w) - (TextOffsetX + (CaretWidth - 1)));
+		caretLoc.x = (location.x + location.w) - (TextOffsetX + (CaretWidth - 1));
+
+		m_clipOffset += offset;
+	}
+	else if (caretLoc.x < location.x + TextOffsetX)
+	{
+		// caret tried to move past the left bound, adjust the offset based on the delta
+		offset = caretLoc.x - (location.x + TextOffsetX);
+		caretLoc.x = location.x + TextOffsetX;
+
+		if (m_clipOffset > 0)
+			m_clipOffset += offset;
+	}
+
+	assert(m_clipOffset >= 0);
+	m_caret.SetLocation(caretLoc);
+}
+
 void TextBox::OnFocusAcquired()
 {
+	assert(SDL_IsTextInputActive() == SDL_FALSE);
 	m_caret.StartAnimation();
 	SetBorderColor(SDLColor(64, 64, 128, 0));
 	auto loc = GetLocation();
@@ -33,10 +142,20 @@ void TextBox::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
 	{
 		m_caret.PauseAnimation();
 
-		if (keyboardEvent.keysym.sym == SDLK_BACKSPACE && m_text.length() > 0)
+		switch (keyboardEvent.keysym.sym)
 		{
-			m_text.pop_back();
-			m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+		case SDLK_BACKSPACE:
+			KeydownBackspace();
+			break;
+		case SDLK_DELETE:
+			KeydownDelete();
+			break;
+		case SDLK_LEFT:
+			KeydownLeft();
+			break;
+		case SDLK_RIGHT:
+			KeydownRight();
+			break;
 		}
 	}
 	else if (keyboardEvent.state == SDL_RELEASED)
@@ -47,11 +166,90 @@ void TextBox::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
 
 bool TextBox::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
-	bool takeFocus = false;
-	if (buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT && SDL_IsTextInputActive() == SDL_FALSE)
-		takeFocus = true;
+	return LeftMouseButtonDown(buttonEvent);
+}
 
-	return takeFocus;
+void TextBox::OnLeftClick(const SDL_Point& clickLoc)
+{
+	if (m_text.size() > 0)
+	{
+		auto loc = GetLocation();
+		auto caretLoc = m_caret.GetLocation();
+
+		if (clickLoc.x < m_texture.GetWidth() + loc.x + TextOffsetX && clickLoc.x != caretLoc.x)
+		{
+			// move the caret to the location that was clicked
+
+			auto pos = m_position;
+
+			// direction of travel when iterating though m_text.
+			// -1 means the click location was to the left of the caret.
+			int direction = -1;
+			if (caretLoc.x < clickLoc.x)
+				direction = 1;
+
+			// if a character is clicked track the x value on each side.  the
+			// side closest to the clicked location is where the caret will go.
+			int leftX = caretLoc.x;
+			int rightX = leftX;
+
+			while (true)
+			{
+				if (direction < 0 && leftX < clickLoc.x)
+					break;
+				else if (direction > 0 && rightX > clickLoc.x)
+					break;
+				else if (pos > m_text.size())
+					break;
+
+				auto charWidth = GetWindow()->GetFont()->GetCharSize(m_text[pos]);
+				assert(charWidth > 0);
+				pos += direction;
+
+				if (direction < 0)
+				{
+					if (static_cast<int>(leftX - charWidth) < clickLoc.x)
+						rightX = leftX;
+
+					leftX += (charWidth * direction);
+				}
+				else
+				{
+					if (static_cast<int>(rightX + charWidth) > clickLoc.x)
+						leftX = rightX;
+
+					rightX += (charWidth * direction);
+				}
+			}
+
+			// check which is closest to the click location
+			if (rightX - clickLoc.x < clickLoc.x - leftX)
+			{
+				caretLoc.x = rightX;
+				m_position = pos;
+				if (direction < 0)
+					++m_position;
+			}
+			else
+			{
+				caretLoc.x = leftX;
+				m_position = pos;
+				if (direction > 0)
+					--m_position;
+			}
+
+			assert(m_position <= m_text.size());
+			assert(caretLoc.x >= loc.x && caretLoc.x <= loc.x + loc.w);
+			m_caret.SetLocation(caretLoc);
+		}
+		else if (clickLoc.x > m_texture.GetWidth() && m_position < m_text.size())
+		{
+			// move the caret to the end of the text
+			caretLoc.x = loc.x + TextOffsetX + m_texture.GetWidth();
+			m_caret.SetLocation(caretLoc);
+			m_position = m_text.size();
+		}
+	}
 }
 
 void TextBox::OnMouseEnter()
@@ -75,7 +273,15 @@ void TextBox::OnMouseExit()
 void TextBox::OnTextInput(const SDL_TextInputEvent& textEvent)
 {
 	GetWindow()->SetCursorHidden(true);
-	m_text.append(textEvent.text);
+	if (m_position == m_text.size())
+		m_text.append(textEvent.text);
+	else
+		m_text.insert(m_position, textEvent.text);
+
+	auto charWidth = GetWindow()->GetFont()->GetTextSize(textEvent.text);
+	MoveCaret(charWidth);
+
+	++m_position;
 	m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
 }
 
@@ -84,17 +290,33 @@ void TextBox::RenderImpl()
 	// create a buffer around the text
 	auto location = GetLocation();
 	location.x += TextOffsetX;
-	location.w -= (TextOffsetX * 2);
-	
-	GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
-	GetWindow()->DrawText(location, m_texture, TextAlignment::MiddleLeft, Anchor::Right);
 
-	// move the caret with respect to our location
-	auto caretLoc = m_caret.GetLocation();
-	caretLoc.x = GetLocation().x + m_texture.GetWidth() + TextOffsetX;
-	// ensure the caret stays within bounds
-	location = GetLocation();
-	if (caretLoc.x > (location.x + location.w) - (TextOffsetX + (caretLoc.w - 1)))
-		caretLoc.x = (location.x + location.w) - (TextOffsetX + (caretLoc.w - 1));
-	m_caret.SetLocation(caretLoc);
+	// vertically center the text in the bounding rect
+	location.y += (location.h - m_texture.GetHeight()) / 2;
+	
+	if (m_texture.GetHeight() <= location.h)
+		location.h = m_texture.GetHeight();
+	else
+		assert(!"Font size is too tall for text box.");
+
+	// if the text width is greater than the width of the text box the
+	// text width will need to be clipped with respect to the position
+
+	location.w -= (TextOffsetX * 2);
+	SDL_Rect clip;
+
+	clip.x = m_clipOffset;
+	clip.y = 0;
+	clip.h = location.h;
+	clip.w = GetLocation().w - (TextOffsetX * 2);
+
+	// if the portion of the texture being displayed doesn't completely fill
+	// the location's width decrease the width so the texture isn't stretched
+
+	auto deltaWidth = (clip.w - (m_texture.GetWidth() - m_clipOffset));
+	if (deltaWidth > 0)
+		location.w -= deltaWidth;
+
+	GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
+	GetWindow()->DrawText(location, m_texture, &clip);
 }

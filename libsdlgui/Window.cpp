@@ -105,7 +105,7 @@ void Window::DrawRectangle(const SDL_Rect& location, const SDL_Color& color, uin
 	}
 }
 
-void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextAlignment alignment, Anchor anchor)
+void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextAlignment alignment)
 {
 	// there are three possibilities
 	//   the size of location is equal to that of textSurface
@@ -166,21 +166,8 @@ void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextA
 
 		if (texture.GetWidth() > location.w)
 		{
-			if (anchor == Anchor::Left)
-			{
-				// clip off the right side of the text
-				clip.w = location.w;
-			}
-			else if (anchor == Anchor::Right)
-			{
-				// clip off the left side of the text
-				clip.w = location.w;
-				clip.x = texture.GetWidth() - location.w;
-			}
-			else
-			{
-				assert(!"unhandled anchor type");
-			}
+			// clip off the right side of the text
+			clip.w = location.w;
 		}
 		else
 		{
@@ -202,6 +189,11 @@ void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextA
 
 		SDL_RenderCopy(m_renderer, texture, &clip, &myLoc);
 	}
+}
+
+void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, SDL_Rect const* clip)
+{
+	SDL_RenderCopy(m_renderer, texture, clip, &location);
 }
 
 void Window::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)

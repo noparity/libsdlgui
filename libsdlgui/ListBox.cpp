@@ -95,7 +95,7 @@ void ListBox::RenderImpl()
 		itemLoc.h = t->GetHeight();
 		if (std::get<2>(texture))
 			GetWindow()->DrawRectangle(itemLoc, GetForegroundColor(), UINT8_MAX);
-		GetWindow()->DrawText(itemLoc, *t, TextAlignment::MiddleLeft, Anchor::Left);
+		GetWindow()->DrawText(itemLoc, *t, TextAlignment::MiddleLeft);
 
 		auto paddedHeight = t->GetHeight();
 		itemLoc.y += paddedHeight;

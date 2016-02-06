@@ -73,7 +73,7 @@ void Dialog::RenderImpl()
 	
 	// draw the title bar
 	window->DrawRectangle(GetTitleBarLoc(), SDLColor(255, 255, 255, 0), UINT8_MAX);
-	window->DrawText(GetTitleBarLoc(), m_titleTexture, TextAlignment::MiddleCenter, Anchor::Left);
+	window->DrawText(GetTitleBarLoc(), m_titleTexture, TextAlignment::MiddleCenter);
 	
 	// draw the close button
 	window->DrawRectangle(GetCloseButtonLoc(), SDLColor(255, 0, 0, 0), UINT8_MAX);

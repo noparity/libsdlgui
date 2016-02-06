@@ -138,7 +138,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Anchor.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="Caret.hpp" />
     <ClInclude Include="CheckBox.hpp" />

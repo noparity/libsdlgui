@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Anchor.hpp"
 #include "Label.hpp"
 
 Label::Label(Window* pWindow, const SDL_Rect& location) :
@@ -14,7 +13,7 @@ Label::Label(Window* pWindow, const SDL_Rect& location) :
 void Label::RenderImpl()
 {
 	GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
-	GetWindow()->DrawText(GetLocation(), m_texture, m_alignment, Anchor::Right);
+	GetWindow()->DrawText(GetLocation(), m_texture, m_alignment);
 }
 
 void Label::SetAlignment(TextAlignment alignment)

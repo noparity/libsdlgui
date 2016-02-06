@@ -60,9 +60,6 @@
     <ClInclude Include="CursorManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Anchor.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Caret.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

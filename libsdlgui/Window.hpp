@@ -1,7 +1,6 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include "Anchor.hpp"
 #include <boost/dynamic_bitset.hpp>
 #include <boost/filesystem.hpp>
 #include "Flags.hpp"
@@ -72,7 +71,8 @@ public:
 	SDLTexture CreateTextureForText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
 	void DrawLine(const SDL_Point& p1, const SDL_Point& p2, const SDL_Color& color);
 	void DrawRectangle(const SDL_Rect& location, const SDL_Color& color, uint8_t thickness);
-	void DrawText(const SDL_Rect& location, const SDLTexture& texture, TextAlignment alignment, Anchor anchor);
+	void DrawText(const SDL_Rect& location, const SDLTexture& texture, TextAlignment alignment);
+	void DrawText(const SDL_Rect& location, const SDLTexture& texture, SDL_Rect const* clip);
 	SDL_Color GetBackgroundColor() const { return m_bColor; }
 	Dimentions GetDimentions() const { return m_dims; }
 	Font* GetFont() const { return m_pFont; }

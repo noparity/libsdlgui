@@ -71,5 +71,5 @@ void DropdownBox::RenderImpl()
 	auto p1 = SDLPoint((myLoc.x + myLoc.w) - (myLoc.h - 1), myLoc.y);
 	auto p2 = SDLPoint((myLoc.x + myLoc.w) - (myLoc.h - 1), myLoc.y + myLoc.h - 1);
 	GetWindow()->DrawLine(p1, p2, SDLColor(128, 128, 128, 0));
-	GetWindow()->DrawText(GetLocation(), m_texture, TextAlignment::MiddleLeft, Anchor::Left);
+	GetWindow()->DrawText(GetLocation(), m_texture, TextAlignment::MiddleLeft);
 }
