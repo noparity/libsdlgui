@@ -5,8 +5,12 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
+	<Filter Include="Public Headers">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Internal Headers">
+      <UniqueIdentifier>{5B9E9F30-C923-470D-B997-E9A0F05D6F88}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
@@ -14,118 +18,122 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Window.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="Exceptions.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="Control.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Flags.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="Label.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="TextAlignment.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SdlHelpers.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Helpers.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="Font.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="FontManager.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="Button.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="TextBox.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="CursorManager.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="Caret.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="Dialog.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="DropdownBox.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="ListBox.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
     </ClInclude>
     <ClInclude Include="CheckBox.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Public Headers</Filter>
+    </ClInclude>
+	<ClInclude Include="Flags.hpp">
+      <Filter>Public Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SdlHelpers.hpp">
+      <Filter>Public Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers.hpp">
+      <Filter>Public Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.hpp">
+      <Filter>Public Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Internal Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Internal Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="..\..\src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
+    <ClCompile Include="..\..\src\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Control.cpp">
+    <ClCompile Include="..\..\src\Control.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Label.cpp">
+    <ClCompile Include="..\..\src\Label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SdlHelpers.cpp">
+    <ClCompile Include="..\..\src\SdlHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Font.cpp">
+    <ClCompile Include="..\..\src\Font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Helpers.cpp">
+    <ClCompile Include="..\..\src\Helpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FontManager.cpp">
+    <ClCompile Include="..\..\src\FontManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
+    <ClCompile Include="..\..\src\Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextBox.cpp">
+    <ClCompile Include="..\..\src\TextBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CursorManager.cpp">
+    <ClCompile Include="..\..\src\CursorManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Caret.cpp">
+    <ClCompile Include="..\..\src\Caret.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dialog.cpp">
+    <ClCompile Include="..\..\src\Dialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DropdownBox.cpp">
+    <ClCompile Include="..\..\src\DropdownBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ListBox.cpp">
+    <ClCompile Include="..\..\src\ListBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CheckBox.cpp">
+    <ClCompile Include="..\..\src\CheckBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

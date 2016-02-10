@@ -77,7 +77,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Joel\src\boost_1_58_0;C:\Users\Joel\src\SDL\include;C:\Users\Joel\src\SDL_image;C:\Users\Joel\src\SDL_ttf</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\..\boost_1_58_0;..\..\..\SDL\include;..\..\..\SDL_image;..\..\..\SDL_ttf</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -161,27 +161,27 @@
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Button.cpp" />
-    <ClCompile Include="Caret.cpp" />
-    <ClCompile Include="CheckBox.cpp" />
-    <ClCompile Include="Control.cpp" />
-    <ClCompile Include="CursorManager.cpp" />
-    <ClCompile Include="Dialog.cpp" />
-    <ClCompile Include="DropdownBox.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="Helpers.cpp" />
-    <ClCompile Include="ListBox.cpp" />
-    <ClCompile Include="SdlHelpers.cpp" />
-    <ClCompile Include="Label.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="..\..\src\Button.cpp" />
+    <ClCompile Include="..\..\src\Caret.cpp" />
+    <ClCompile Include="..\..\src\CheckBox.cpp" />
+    <ClCompile Include="..\..\src\Control.cpp" />
+    <ClCompile Include="..\..\src\CursorManager.cpp" />
+    <ClCompile Include="..\..\src\Dialog.cpp" />
+    <ClCompile Include="..\..\src\DropdownBox.cpp" />
+    <ClCompile Include="..\..\src\Font.cpp" />
+    <ClCompile Include="..\..\src\Helpers.cpp" />
+    <ClCompile Include="..\..\src\ListBox.cpp" />
+    <ClCompile Include="..\..\src\SdlHelpers.cpp" />
+    <ClCompile Include="..\..\src\Label.cpp" />
+    <ClCompile Include="..\..\src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="FontManager.cpp" />
-    <ClCompile Include="TextBox.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="..\..\src\FontManager.cpp" />
+    <ClCompile Include="..\..\src\TextBox.cpp" />
+    <ClCompile Include="..\..\src\Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

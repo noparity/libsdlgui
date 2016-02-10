@@ -88,24 +88,24 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Joel\src\SDL\include;C:\Users\Joel\src\boost_1_58_0;C:\Users\Joel\src\SDL_image;C:\Users\Joel\src\SDL_ttf;..\libsdlgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\..\SDL\include;..\..\..\boost_1_58_0;..\..\..\SDL_image;..\..\..\SDL_ttf;..\libsdlgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\$(Configuration);C:\Users\Joel\src\SDL\VisualC\SDL\Win32\$(Configuration);C:\Users\Joel\src\SDL\VisualC\SDLmain\Win32\$(Configuration);C:\Users\Joel\src\SDL_image\VisualC\Win32\$(Configuration);C:\Users\Joel\src\SDL_ttf\VisualC\Win32\$(Configuration);C:\Users\Joel\src\boost_1_58_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\$(Configuration);..\..\..\SDL\VisualC\SDL\Win32\$(Configuration);..\..\..\SDL\VisualC\SDLmain\Win32\$(Configuration);..\..\..\SDL_image\VisualC\Win32\$(Configuration);..\..\..\SDL_ttf\VisualC\Win32\$(Configuration);..\..\..\boost_1_58_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libsdlgui.lib;sdl2.lib;sdl2main.lib;sdl2_image.lib;sdl2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y ..\..\SDL\VisualC\SDL\Win32\$(Configuration)\sdl2.dll $(OutDir)
-copy /y ..\..\SDL\VisualC\SDL\Win32\$(Configuration)\sdl2.pdb $(OutDir)
-copy /y ..\..\SDL_image\VisualC\Win32\$(Configuration)\sdl2_image.dll $(OutDir)
-copy /y ..\..\SDL_image\VisualC\Win32\$(Configuration)\sdl2_image.pdb $(OutDir)
-copy /y ..\..\SDL_ttf\VisualC\Win32\$(Configuration)\sdl2_ttf.dll $(OutDir)
-copy /y ..\..\SDL_ttf\VisualC\Win32\$(Configuration)\sdl2_ttf.pdb $(OutDir)
-copy /y ..\..\libpng\projects\vstudio\$(Configuration)\libpng16.dll $(OutDir)
-copy /y ..\..\libpng\projects\vstudio\$(Configuration)\libpng16.pdb $(OutDir)</Command>
+      <Command>copy /y ..\..\..\SDL\VisualC\SDL\Win32\$(Configuration)\sdl2.dll $(OutDir)
+copy /y ..\..\..\SDL\VisualC\SDL\Win32\$(Configuration)\sdl2.pdb $(OutDir)
+copy /y ..\..\..\SDL_image\VisualC\Win32\$(Configuration)\sdl2_image.dll $(OutDir)
+copy /y ..\..\..\SDL_image\VisualC\Win32\$(Configuration)\sdl2_image.pdb $(OutDir)
+copy /y ..\..\..\SDL_ttf\VisualC\Win32\$(Configuration)\sdl2_ttf.dll $(OutDir)
+copy /y ..\..\..\SDL_ttf\VisualC\Win32\$(Configuration)\sdl2_ttf.pdb $(OutDir)
+copy /y ..\..\..\libpng\projects\vstudio\$(Configuration)\libpng16.dll $(OutDir)
+copy /y ..\..\..\libpng\projects\vstudio\$(Configuration)\libpng16.pdb $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,13 +160,13 @@ copy /y ..\..\libpng\projects\vstudio\$(Configuration)\libpng16.pdb $(OutDir)</C
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="..\..\TestApp\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestApp.cpp" />
+    <ClCompile Include="..\..\TestApp\TestApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestApp.hpp" />

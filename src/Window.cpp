@@ -501,16 +501,12 @@ bool Window::TranslateEvent(const SDL_Event& sdlEvent)
 
 void Window::UnregisterForElapsedTimeNotification(Control* pControl)
 {
-	bool found = false;
 	for (auto iter = m_ctrlsElapsedTime.begin(); iter != m_ctrlsElapsedTime.end(); ++iter)
 	{
 		if (std::get<0>(*iter) == pControl)
 		{
 			m_ctrlsElapsedTime.erase(iter);
-			found = true;
 			break;
 		}
 	}
-
-	assert(found);
 }
