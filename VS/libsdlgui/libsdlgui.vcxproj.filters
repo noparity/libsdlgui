@@ -5,7 +5,7 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-	<Filter Include="Public Headers">
+    <Filter Include="Public Headers">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
@@ -18,67 +18,68 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
-
   <ItemGroup>
-    <ClInclude Include="Window.hpp">
+    <ClInclude Include="..\..\include\Window.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Exceptions.hpp">
+    <ClInclude Include="..\..\include\Exceptions.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Control.hpp">
+    <ClInclude Include="..\..\include\Control.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Label.hpp">
+    <ClInclude Include="..\..\include\Label.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="TextAlignment.hpp">
+    <ClInclude Include="..\..\include\TextAlignment.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Font.hpp">
+    <ClInclude Include="..\..\include\Font.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="FontManager.hpp">
+    <ClInclude Include="..\..\include\FontManager.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Button.hpp">
+    <ClInclude Include="..\..\include\Button.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="TextBox.hpp">
+    <ClInclude Include="..\..\include\TextBox.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="CursorManager.hpp">
+    <ClInclude Include="..\..\include\CursorManager.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Caret.hpp">
+    <ClInclude Include="..\..\include\Caret.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Dialog.hpp">
+    <ClInclude Include="..\..\include\Dialog.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="DropdownBox.hpp">
+    <ClInclude Include="..\..\include\DropdownBox.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ListBox.hpp">
+    <ClInclude Include="..\..\include\ListBox.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="CheckBox.hpp">
+    <ClInclude Include="..\..\include\CheckBox.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-	<ClInclude Include="Flags.hpp">
+    <ClInclude Include="..\..\include\Flags.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SdlHelpers.hpp">
+    <ClInclude Include="..\..\include\SdlHelpers.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Helpers.hpp">
+    <ClInclude Include="..\..\include\Helpers.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Singleton.hpp">
+    <ClInclude Include="..\..\include\Singleton.hpp">
+      <Filter>Public Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Panel.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
   </ItemGroup>
-
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>Internal Headers</Filter>
@@ -134,6 +135,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\CheckBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Panel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

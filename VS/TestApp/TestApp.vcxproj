@@ -156,8 +156,8 @@ copy /y ..\..\..\libpng\projects\vstudio\$(Configuration)\libpng16.pdb $(OutDir)
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="..\..\TestApp\stdafx.h" />
+    <ClInclude Include="..\..\TestApp\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\TestApp\stdafx.cpp">
@@ -169,7 +169,7 @@ copy /y ..\..\..\libpng\projects\vstudio\$(Configuration)\libpng16.pdb $(OutDir)
     <ClCompile Include="..\..\TestApp\TestApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestApp.hpp" />
+    <None Include="..\..\TestApp\TestApp.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

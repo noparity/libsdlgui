@@ -138,27 +138,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Button.hpp" />
-    <ClInclude Include="Caret.hpp" />
-    <ClInclude Include="CheckBox.hpp" />
-    <ClInclude Include="Control.hpp" />
-    <ClInclude Include="CursorManager.hpp" />
-    <ClInclude Include="Dialog.hpp" />
-    <ClInclude Include="DropdownBox.hpp" />
-    <ClInclude Include="Exceptions.hpp" />
-    <ClInclude Include="Flags.hpp" />
-    <ClInclude Include="Font.hpp" />
-    <ClInclude Include="Helpers.hpp" />
-    <ClInclude Include="ListBox.hpp" />
-    <ClInclude Include="SdlHelpers.hpp" />
-    <ClInclude Include="Label.hpp" />
-    <ClInclude Include="Singleton.hpp" />
+    <ClInclude Include="..\..\include\Button.hpp" />
+    <ClInclude Include="..\..\include\Caret.hpp" />
+    <ClInclude Include="..\..\include\CheckBox.hpp" />
+    <ClInclude Include="..\..\include\Control.hpp" />
+    <ClInclude Include="..\..\include\CursorManager.hpp" />
+    <ClInclude Include="..\..\include\Dialog.hpp" />
+    <ClInclude Include="..\..\include\DropdownBox.hpp" />
+    <ClInclude Include="..\..\include\Exceptions.hpp" />
+    <ClInclude Include="..\..\include\Flags.hpp" />
+    <ClInclude Include="..\..\include\Font.hpp" />
+    <ClInclude Include="..\..\include\Helpers.hpp" />
+    <ClInclude Include="..\..\include\ListBox.hpp" />
+    <ClInclude Include="..\..\include\Panel.hpp" />
+    <ClInclude Include="..\..\include\SdlHelpers.hpp" />
+    <ClInclude Include="..\..\include\Label.hpp" />
+    <ClInclude Include="..\..\include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TextAlignment.hpp" />
-    <ClInclude Include="FontManager.hpp" />
-    <ClInclude Include="TextBox.hpp" />
-    <ClInclude Include="Window.hpp" />
+    <ClInclude Include="..\..\include\TextAlignment.hpp" />
+    <ClInclude Include="..\..\include\FontManager.hpp" />
+    <ClInclude Include="..\..\include\TextBox.hpp" />
+    <ClInclude Include="..\..\include\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Button.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="..\..\src\Font.cpp" />
     <ClCompile Include="..\..\src\Helpers.cpp" />
     <ClCompile Include="..\..\src\ListBox.cpp" />
+    <ClCompile Include="..\..\src\Panel.cpp" />
     <ClCompile Include="..\..\src\SdlHelpers.cpp" />
     <ClCompile Include="..\..\src\Label.cpp" />
     <ClCompile Include="..\..\src\stdafx.cpp">

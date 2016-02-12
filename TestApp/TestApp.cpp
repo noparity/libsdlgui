@@ -5,73 +5,44 @@
 #include <SDL_keycode.h>
 
 TestControl::TestControl(Window* pWindow, const SDL_Rect& location) :
-	Control(pWindow, location)
+	Panel(pWindow, location)
 {
-	m_label1 = std::make_unique<Label>(pWindow, SDLRect(0, 0, 64, 32));
+	m_label1 = std::make_unique<Label>(pWindow, SDLRect(0, 0, 64, 32, location));
 	m_label1->SetBorderColor(SDLColor(255, 0, 0, 0));
 	m_label1->SetBorderSize(1);
+	AddControl(m_label1.get());
 
-	m_label2 = std::make_unique<Label>(pWindow, SDLRect(location.w - 64, 0, 64, 32));
+	m_label2 = std::make_unique<Label>(pWindow, SDLRect(location.w - 64, 0, 64, 32, location));
 	m_label2->SetBorderColor(SDLColor(0, 0, 255, 0));
 	m_label2->SetBorderSize(1);
 	m_label2->SetAlignment(TextAlignment::TopRight);
+	AddControl(m_label2.get());
 
-	m_label3 = std::make_unique<Label>(pWindow, SDLRect((location.w / 2) - 32, ((location.h / 2) - 32), 64, 32));
+	m_label3 = std::make_unique<Label>(pWindow, SDLRect((location.w / 2) - 32, ((location.h / 2) - 32), 64, 32, location));
 	m_label3->SetBorderColor(SDLColor(0, 255, 255, 0));
 	m_label3->SetBorderSize(1);
 	m_label3->SetAlignment(TextAlignment::MiddleCenter);
+	AddControl(m_label3.get());
 
-	m_label4 = std::make_unique<Label>(pWindow, SDLRect(0, location.h - 64, 64, 32));
+	m_label4 = std::make_unique<Label>(pWindow, SDLRect(0, location.h - 32, 64, 32, location));
 	m_label4->SetBorderColor(SDLColor(255, 0, 0, 0));
 	m_label4->SetBorderSize(1);
 	m_label4->SetAlignment(TextAlignment::BottomLeft);
+	AddControl(m_label4.get());
 
-	m_label5 = std::make_unique<Label>(pWindow, SDLRect(location.w - 64, location.h - 64, 64, 32));
+	m_label5 = std::make_unique<Label>(pWindow, SDLRect(location.w - 64, location.h - 32, 64, 32, location));
 	m_label5->SetBorderColor(SDLColor(0, 0, 255, 0));
 	m_label5->SetBorderSize(1);
 	m_label5->SetAlignment(TextAlignment::BottomRight);
+	AddControl(m_label5.get());
+
+	SetBackgroundColor(SDLColor(63, 63, 63, 0));
 }
 
 void TestControl::RenderImpl()
 {
 	GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
 }
-
-/*
-SDL_Rect panelLoc;
-panelLoc.w = 320;
-panelLoc.h = 240;
-panelLoc.x = (dimentions.W / 2) - (panelLoc.w / 2);
-panelLoc.y = (dimentions.H / 2) - (panelLoc.h / 2);
-
-m_panel = std::make_unique<TestControl>(this, panelLoc);
-m_panel->SetBorderColor(SDLColor(0, 255, 0, 0));
-m_panel->SetBorderSize(1);
-
-SDL_Rect loc;
-loc.w = 64;
-loc.h = 32;
-loc.x = 256;
-loc.y = 0;
-
-m_label1 = std::make_unique<Label>(this, loc);
-m_label1->SetBorderColor(SDLColor(255, 0, 0, 0));
-m_label1->SetBorderSize(1);
-m_label1->SetText("test");
-m_label1->SetAlignment(TextAlignment::MiddleCenter);
-m_label1->SetFont(FontManager::GetInstance()->GetOrLoadFont("times", 16, Font::Attributes::Underline | Font::Attributes::Bold));
-
-auto labelPtr = m_panel.get();
-//RegisterForResizeEvent([labelPtr](Window* pWindow)
-//{
-//	// re-center the label
-//	SDL_Rect loc = labelPtr->GetLocation();
-//	auto dims = pWindow->GetDimentions();
-//	loc.x = (dims.W / 2) - 32;
-//	loc.y = (dims.H / 2) - 16;
-//	labelPtr->SetLocation(loc);
-//});
-*/
 
 TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
 	m_frameNumber(0), Window(title, dimentions, windowFlags)
@@ -105,6 +76,20 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
 
 	m_checkBox1 = std::make_unique<CheckBox>(this, SDLRect(32, 178, 128, 32));
 	m_checkBox1->Text()->SetText("Check me!");
+	m_checkBox1->RegisterForCheckedChangedCallback([this](bool checked)
+	{
+		m_panel->SetHidden(checked);
+	});
+
+	SDL_Rect panelLoc;
+	panelLoc.w = 320;
+	panelLoc.h = 240;
+	panelLoc.x = (dimentions.W / 2) - (panelLoc.w / 2);
+	panelLoc.y = (dimentions.H / 2) - (panelLoc.h / 2);
+
+	m_panel = std::make_unique<TestControl>(this, panelLoc);
+	m_panel->SetBorderColor(SDLColor(0, 255, 0, 0));
+	m_panel->SetBorderSize(1);
 
 	FrameOne();
 }

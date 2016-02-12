@@ -10,6 +10,7 @@
 #include <SDL_render.h>
 #include <string>
 
+// list of SDL subsystems that can be initialized
 enum class SDLSubSystem
 {
 	Timer = SDL_INIT_TIMER,
@@ -46,6 +47,7 @@ public:
 	~SDLInitSubSystem();
 };
 
+// list of IMG subsystems that can be initialized
 enum class IMGSubSystem
 {
 	Png = IMG_INIT_PNG
@@ -65,6 +67,7 @@ public:
 	static bool IsInit() { return m_init; }
 };
 
+// class that wraps initialization and shutdown of TTF
 class TTFInit
 {
 public:
@@ -113,6 +116,7 @@ public:
 	SDLTexture& operator=(SDLTexture&& rhs);
 };
 
+// encapsulates a TTF_Font*
 class TTFFont
 {
 private:
@@ -127,6 +131,7 @@ public:
 	TTF_Font* Get() const { return m_pFont; }
 };
 
+// returns an SDL_Color struct from the specified arguments
 inline SDL_Color SDLColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
 	SDL_Color color = { r, g, b, a };
@@ -144,9 +149,18 @@ inline bool operator!=(const SDL_Color& lhs, const SDL_Color& rhs)
 	return !(lhs == rhs);
 }
 
+// returns an SDL_Rect struct from the specified arguments
 inline SDL_Rect SDLRect(int x, int y, int w, int h)
 {
 	SDL_Rect rect = { x, y, w, h };
+	return rect;
+}
+
+// returns an SDL_Rect struct from the specified arguments. the x and
+// y values are adjusted with respect to relative.x and relative.y.
+inline SDL_Rect SDLRect(int x, int y, int w, int h, const SDL_Rect& relative)
+{
+	SDL_Rect rect = { relative.x + x, relative.y + y, w, h };
 	return rect;
 }
 
@@ -160,6 +174,7 @@ inline bool operator!=(const SDL_Rect& lhs, const SDL_Rect& rhs)
 	return !(lhs == rhs);
 }
 
+// returns an SDL_Point struct from the specified arguments
 inline SDL_Point SDLPoint(int x, int y)
 {
 	SDL_Point point = { x, y };
@@ -176,6 +191,8 @@ inline bool operator!=(const SDL_Point& lhs, const SDL_Point& rhs)
 	return !(lhs == rhs);
 }
 
+// class used for switching the drawing color.  when the
+// object goes out of scope the original color is restored.
 class SDLColorHolder
 {
 private:
@@ -187,6 +204,7 @@ public:
 	~SDLColorHolder();
 };
 
+// returns true if the bottom rect is occluded by top
 inline bool SDLRectOcclusion(const SDL_Rect& top, const SDL_Rect& bottom)
 {
 	return (bottom.x >= top.x && bottom.y >= top.y &&
@@ -194,6 +212,7 @@ inline bool SDLRectOcclusion(const SDL_Rect& top, const SDL_Rect& bottom)
 		(bottom.y + bottom.h) <= (top.y + top.h));
 }
 
+// returns true if the specified points are within rect
 inline bool SDLPointInRect(const SDL_Point& point, const SDL_Rect& rect)
 {
 	return (point.x >= rect.x && point.x <= (rect.x + rect.w) &&
