@@ -7,20 +7,20 @@
 
 namespace detail
 {
-	class CursorManager
-	{
-	private:
-		friend void Singleton<CursorManager>::Initialize();
-		friend void Singleton<CursorManager>::Destroy();
+    class CursorManager
+    {
+    private:
+        friend void Singleton<CursorManager>::Initialize();
+        friend void Singleton<CursorManager>::Destroy();
 
-		std::vector<SDL_Cursor*> m_sysCursors;
+        std::vector<SDL_Cursor*> m_sysCursors;
 
-		CursorManager();
-		~CursorManager();
+        CursorManager();
+        ~CursorManager();
 
-	public:
-		SDL_Cursor* GetSystemCursor(SDL_SystemCursor systemCursor);
-	};
+    public:
+        SDL_Cursor* GetSystemCursor(SDL_SystemCursor systemCursor);
+    };
 }
 
 using CursorManager = Singleton<detail::CursorManager>;

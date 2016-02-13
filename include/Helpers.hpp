@@ -6,7 +6,7 @@
 template<typename T>
 std::string ToString(const T& in)
 {
-	return boost::lexical_cast<std::string>(in);
+    return boost::lexical_cast<std::string>(in);
 }
 
 std::string SafeGetEnv(const std::string& name);

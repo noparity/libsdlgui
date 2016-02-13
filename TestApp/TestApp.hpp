@@ -13,40 +13,40 @@
 class TestControl : public Panel
 {
 private:
-	std::unique_ptr<Label> m_label1;
-	std::unique_ptr<Label> m_label2;
-	std::unique_ptr<Label> m_label3;
-	std::unique_ptr<Label> m_label4;
-	std::unique_ptr<Label> m_label5;
+    std::unique_ptr<Label> m_label1;
+    std::unique_ptr<Label> m_label2;
+    std::unique_ptr<Label> m_label3;
+    std::unique_ptr<Label> m_label4;
+    std::unique_ptr<Label> m_label5;
 
-	virtual void RenderImpl();
+    virtual void RenderImpl();
 
 public:
-	TestControl(Window* pWindow, const SDL_Rect& location);
+    TestControl(Window* pWindow, const SDL_Rect& location);
 };
 
 class TestWindow : public Window
 {
 private:
-	std::unique_ptr<TestControl> m_panel;
-	std::unique_ptr<Label> m_label1;
-	std::unique_ptr<Button> m_button1;
-	std::unique_ptr<Button> m_button2;
-	std::unique_ptr<Control> m_frame;
-	std::unique_ptr<TextBox> m_textBox;
-	std::unique_ptr<Dialog> m_dialog;
-	std::unique_ptr<DropdownBox> m_dropDown;
-	std::unique_ptr<CheckBox> m_checkBox1;
+    std::unique_ptr<TestControl> m_panel;
+    std::unique_ptr<Label> m_label1;
+    std::unique_ptr<Button> m_button1;
+    std::unique_ptr<Button> m_button2;
+    std::unique_ptr<Control> m_frame;
+    std::unique_ptr<TextBox> m_textBox;
+    std::unique_ptr<Dialog> m_dialog;
+    std::unique_ptr<DropdownBox> m_dropDown;
+    std::unique_ptr<CheckBox> m_checkBox1;
 
-	int m_frameNumber;
+    int m_frameNumber;
 
-	void FrameOne();
-	void FrameTwo();
-	void FrameThree();
-	void NextFrame();
+    void FrameOne();
+    void FrameTwo();
+    void FrameThree();
+    void NextFrame();
 
 public:
-	TestWindow(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags);
+    TestWindow(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags);
 };
 
 #endif // TESTAPP_HPP

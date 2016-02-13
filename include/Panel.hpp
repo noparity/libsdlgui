@@ -8,17 +8,17 @@
 class Panel : public Control
 {
 private:
-	std::vector<Control*> m_controls;
+    std::vector<Control*> m_controls;
 
-	virtual void OnHiddenChanged(bool isHidden);
-	virtual void RenderImpl();
+    virtual void OnHiddenChanged(bool isHidden);
+    virtual void RenderImpl();
 
 public:
-	Panel(Window* pWindow, const SDL_Rect& location);
+    Panel(Window* pWindow, const SDL_Rect& location);
 
-	// adds a control to the panel.  the location of
-	// the control must be within bounds of the panel
-	void AddControl(Control* pControl);
+    // adds a control to the panel.  the location of
+    // the control must be within bounds of the panel
+    void AddControl(Control* pControl);
 };
 
 #endif // PANEL_HPP

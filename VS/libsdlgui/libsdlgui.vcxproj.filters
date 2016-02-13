@@ -81,10 +81,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="..\..\src\stdafx.h">
       <Filter>Internal Headers</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="..\..\src\targetver.h">
       <Filter>Internal Headers</Filter>
     </ClInclude>
   </ItemGroup>

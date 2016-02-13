@@ -7,9 +7,9 @@
 class SDLException : public std::runtime_error
 {
 public:
-	SDLException(const std::string& message) : std::runtime_error(message)
-	{
-	}
+    SDLException(const std::string& message) : std::runtime_error(message)
+    {
+    }
 };
 
 #endif // EXCEPTIONS_HPP

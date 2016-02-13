@@ -7,25 +7,25 @@
 class Caret : public Control
 {
 private:
-	bool m_pause;
+    bool m_pause;
 
-	virtual void OnElapsedTime();
-	virtual void RenderImpl();
+    virtual void OnElapsedTime();
+    virtual void RenderImpl();
 
 public:
-	Caret(Window* pWindow, const SDL_Rect& location);
+    Caret(Window* pWindow, const SDL_Rect& location);
 
-	// pauses the caret animation
-	void PauseAnimation();
+    // pauses the caret animation
+    void PauseAnimation();
 
-	// resumes the caret animation
-	void ResumeAnimation();
+    // resumes the caret animation
+    void ResumeAnimation();
 
-	// starts the caret animation
-	void StartAnimation();
+    // starts the caret animation
+    void StartAnimation();
 
-	// stops the caret animation
-	void StopAnimation();
+    // stops the caret animation
+    void StopAnimation();
 };
 
 #endif // CARET_HPP

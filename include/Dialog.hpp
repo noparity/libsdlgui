@@ -12,20 +12,20 @@
 class Dialog : public Control
 {
 private:
-	std::string m_title;
-	SDLTexture m_titleTexture;
-	bool m_canDrag;
+    std::string m_title;
+    SDLTexture m_titleTexture;
+    bool m_canDrag;
 
-	SDL_Rect GetCloseButtonLoc() const;
-	SDL_Rect GetTitleBarLoc() const;
+    SDL_Rect GetCloseButtonLoc() const;
+    SDL_Rect GetTitleBarLoc() const;
 
-	virtual bool CanDragImpl() const;
-	virtual void OnLeftClick(const SDL_Point& clickLoc);
-	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
-	virtual void RenderImpl();
+    virtual bool CanDragImpl() const;
+    virtual void OnLeftClick(const SDL_Point& clickLoc);
+    virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+    virtual void RenderImpl();
 
 public:
-	Dialog(Window* pWindow, const std::string& title, const SDL_Rect& location);
+    Dialog(Window* pWindow, const std::string& title, const SDL_Rect& location);
 };
 
 #endif // DIALOG_HPP
