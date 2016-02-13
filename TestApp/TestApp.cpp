@@ -44,16 +44,40 @@ void TestControl::RenderImpl()
     GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
 }
 
+TestDialog::TestDialog(Window* pWindow, const std::string& title, const Dimentions& dimentions) :
+    Dialog(pWindow, title, dimentions),
+    m_buttonOK(pWindow, SDLRect(dimentions.W - 68, dimentions.H - 36, 64, 32, GetContentLoc())),
+    m_buttonCancel(pWindow, SDLRect(dimentions.W - 68 - 70, dimentions.H - 36, 64, 32, GetContentLoc())),
+    m_text(pWindow, SDLRect(32, 64, 128, 32, GetContentLoc()))
+{
+    AddControl(&m_buttonOK);
+    AddControl(&m_buttonCancel);
+    AddControl(&m_text);
+    m_text.SetText("Click one");
+
+    m_buttonOK.SetTexture(pWindow->CreateTextureForText("OK", pWindow->GetFont(),
+        GetForegroundColor(), m_buttonOK.GetBackgroundColor()));
+
+    m_buttonCancel.SetTexture(pWindow->CreateTextureForText("Cancel", pWindow->GetFont(),
+        GetForegroundColor(), m_buttonCancel.GetBackgroundColor()));
+
+    m_buttonCancel.RegisterForClickCallback([this]()
+    {
+        this->SetHidden(true);
+    });
+}
+
 TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
     m_frameNumber(0), Window(title, dimentions, windowFlags)
 {
     m_label1 = std::make_unique<Label>(this, SDLRect(420, 128, 150, 32));
     m_label1->SetText("Nothing selected");
     m_label1->SetAlignment(TextAlignment::MiddleCenter);
-    m_dialog = std::make_unique<Dialog>(this, "Test Dialog", SDLRect(48, 34, 640, 480));
+    m_dialog = std::make_unique<TestDialog>(this, "Test Dialog", Dimentions(400, 300));
     m_button1 = std::make_unique<Button>(this, SDLRect(32, 32, 64, 32));
     m_button1->RegisterForClickCallback([this]()
     {
+        this->m_dialog->CenterDialog();
         this->m_dialog->SetHidden(false);
     });
     m_button1->SetTexture(this->CreateTextureForText("click", GetFont(), SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor()));

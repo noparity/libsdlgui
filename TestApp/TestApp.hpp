@@ -25,6 +25,17 @@ public:
     TestControl(Window* pWindow, const SDL_Rect& location);
 };
 
+class TestDialog : public Dialog
+{
+private:
+    Button m_buttonOK;
+    Button m_buttonCancel;
+    Label m_text;
+
+public:
+    TestDialog(Window* pWindow, const std::string& title, const Dimentions& dimentions);
+};
+
 class TestWindow : public Window
 {
 private:
@@ -34,7 +45,7 @@ private:
     std::unique_ptr<Button> m_button2;
     std::unique_ptr<Control> m_frame;
     std::unique_ptr<TextBox> m_textBox;
-    std::unique_ptr<Dialog> m_dialog;
+    std::unique_ptr<TestDialog> m_dialog;
     std::unique_ptr<DropdownBox> m_dropDown;
     std::unique_ptr<CheckBox> m_checkBox1;
 

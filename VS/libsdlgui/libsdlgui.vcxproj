@@ -144,6 +144,7 @@
     <ClInclude Include="..\..\include\Control.hpp" />
     <ClInclude Include="..\..\include\CursorManager.hpp" />
     <ClInclude Include="..\..\include\Dialog.hpp" />
+    <ClInclude Include="..\..\include\Dimentions.hpp" />
     <ClInclude Include="..\..\include\DropdownBox.hpp" />
     <ClInclude Include="..\..\include\Exceptions.hpp" />
     <ClInclude Include="..\..\include\Flags.hpp" />

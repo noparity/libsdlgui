@@ -3,6 +3,7 @@
 
 #include <boost/dynamic_bitset.hpp>
 #include <boost/filesystem.hpp>
+#include "Dimentions.hpp"
 #include "Flags.hpp"
 #include "Font.hpp"
 #include "SdlHelpers.hpp"
@@ -14,13 +15,6 @@
 #include <SDL_video.h>
 #include <string>
 #include <vector>
-
-struct Dimentions
-{
-    int W;
-    int H;
-    Dimentions(int w, int h) : W(w), H(h) {}
-};
 
 // forward declaration to prevent circular reference
 class Control;

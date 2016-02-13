@@ -79,6 +79,9 @@
     <ClInclude Include="..\..\include\Panel.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Dimentions.hpp">
+      <Filter>Public Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\stdafx.h">

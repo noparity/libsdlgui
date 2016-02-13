@@ -154,6 +154,11 @@ void Control::OnLeftClick(const SDL_Point&)
     // empty
 }
 
+void Control::OnLocationChanged(int, int)
+{
+    // empty
+}
+
 void Control::OnMiddleClick(const SDL_Point&)
 {
     // empty
@@ -248,7 +253,14 @@ void Control::SetHidden(bool isHidden)
 
 void Control::SetLocation(const SDL_Rect& location)
 {
-    m_loc = location;
+    if (m_loc != location)
+    {
+        int deltaX = location.x - m_loc.x;
+        int deltaY = location.y - m_loc.y;
+        m_loc = location;
+
+        OnLocationChanged(deltaX, deltaY);
+    }
 }
 
 void Control::SetZOrder(uint8_t zOrder)

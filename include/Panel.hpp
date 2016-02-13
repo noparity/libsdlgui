@@ -11,6 +11,7 @@ private:
     std::vector<Control*> m_controls;
 
     virtual void OnHiddenChanged(bool isHidden);
+    virtual void OnLocationChanged(int deltaX, int deltaY);
     virtual void RenderImpl();
 
 public:

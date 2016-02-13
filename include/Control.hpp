@@ -34,6 +34,7 @@ private:
     virtual void OnHiddenChanged(bool);
     virtual void OnKeyboard(const SDL_KeyboardEvent&);
     virtual void OnLeftClick(const SDL_Point&);
+    virtual void OnLocationChanged(int, int);
     virtual void OnMiddleClick(const SDL_Point&);
     virtual bool OnMouseButton(const SDL_MouseButtonEvent&);
     virtual void OnMouseButtonExternal(const SDL_MouseButtonEvent&, Control* pControl);
