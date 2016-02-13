@@ -34,6 +34,7 @@ private:
 	virtual void OnFocusLost();
 	virtual void OnLeftClick(const SDL_Point& clickLoc);
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+	virtual void OnMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl);
 	virtual void RenderImpl();
 
 public:

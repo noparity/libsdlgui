@@ -36,6 +36,7 @@ private:
 	virtual void OnLeftClick(const SDL_Point&);
 	virtual void OnMiddleClick(const SDL_Point&);
 	virtual bool OnMouseButton(const SDL_MouseButtonEvent&);
+	virtual void OnMouseButtonExternal(const SDL_MouseButtonEvent&, Control* pControl);
 	virtual void OnMouseEnter();
 	virtual void OnMouseExit();
 	virtual void OnMouseMotion(const SDL_MouseMotionEvent&);
@@ -92,6 +93,11 @@ public:
 	// sends mouse button event data to the control (e.g. was clicked).  if
 	// the function returns true it means the control should acquire focus.
 	bool NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+
+	// sends mouse button event data to the control when the event
+	// happens outside the bounds of the control.  if the event happens
+	// on a control a pointer to that control is provided.
+	void NotificationMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl);
 
 	// notifies the control that the mouse has entered its bounding area
 	void NotificationMouseEnter();

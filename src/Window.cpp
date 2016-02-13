@@ -204,6 +204,12 @@ void Window::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
 
 void Window::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
+	// if a control has focus and a click happens outside of that control
+	// we need to send it a notification.  if the click happens on another
+	// control pass the pointer to that control.
+	bool notifyCtrl = true;
+	Control* pClickedCtrl = nullptr;
+
 	for (size_t i = 0; i < m_controls.size(); ++i)
 	{
 		if (m_occlusionMap[i] == 1 || m_controls[i]->GetHidden())
@@ -226,11 +232,22 @@ void Window::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 					m_pCtrlWithFocus = m_controls[i];
 					m_pCtrlWithFocus->NotificationFocusAcquired();
 				}
+
+				// a control that took focus was clicked, no need to notify
+				// the previous control as it would have received a notification
+				// that it lost focus.
+				notifyCtrl = false;
 			}
+
+			// remember the control that was clicked but did not take focus
+			pClickedCtrl = m_controls[i];
 
 			break;
 		}
 	}
+
+	if (m_pCtrlWithFocus != nullptr && notifyCtrl)
+		m_pCtrlWithFocus->NotificationMouseButtonExternal(buttonEvent, pClickedCtrl);
 }
 
 void Window::OnMouseMotion(const SDL_MouseMotionEvent& motionEvent)

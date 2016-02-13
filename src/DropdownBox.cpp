@@ -60,6 +60,13 @@ bool DropdownBox::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 	return LeftMouseButtonDown(buttonEvent);
 }
 
+void DropdownBox::OnMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl)
+{
+	// if the left mouse button was pressed and it wasn't on the content box then hide it
+	if (buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT && pControl != &m_contentBox)
+		m_contentBox.SetHidden(true);
+}
+
 void DropdownBox::RegisterForSelectionChangedCallback(const SelectionChangedCallback& callback)
 {
 	m_callback = callback;

@@ -83,6 +83,11 @@ bool Control::NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 	return result;
 }
 
+void Control::NotificationMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl)
+{
+	OnMouseButtonExternal(buttonEvent, pControl);
+}
+
 void Control::NotificationMouseEnter()
 {
 	OnMouseEnter();
@@ -158,6 +163,11 @@ bool Control::OnMouseButton(const SDL_MouseButtonEvent&)
 {
 	// don't acquire focus by default
 	return false;
+}
+
+void Control::OnMouseButtonExternal(const SDL_MouseButtonEvent&, Control*)
+{
+	// empty
 }
 
 void Control::OnMouseEnter()
