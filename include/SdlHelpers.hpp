@@ -113,6 +113,7 @@ public:
     int GetWidth() const { return m_width; }
     int GetHeight() const { return m_height; }
     operator SDL_Texture*() const { return m_pTexture; }
+    SDLTexture& operator=(SDLTexture& rhs);
     SDLTexture& operator=(SDLTexture&& rhs);
 };
 

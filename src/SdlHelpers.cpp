@@ -129,7 +129,7 @@ void SDLTexture::Cleanup()
         SDL_DestroyTexture(m_pTexture);
 }
 
-SDLTexture& SDLTexture::operator=(SDLTexture&& rhs)
+SDLTexture& SDLTexture::operator=(SDLTexture& rhs)
 {
     if (this != &rhs)
     {
@@ -143,6 +143,11 @@ SDLTexture& SDLTexture::operator=(SDLTexture&& rhs)
     }
 
     return *this;
+}
+
+SDLTexture& SDLTexture::operator=(SDLTexture&& rhs)
+{
+    return *this = rhs;
 }
 
 TTFFont::TTFFont(const boost::filesystem::path& fileName, int size)

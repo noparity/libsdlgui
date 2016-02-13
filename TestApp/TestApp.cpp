@@ -56,12 +56,14 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
     {
         this->m_dialog->SetHidden(false);
     });
+    m_button1->SetTexture(this->CreateTextureForText("click", GetFont(), SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor()));
 
     m_button2 = std::make_unique<Button>(this, SDLRect(128, 64, 64, 32));
     m_button2->RegisterForClickCallback([this]()
     {
         this->NextFrame();
     });
+    m_button2->SetTexture(this->CreateTextureForText("next", GetFont(), SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor()));
 
     m_textBox = std::make_unique<TextBox>(this, SDLRect(32, 128, 128, 32));
     m_dropDown = std::make_unique<DropdownBox>(this, SDLRect(256, 128, 128, 32));

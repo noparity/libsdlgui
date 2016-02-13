@@ -82,8 +82,8 @@ public:
     // draws the specified text at the specified location
     void DrawText(const SDL_Rect& location, const SDLTexture& texture, TextAlignment alignment);
 
-    // draws the specified text at the specified location with an optional clipping rectangle
-    void DrawText(const SDL_Rect& location, const SDLTexture& texture, SDL_Rect const* clip);
+    // draws the specified texture at the specified location with an optional clipping rectangle
+    void DrawTexture(const SDL_Rect& location, const SDLTexture& texture, SDL_Rect const* clip);
 
     // gets the window's background color
     SDL_Color GetBackgroundColor() const { return m_bColor; }

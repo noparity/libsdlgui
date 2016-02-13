@@ -318,5 +318,5 @@ void TextBox::RenderImpl()
         location.w -= deltaWidth;
 
     GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
-    GetWindow()->DrawText(location, m_texture, &clip);
+    GetWindow()->DrawTexture(location, m_texture, &clip);
 }

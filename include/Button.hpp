@@ -10,6 +10,7 @@ public:
     using ButtonClickCallback = std::function<void()>;
 
 private:
+    SDLTexture m_texture;
     ButtonClickCallback m_onClick;
 
     virtual void OnFocusAcquired();
@@ -28,6 +29,12 @@ public:
 
     // registers a callback to be invoked when the button is clicked
     void RegisterForClickCallback(const ButtonClickCallback& callback);
+
+    // sets the texture to be rendered on the button
+    void SetTexture(SDLTexture& texture);
+
+    // sets the texture to be rendered on the button
+    void SetTexture(SDLTexture&& texture);
 };
 
 #endif // BUTTON_HPP

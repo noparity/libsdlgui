@@ -191,7 +191,7 @@ void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, TextA
     }
 }
 
-void Window::DrawText(const SDL_Rect& location, const SDLTexture& texture, SDL_Rect const* clip)
+void Window::DrawTexture(const SDL_Rect& location, const SDLTexture& texture, SDL_Rect const* clip)
 {
     SDL_RenderCopy(m_renderer, texture, clip, &location);
 }
