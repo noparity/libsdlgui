@@ -206,8 +206,9 @@ void Window::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 {
     // if a control has focus and a click happens outside of that control
     // we need to send it a notification.  if the click happens on another
-    // control pass the pointer to that control.
-    bool notifyCtrl = true;
+    // control pass the pointer to that control.  only do this when the
+    // button has been pressed, never on release.
+    bool notifyCtrl = buttonEvent.state == SDL_PRESSED;
     Control* pClickedCtrl = nullptr;
 
     for (size_t i = 0; i < m_controls.size(); ++i)
