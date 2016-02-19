@@ -40,6 +40,12 @@ void Panel::OnLocationChanged(int deltaX, int deltaY)
     }
 }
 
+void Panel::OnZOrderChanged()
+{
+    for (auto& control : m_controls)
+        control->SetZOrder(GetZOrder() + 1);
+}
+
 void Panel::RenderImpl()
 {
     // empty

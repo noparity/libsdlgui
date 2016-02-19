@@ -205,6 +205,11 @@ void Control::OnWindowChanged()
     // empty
 }
 
+void Control::OnZOrderChanged()
+{
+    // empty
+}
+
 void Control::Render()
 {
     if (!GetHidden())
@@ -266,4 +271,5 @@ void Control::SetLocation(const SDL_Rect& location)
 void Control::SetZOrder(uint8_t zOrder)
 {
     m_zOrder = zOrder;
+    OnZOrderChanged();
 }

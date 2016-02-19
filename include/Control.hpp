@@ -44,6 +44,7 @@ private:
     virtual void OnRightClick(const SDL_Point&);
     virtual void OnTextInput(const SDL_TextInputEvent&);
     virtual void OnWindowChanged();
+    virtual void OnZOrderChanged();
 
     virtual void RenderImpl() = 0;
 

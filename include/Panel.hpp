@@ -12,6 +12,7 @@ private:
 
     virtual void OnHiddenChanged(bool isHidden);
     virtual void OnLocationChanged(int deltaX, int deltaY);
+    virtual void OnZOrderChanged();
     virtual void RenderImpl();
 
 public:
