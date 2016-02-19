@@ -31,6 +31,8 @@ public:
 
     Attributes GetAttributes() const { return m_attribs.Get(); }
     size_t GetCharSize(char c);
+    size_t GetHeight();
+    size_t GetLineSkipHeight();
     std::string GetName() const { return m_name; }
     size_t GetTextSize(const char* text);
     TTF_Font* GetTtf() const { return m_ttf; }
