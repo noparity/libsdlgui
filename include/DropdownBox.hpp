@@ -12,29 +12,33 @@
 class DropdownBox : public Control
 {
 public:
-    using SelectionChangedCallback = std::function<void(const std::string&)>;
+    using SelectionChangedCallback = ListBox::SelectionChangedCallback;
 
 private:
+    static const uint32_t DropdownButtonWidth = 25;
 
-    // Used to display the content of the drop-down box.
+    // a slightly specialized list box used to display the content of the drop-down box.
     class ContentBox : public ListBox
     {
     private:
         virtual bool OnMouseButton(const SDL_MouseButtonEvent&);
 
     public:
-        ContentBox(Window* pWindow, const SDL_Rect& location);
+        ContentBox(Window* pWindow, const SDL_Rect& location, uint32_t minVisible, uint32_t maxVisible, Control* parent);
+        bool IsSubControl(Control* pControl);
     };
 
-    ContentBox m_contentBox;
+    ContentBox m_content;
     SDLTexture m_texture;
     SelectionChangedCallback m_callback;
 
     virtual void OnFocusAcquired();
     virtual void OnFocusLost();
+    virtual void OnKeyboard(const SDL_KeyboardEvent& keyboardEvent);
     virtual void OnLeftClick(const SDL_Point& clickLoc);
     virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
     virtual void OnMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl);
+    virtual void OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent);
     virtual void RenderImpl();
 
 public:

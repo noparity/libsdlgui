@@ -1,10 +1,27 @@
 #include "stdafx.h"
+#include "DrawingRoutines.hpp"
 #include "DropdownBox.hpp"
 
-DropdownBox::ContentBox::ContentBox(Window* pWindow, const SDL_Rect& location) :
-    ListBox(pWindow, location)
+DropdownBox::ContentBox::ContentBox(Window* pWindow, const SDL_Rect& location, uint32_t minVisible, uint32_t maxVisible, Control* parent) :
+    ListBox(pWindow, location, minVisible, maxVisible, this, true, false)
 {
     // empty
+}
+
+bool DropdownBox::ContentBox::IsSubControl(Control* pControl)
+{
+    // walk the parent hierachy to see if the control
+    // that was clicked is a child of m_content
+
+    while (pControl != nullptr)
+    {
+        if (pControl == this)
+            return true;
+
+        pControl = pControl->GetParent();
+    }
+
+    return false;
 }
 
 bool DropdownBox::ContentBox::OnMouseButton(const SDL_MouseButtonEvent&)
@@ -14,17 +31,18 @@ bool DropdownBox::ContentBox::OnMouseButton(const SDL_MouseButtonEvent&)
 }
 
 DropdownBox::DropdownBox(Window* pWindow, const SDL_Rect& location) :
-    Control(pWindow, location), m_contentBox(pWindow, SDLRect(location.x, location.y + location.h, location.w, 0))
+    Control(pWindow, location), m_content(pWindow, SDLRect(location.x, location.y + location.h, location.w, 0), 1, 10, this)
 {
-    m_contentBox.SetHidden(true);
-    m_contentBox.RegisterForSelectionChangedCallback([this](const std::string& item)
+    m_content.SetHidden(true);
+    m_content.RegisterForSelectionChangedCallback([this](SelectionChangedCallback::argument_type item)
     {
         m_texture = GetWindow()->CreateTextureForText(item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
-        m_contentBox.SetHidden(true);
+        m_content.SetHidden(true);
 
         if (m_callback != nullptr)
             m_callback(item);
     });
+    m_content.SetZOrder(32);
 
     SetBorderSize(1);
     SetBorderColor(SDLColor(0, 128, 0, 0));
@@ -34,7 +52,7 @@ DropdownBox::DropdownBox(Window* pWindow, const SDL_Rect& location) :
 
 void DropdownBox::AddItem(const std::string& item)
 {
-    m_contentBox.AddItem(item);
+    m_content.AddItem(item);
 }
 
 void DropdownBox::OnFocusAcquired()
@@ -45,14 +63,34 @@ void DropdownBox::OnFocusAcquired()
 void DropdownBox::OnFocusLost()
 {
     SetBorderColor(SDLColor(128, 128, 128, 0));
-    m_contentBox.SetHidden(true);
+    m_content.SetHidden(true);
+}
+
+void DropdownBox::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
+{
+    // forward to the underlying ListBox to handle arrow keys
+    m_content.NotificationKeyboard(keyboardEvent);
 }
 
 void DropdownBox::OnLeftClick(const SDL_Point& clickLoc)
 {
     auto myLoc = GetLocation();
-    if (clickLoc.x >= (myLoc.x + myLoc.w) - (myLoc.h - 1))
-        m_contentBox.SetHidden(!m_contentBox.GetHidden());
+    if (clickLoc.x >= (myLoc.x + myLoc.w) - static_cast<int>(DropdownButtonWidth))
+    {
+        // by default the content box will be drawn under the drop-down box.
+        // if this would cause the content box not to be fully drawn then
+        // place it above the drop-down (assumes this would be a better fit).
+        auto windowDims = GetWindow()->GetDimentions();
+        auto contentLoc = m_content.GetLocation();
+
+        if (contentLoc.y + contentLoc.h > windowDims.H)
+        {
+            contentLoc.y = myLoc.y - contentLoc.h;
+            m_content.SetLocation(contentLoc);
+        }
+
+        m_content.SetHidden(!m_content.GetHidden());
+    }
 }
 
 bool DropdownBox::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
@@ -63,8 +101,27 @@ bool DropdownBox::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
 void DropdownBox::OnMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl)
 {
     // if the left mouse button was pressed and it wasn't on the content box then hide it
-    if (buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT && pControl != &m_contentBox)
-        m_contentBox.SetHidden(true);
+    if (buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT && !m_content.IsSubControl(pControl))
+        m_content.SetHidden(true);
+}
+
+void DropdownBox::OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent)
+{
+    if (HasFocus() && m_content.GetHidden())
+    {
+        // scrolling over the dropdown box will change the selected item.
+        // we can piggyback on the keyboard event to get the desired behavior.
+
+        SDL_KeyboardEvent keyboardEvent = { 0 };
+        keyboardEvent.state = SDL_PRESSED;
+
+        if (wheelEvent.y > 0)
+            keyboardEvent.keysym.sym = SDLK_UP;
+        else
+            keyboardEvent.keysym.sym = SDLK_DOWN;
+
+        OnKeyboard(keyboardEvent);
+    }
 }
 
 void DropdownBox::RegisterForSelectionChangedCallback(const SelectionChangedCallback& callback)
@@ -75,8 +132,10 @@ void DropdownBox::RegisterForSelectionChangedCallback(const SelectionChangedCall
 void DropdownBox::RenderImpl()
 {
     auto myLoc = GetLocation();
-    auto p1 = SDLPoint((myLoc.x + myLoc.w) - (myLoc.h - 1), myLoc.y);
-    auto p2 = SDLPoint((myLoc.x + myLoc.w) - (myLoc.h - 1), myLoc.y + myLoc.h - 1);
-    GetWindow()->DrawLine(p1, p2, SDLColor(128, 128, 128, 0));
+
+    auto buttonStart = (myLoc.x + myLoc.w) - DropdownButtonWidth;
+    auto buttonLoc = SDLRect(buttonStart, myLoc.y, DropdownButtonWidth, myLoc.h);
+    GetWindow()->DrawRectangle(buttonLoc, GetForegroundColor(), UINT8_MAX);
+    DrawChevron(GetWindow(), buttonLoc, GetBackgroundColor(), false);
     GetWindow()->DrawText(GetLocation(), m_texture, TextAlignment::MiddleLeft);
 }

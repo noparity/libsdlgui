@@ -306,6 +306,12 @@ void Window::OnMouseMotion(const SDL_MouseMotionEvent& motionEvent)
     }
 }
 
+void Window::OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent)
+{
+    if (m_pCtrlUnderMouse != nullptr)
+        m_pCtrlUnderMouse->NotificationMouseWheel(wheelEvent);
+}
+
 void Window::OnTextInput(const SDL_TextInputEvent& textEvent)
 {
     // should have a control with focus (e.g. a text box)
@@ -330,7 +336,26 @@ void Window::OnWindowResized(const SDL_WindowEvent& windowEvent)
 
 void Window::RegisterForElapsedTimeNotification(Control* pControl, uint32_t ticks)
 {
-    m_ctrlsElapsedTime.push_back(ControlElapsedTime(pControl, ticks, SDL_GetTicks()));
+    // check if the control is already registered, if
+    // it is then update the frequency and start ticks.
+
+    std::vector<ControlElapsedTime>::iterator iter;
+    for (iter = m_ctrlsElapsedTime.begin(); iter != m_ctrlsElapsedTime.end(); ++iter)
+    {
+        if (std::get<0>(*iter) == pControl)
+            break;
+    }
+
+    if (iter == m_ctrlsElapsedTime.end())
+    {
+        m_ctrlsElapsedTime.push_back(ControlElapsedTime(pControl, ticks, SDL_GetTicks()));
+    }
+    else
+    {
+        // update the value and start time
+        std::get<1>(*iter) = ticks;
+        std::get<2>(*iter) = SDL_GetTicks();
+    }
 }
 
 void Window::RemoveAllControls()
@@ -487,6 +512,9 @@ bool Window::TranslateEvent(const SDL_Event& sdlEvent)
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
         OnMouseButton(sdlEvent.button);
+        break;
+    case SDL_MOUSEWHEEL:
+        OnMouseWheel(sdlEvent.wheel);
         break;
     case SDL_MOUSEMOTION:
         OnMouseMotion(sdlEvent.motion);

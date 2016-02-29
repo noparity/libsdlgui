@@ -6,6 +6,7 @@
 #include "Dialog.hpp"
 #include "DropdownBox.hpp"
 #include "Label.hpp"
+#include "ListBox.hpp"
 #include "Panel.hpp"
 #include "TextBox.hpp"
 #include "Window.hpp"
@@ -48,6 +49,7 @@ private:
     std::unique_ptr<TestDialog> m_dialog;
     std::unique_ptr<DropdownBox> m_dropDown;
     std::unique_ptr<CheckBox> m_checkBox1;
+    std::unique_ptr<ListBox> m_listBox;
 
     int m_frameNumber;
 

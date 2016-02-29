@@ -213,3 +213,4 @@ ModelManifest.xml
 
 # VC opendb files
 *.opendb
+*.vc.db

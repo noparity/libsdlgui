@@ -150,6 +150,12 @@ inline bool operator!=(const SDL_Color& lhs, const SDL_Color& rhs)
     return !(lhs == rhs);
 }
 
+// returns a color of lower intensity
+inline SDL_Color operator/(const SDL_Color& lhs, uint8_t rhs)
+{
+    return SDLColor(lhs.r / rhs, lhs.g / rhs, lhs.b / rhs, lhs.a / rhs);
+}
+
 // returns an SDL_Rect struct from the specified arguments
 inline SDL_Rect SDLRect(int x, int y, int w, int h)
 {

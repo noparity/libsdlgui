@@ -49,6 +49,7 @@ private:
     void OnKeyboard(const SDL_KeyboardEvent& keyboardEvent);
     void OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
     void OnMouseMotion(const SDL_MouseMotionEvent& motionEvent);
+    void OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent);
     void OnTextInput(const SDL_TextInputEvent& textEvent);
     void OnWindowResized(const SDL_WindowEvent& windowEvent);
     bool ShouldRender();
@@ -100,7 +101,8 @@ public:
     // render the window and its contents
     void Render();
 
-    // registers a control to receive a callback on the specified interval
+    // registers a control to receive a callback on the specified interval.
+    // doing subsequent calls with the same control will change the interval.
     void RegisterForElapsedTimeNotification(Control* pControl, uint32_t ticks);
 
     // sets the cursor's hidden state

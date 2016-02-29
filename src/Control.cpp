@@ -2,8 +2,8 @@
 #include "Control.hpp"
 #include "SdlHelpers.hpp"
 
-Control::Control(Window* pWindow, const SDL_Rect& location) :
-    m_pWindow(pWindow), m_flags(State::None), m_loc(location), m_borderSize(0), m_zOrder(0)
+Control::Control(Window* pWindow, const SDL_Rect& location, Control* parent) :
+    m_pWindow(pWindow), m_pParent(parent), m_flags(State::None), m_loc(location), m_borderSize(0), m_zOrder(0)
 {
     assert(m_pWindow != nullptr);
     m_borderColor = { 0, 0, 0, 0 };
@@ -34,6 +34,11 @@ bool Control::LeftMouseButtonDown(const SDL_MouseButtonEvent& buttonEvent)
 {
     // if the left mouse button was pressed return true
     return buttonEvent.state == SDL_PRESSED && buttonEvent.button == SDL_BUTTON_LEFT;
+}
+
+bool Control::LeftMouseButtonUp(const SDL_MouseButtonEvent& buttonEvent)
+{
+    return buttonEvent.state == SDL_RELEASED && buttonEvent.button == SDL_BUTTON_LEFT;
 }
 
 void Control::NotificationElapsedTime()
@@ -114,6 +119,11 @@ void Control::NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent)
     OnMouseMotion(motionEvent);
 }
 
+void Control::NotificationMouseWheel(const SDL_MouseWheelEvent& wheelEvent)
+{
+    OnMouseWheel(wheelEvent);
+}
+
 void Control::NotificationTextInput(const SDL_TextInputEvent& textEvent)
 {
     OnTextInput(textEvent);
@@ -186,6 +196,11 @@ void Control::OnMouseExit()
 }
 
 void Control::OnMouseMotion(const SDL_MouseMotionEvent&)
+{
+    // empty
+}
+
+void Control::OnMouseWheel(const SDL_MouseWheelEvent&)
 {
     // empty
 }

@@ -17,6 +17,7 @@ private:
     };
 
     Window* m_pWindow;
+    Control* m_pParent;
     Flags<State> m_flags;
     SDL_Rect m_loc;
     SDL_Color m_bColor;
@@ -41,6 +42,7 @@ private:
     virtual void OnMouseEnter();
     virtual void OnMouseExit();
     virtual void OnMouseMotion(const SDL_MouseMotionEvent&);
+    virtual void OnMouseWheel(const SDL_MouseWheelEvent&);
     virtual void OnRightClick(const SDL_Point&);
     virtual void OnTextInput(const SDL_TextInputEvent&);
     virtual void OnWindowChanged();
@@ -58,8 +60,11 @@ protected:
     // returns true if the left mouse button was pressed on the control
     bool LeftMouseButtonDown(const SDL_MouseButtonEvent& buttonEvent);
 
+    // returns true if the left mouse button was released on the control
+    bool LeftMouseButtonUp(const SDL_MouseButtonEvent& buttonEvent);
+
 public:
-    Control(Window* pWindow, const SDL_Rect& location);
+    Control(Window* pWindow, const SDL_Rect& location, Control* parent = nullptr);
     virtual ~Control();
 
     // returns true if the control can be dragged
@@ -76,6 +81,9 @@ public:
 
     // gets the location of the control
     SDL_Rect GetLocation() const { return m_loc; }
+
+    // gets this control's parent, can be nullptr
+    Control* GetParent() const { return m_pParent; }
 
     // gets the Z-order of the control.  controls are rendered in ascending Z-order
     uint8_t GetZOrder() const { return m_zOrder; }
@@ -109,6 +117,9 @@ public:
 
     // sends mouse motion event data to the control (e.g. mouse is moving within the control)
     void NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent);
+
+    // sends mouse wheel event data to the control (e.g. scroll direction)
+    void NotificationMouseWheel(const SDL_MouseWheelEvent& wheelEvent);
 
     // sends text input events to the control (e.g. typing in a text box)
     void NotificationTextInput(const SDL_TextInputEvent& textEvent);

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Dialog.hpp"
+#include "DrawingRoutines.hpp"
 
 Dialog::Dialog(Window* pWindow, const std::string& title, const Dimentions& dimentions) :
     Control(pWindow, SDLRect(0, 0, dimentions.W, dimentions.H + TitleBarHeight)),
@@ -113,4 +114,5 @@ void Dialog::RenderImpl()
     
     // draw the close button
     window->DrawRectangle(GetCloseButtonLoc(), SDLColor(255, 0, 0, 0), UINT8_MAX);
+    DrawX(GetWindow(), GetCloseButtonLoc(), SDLColor(0, 0, 0, 0));
 }

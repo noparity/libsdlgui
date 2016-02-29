@@ -90,11 +90,11 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
     m_button2->SetTexture(this->CreateTextureForText("next", GetFont(), SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor()));
 
     m_textBox = std::make_unique<TextBox>(this, SDLRect(32, 128, 128, 32));
-    m_dropDown = std::make_unique<DropdownBox>(this, SDLRect(256, 128, 128, 32));
+    m_dropDown = std::make_unique<DropdownBox>(this, SDLRect(340, 200, 128, 32));
 
-    m_dropDown->AddItem("One");
-    m_dropDown->AddItem("Two");
-    m_dropDown->AddItem("Three");
+    for (int i = 0; i < 100; ++i)
+        m_dropDown->AddItem(ToString(i));
+
     m_dropDown->RegisterForSelectionChangedCallback([this](const std::string& item)
     {
         m_label1->SetText(std::string("Selected ") + item);
@@ -116,6 +116,14 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
     m_panel = std::make_unique<TestControl>(this, panelLoc);
     m_panel->SetBorderColor(SDLColor(0, 255, 0, 0));
     m_panel->SetBorderSize(1);
+
+    m_listBox = std::make_unique<ListBox>(this, SDLRect(40, 280, 128, 32), 3, 3);
+    m_listBox->AddItem("some");
+    m_listBox->AddItem("things");
+    m_listBox->AddItem("to");
+    m_listBox->AddItem("put");
+    m_listBox->AddItem("in");
+    m_listBox->AddItem("here");
 
     FrameOne();
 }
