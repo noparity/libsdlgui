@@ -3,7 +3,7 @@
 #include "DropdownBox.hpp"
 
 DropdownBox::ContentBox::ContentBox(Window* pWindow, const SDL_Rect& location, uint32_t minVisible, uint32_t maxVisible, Control* parent) :
-    ListBox(pWindow, location, minVisible, maxVisible, this, true, false)
+    ListBox(pWindow, location, minVisible, maxVisible, parent, true, false)
 {
     // empty
 }
