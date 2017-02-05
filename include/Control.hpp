@@ -43,6 +43,7 @@ private:
     virtual void OnMouseExit();
     virtual void OnMouseMotion(const SDL_MouseMotionEvent&);
     virtual void OnMouseWheel(const SDL_MouseWheelEvent&);
+    virtual void OnResize(int, int);
     virtual void OnRightClick(const SDL_Point&);
     virtual void OnTextInput(const SDL_TextInputEvent&);
     virtual void OnWindowChanged();

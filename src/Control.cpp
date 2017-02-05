@@ -205,6 +205,11 @@ void Control::OnMouseWheel(const SDL_MouseWheelEvent&)
     // empty
 }
 
+void Control::OnResize(int, int)
+{
+    // empty
+}
+
 void Control::OnRightClick(const SDL_Point&)
 {
     // empty
@@ -275,11 +280,22 @@ void Control::SetLocation(const SDL_Rect& location)
 {
     if (m_loc != location)
     {
-        int deltaX = location.x - m_loc.x;
-        int deltaY = location.y - m_loc.y;
+        auto oldLoc = m_loc;
         m_loc = location;
 
-        OnLocationChanged(deltaX, deltaY);
+        // check location
+        int deltaX = location.x - oldLoc.x;
+        int deltaY = location.y - oldLoc.y;
+
+        if (deltaX != 0 || deltaY != 0)
+            OnLocationChanged(deltaX, deltaY);
+
+        // check size
+        deltaX = location.h - oldLoc.h;
+        deltaY = location.w - oldLoc.w;
+
+        if (deltaX != 0 || deltaY != 0)
+            OnResize(deltaX, deltaY);
     }
 }
 
