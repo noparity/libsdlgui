@@ -9,27 +9,26 @@ ListBox::ListBox(Window* pWindow, const SDL_Rect& location, uint32_t minVisible,
     m_minVisible(minVisible),
     m_maxVisible(maxVisible),
     m_visStart(0),
-    m_vertScrollbar(pWindow, location, maxVisible, this),
+    m_vertScrollbar(pWindow, location, this),
     m_scrollRequiredFocus(scrollRequiresFocus),
     m_highlightOnMouseMotion(highlightOnMouseMotion)
 {
+    auto myLoc = GetLocation();
+
+    // place the scroll bar in the right side of the control
+    m_vertScrollbar.SetLocation(SDLRect(myLoc.x + myLoc.w - (VertScrollbarWidth + 1), myLoc.y + 1, VertScrollbarWidth, myLoc.h - 2));
+
     // set the height of the control based on the item height and min visible count
     m_itemHeight = GetWindow()->GetFont()->GetHeight();
-    auto myLoc = GetLocation();
     myLoc.h = m_itemHeight * m_minVisible;
     SetLocation(myLoc);
     SetBorderColor(SDLColor(0, 128, 0, 0));
     SetBorderSize(1);
 
-    // now fix up the vertical scrollbar's dimentions
-    AdjustVertScrollBarHeight();
     m_vertScrollbar.SetZOrder(GetZOrder() + 1);
-    m_vertScrollbar.RegisterForScrollCallback([this](VerticalScrollbar::Direction dir)
+    m_vertScrollbar.RegisterForScrollCallback([this](const ScrollEventData& eventData)
     {
-        if (dir == VerticalScrollbar::Direction::TowardsBeginning && m_visStart > 0)
-            --m_visStart;
-        else if (dir == VerticalScrollbar::Direction::TowardsEnd && m_visStart < (m_items.size() - m_maxVisible))
-            ++m_visStart;
+        m_visStart = eventData.NewValue();
     });
 
     // hide the scrollbar by default
@@ -44,7 +43,14 @@ void ListBox::AddItem(const std::string& item)
 
     assert(static_cast<uint32_t>(default.GetHeight()) == m_itemHeight);
     m_textures.push_back(std::tuple<SDLTexture, SDLTexture, bool>(std::move(default), std::move(highlight), false));
-    m_vertScrollbar.Resize(m_items.size());
+
+    // set the max based on the total item size minus the
+    // max items visible paying attention to underflow
+    uint32_t vertMax = m_items.size() - m_maxVisible;
+    if (vertMax > m_items.size())
+        vertMax = 0;
+
+    m_vertScrollbar.SetMaximum(vertMax);
 
     // if the count of items is greater than the minimum
     // number to display we need to resize the control up
@@ -54,43 +60,12 @@ void ListBox::AddItem(const std::string& item)
         auto myLoc = GetLocation();
         myLoc.h = m_itemHeight * m_items.size();
         SetLocation(myLoc);
-        AdjustVertScrollBarHeight();
     }
 
     // if the count of items is greater than the maximum
     // to display enable the vertical scrollbar
     if (m_items.size() > m_maxVisible && !GetHidden())
         m_vertScrollbar.SetHidden(false);
-}
-
-void ListBox::AdjustVertScrollBarHeight()
-{
-    // keep the height of the scroll bar in sync with the height of the list box
-    auto myLoc = GetLocation();
-    m_vertScrollbar.SetLocation(SDLRect(myLoc.x + myLoc.w - (VertScrollbarWidth + 1), myLoc.y + 1, VertScrollbarWidth, myLoc.h - 2));
-}
-
-void ListBox::ChangeSelectedItem(uint32_t oldItem, uint32_t newItem)
-{
-    assert(newItem < m_items.size());
-    assert(oldItem != newItem);
-
-    SetHighlighted(newItem);
-
-    if (m_callback != nullptr)
-        m_callback(m_items[newItem]);
-
-    // adjust the visible start index as required
-    if (m_selected >= m_visStart + m_maxVisible)
-    {
-        ++m_visStart;
-        m_vertScrollbar.MoveSlider(VerticalScrollbar::Direction::TowardsEnd);
-    }
-    else if (m_selected < m_visStart)
-    {
-        --m_visStart;
-        m_vertScrollbar.MoveSlider(VerticalScrollbar::Direction::TowardsBeginning);
-    }
 }
 
 uint32_t ListBox::GetIndexForMouseLoc(const SDL_Point& mouseLoc)
@@ -145,17 +120,15 @@ void ListBox::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
         case SDLK_DOWN:
             if (m_selected == UINT32_MAX || m_selected < (m_items.size() - 1))
             {
-                auto old = m_selected;
                 ++m_selected;
-                ChangeSelectedItem(old, m_selected);
+                SelectedItemChanged();
             }
             break;
         case SDLK_UP:
             if (m_selected != UINT32_MAX && m_selected > 0)
             {
-                auto old = m_selected;
                 --m_selected;
-                ChangeSelectedItem(old, m_selected);
+                SelectedItemChanged();
             }
             break;
         }
@@ -167,9 +140,8 @@ void ListBox::OnLeftClick(const SDL_Point& clickLoc)
     auto index = GetIndexForMouseLoc(clickLoc);
     if (index != UINT32_MAX && index != m_selected)
     {
-        auto old = m_selected;
         m_selected = index;
-        ChangeSelectedItem(old, m_selected);
+        SelectedItemChanged();
     }
 }
 
@@ -195,6 +167,14 @@ void ListBox::OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent)
 {
     if (HasFocus() || !m_scrollRequiredFocus)
         m_vertScrollbar.NotificationMouseWheel(wheelEvent);
+}
+
+void ListBox::OnResize(int deltaH, int)
+{
+    // keep the height of the scroll bar in sync with the height of the list box
+    auto loc = m_vertScrollbar.GetLocation();
+    loc.h += deltaH;
+    m_vertScrollbar.SetLocation(loc);
 }
 
 void ListBox::OnZOrderChanged()
@@ -235,6 +215,21 @@ void ListBox::RenderImpl()
 void ListBox::RegisterForSelectionChangedCallback(const SelectionChangedCallback& callback)
 {
     m_callback = callback;
+}
+
+void ListBox::SelectedItemChanged()
+{
+    // move the vis start item within bounds
+    if (m_selected <= m_items.size() - m_maxVisible)
+    {
+        m_visStart = m_selected;
+        m_vertScrollbar.SetCurrent(m_visStart);
+    }
+
+    SetHighlighted(m_selected);
+
+    if (m_callback != nullptr)
+        m_callback(m_items[m_selected]);
 }
 
 void ListBox::SetHighlighted(uint32_t index)

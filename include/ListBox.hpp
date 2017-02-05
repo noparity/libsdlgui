@@ -28,8 +28,7 @@ private:
     bool m_scrollRequiredFocus;
     bool m_highlightOnMouseMotion;
 
-    void AdjustVertScrollBarHeight();
-    void ChangeSelectedItem(uint32_t oldItem, uint32_t newItem);
+    uint32_t GetIndexForMouseLoc(const SDL_Point& mouseLoc);
     uint32_t GetVisCount() const;
     virtual void OnHiddenChanged(bool isHidden);
     virtual void OnKeyboard(const SDL_KeyboardEvent& keyboardEvent);
@@ -37,8 +36,10 @@ private:
     virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
     virtual void OnMouseMotion(const SDL_MouseMotionEvent& motionEvent);
     virtual void OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent);
+    virtual void OnResize(int deltaH, int);
     virtual void OnZOrderChanged();
     virtual void RenderImpl();
+    void SelectedItemChanged();
     void SetHighlighted(uint32_t index);
 
 public:
@@ -51,9 +52,6 @@ public:
 
     // returns the number of items in the list box
     size_t GetCountItems() const { return m_items.size(); }
-
-    // returns the index of the item the mouse is over
-    uint32_t GetIndexForMouseLoc(const SDL_Point& mouseLoc);
 
     // returns the index of the item that's currently selected
     uint32_t GetSelectedIndex() const { return m_selected; }

@@ -152,6 +152,7 @@
     <ClInclude Include="..\..\include\Helpers.hpp" />
     <ClInclude Include="..\..\include\ListBox.hpp" />
     <ClInclude Include="..\..\include\Panel.hpp" />
+    <ClInclude Include="..\..\include\ScrollEventData.hpp" />
     <ClInclude Include="..\..\include\SdlHelpers.hpp" />
     <ClInclude Include="..\..\include\Label.hpp" />
     <ClInclude Include="..\..\include\Singleton.hpp" />

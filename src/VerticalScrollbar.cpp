@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "DrawingRoutines.hpp"
-#include <iostream>
 #include "VerticalScrollbar.hpp"
 
-VerticalScrollbar::VerticalScrollbar(Window* pWindow, const SDL_Rect& location, uint32_t visible, Control* parent) :
+VerticalScrollbar::VerticalScrollbar(Window* pWindow, const SDL_Rect& location, Control* parent) :
     Control(pWindow, location, parent),
-    m_count(0),
-    m_visible(visible),
-    m_range(0),
+    m_current(0),
+    m_max(0),
+    m_min(0),
+    m_largeChange(10),
+    m_smallChange(1),
     m_held(ButtonClicked::None),
-    m_sliderMoved(0),
     m_showSlider(false),
     m_dragSlider(false)
 {
@@ -33,6 +33,7 @@ SDL_Rect VerticalScrollbar::GetButtonBounds(bool isUp) const
         buttonLoc.y = myLoc.y;
     else
         buttonLoc.y = (myLoc.y + myLoc.h) - height;
+
     buttonLoc.h = height;
     buttonLoc.w = myLoc.w;
 
@@ -56,55 +57,33 @@ VerticalScrollbar::ButtonClicked VerticalScrollbar::GetButtonClicked(const SDL_P
     return buttonClicked;
 }
 
-uint8_t VerticalScrollbar::GetPixelsForScroll() const
+ScrollDirection VerticalScrollbar::GetScrollDirForButton(VerticalScrollbar::ButtonClicked button)
 {
-    assert(m_showSlider);
-    auto pixelsForScroll = std::ceil(static_cast<double>(m_range) / m_count);
-    assert(pixelsForScroll > 0);
-    assert(pixelsForScroll <= UINT8_MAX);
-    return static_cast<uint8_t>(pixelsForScroll);
+    assert(button != ButtonClicked::Slider && button != ButtonClicked::None);
+    ScrollDirection dir = ScrollDirection::Increment;
+    if (button == ButtonClicked::Up)
+        dir = ScrollDirection::Decrement;
+
+    return dir;
 }
 
-void VerticalScrollbar::MoveSlider(VerticalScrollbar::Direction direction)
-{
-    MoveSliderInternal(direction, false);
-}
-
-void VerticalScrollbar::MoveSliderImpl(int direction)
-{
-    assert(direction != 0);
-    // keep the slider within bounds
-    if (direction < 0)
-    {
-        auto upButton = GetButtonBounds(true);
-        auto newYTop = m_sliderLoc.y + direction;
-        if (newYTop < upButton.y + upButton.h)
-            direction += (upButton.y + upButton.h) - newYTop;
-    }
-    else
-    {
-        auto downButton = GetButtonBounds(false);
-        auto newYBottom = m_sliderLoc.y + m_sliderLoc.h + direction;
-        if (newYBottom > downButton.y)
-            direction -= newYBottom - downButton.y;
-    }
-
-    m_sliderLoc.y += direction;
-}
-
-void VerticalScrollbar::MoveSliderInternal(Direction direction, bool raiseEvent)
+void VerticalScrollbar::MoveSlider()
 {
     if (m_showSlider)
     {
-        auto pixelsToMove = static_cast<int>(GetPixelsForScroll());
-        if (direction == VerticalScrollbar::Direction::TowardsBeginning)
-            pixelsToMove = -pixelsToMove;
+        // get the height of the slider
+        auto height = m_sliderLoc.h;
 
-        MoveSliderImpl(pixelsToMove);
+        // get the full range of pixels available for sliding
+        auto downButton = GetButtonBounds(false);
+        auto upButton = GetButtonBounds(true);
+        auto range = downButton.y - (upButton.y + upButton.h) - height;
+
+        // normalize the min/max range to the range of available pixels
+
+        // y = Min + (x - A) * (Max - Min) / (B - A)
+        m_sliderLoc.y = (upButton.y + upButton.h) + (m_current - m_min) * (range) / (m_max - m_min);
     }
-
-    if (raiseEvent)
-        RaiseScrollEvent(direction);
 }
 
 void VerticalScrollbar::OnElapsedTime()
@@ -118,11 +97,7 @@ void VerticalScrollbar::OnElapsedTime()
         accelerate = true;
     }
 
-    VerticalScrollbar::Direction dir = VerticalScrollbar::Direction::TowardsEnd;
-    if (m_held == ButtonClicked::Up)
-        dir = VerticalScrollbar::Direction::TowardsBeginning;
-
-    MoveSliderInternal(dir, true);
+    ScrollContent(GetScrollDirForButton(m_held), ScrollMagnitude::Small);
 
     if (accelerate)
         GetWindow()->RegisterForElapsedTimeNotification(this, 100);
@@ -137,11 +112,7 @@ bool VerticalScrollbar::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
         {
             if (buttonClicked != ButtonClicked::Slider)
             {
-                VerticalScrollbar::Direction dir = VerticalScrollbar::Direction::TowardsEnd;
-                if (buttonClicked == ButtonClicked::Up)
-                    dir = VerticalScrollbar::Direction::TowardsBeginning;
-
-                MoveSliderInternal(dir, true);
+                ScrollContent(GetScrollDirForButton(buttonClicked), ScrollMagnitude::Small);
 
                 // track the button being held down and start a timer, this
                 // allows the scrolling to continue if the button is held down.
@@ -183,38 +154,22 @@ void VerticalScrollbar::OnMouseMotion(const SDL_MouseMotionEvent& motionEvent)
     if (m_dragSlider && motionEvent.yrel != 0)
     {
         assert(m_showSlider);
-        // move the slider accordingly
-        m_sliderMoved += static_cast<uint8_t>(std::abs(motionEvent.yrel));
 
-        // track how far the scroll bar is moved, once it's moved
-        // the requisite number of pixels raise the scroll event.
-        if (m_sliderMoved >= GetPixelsForScroll())
-        {
-            m_sliderMoved = 0;
-            VerticalScrollbar::Direction dir = VerticalScrollbar::Direction::TowardsEnd;
-            if (motionEvent.yrel < 0)
-                dir = VerticalScrollbar::Direction::TowardsBeginning;
+        ScrollDirection dir = ScrollDirection::Increment;
+        if (motionEvent.yrel < 0)
+            dir = ScrollDirection::Decrement;
 
-            RaiseScrollEvent(dir);
-        }
-
-        MoveSliderImpl(motionEvent.yrel);
+        ScrollContent(dir, ScrollMagnitude::Small);
     }
 }
 
 void VerticalScrollbar::OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent)
 {
-    VerticalScrollbar::Direction dir = VerticalScrollbar::Direction::TowardsEnd;
+    ScrollDirection dir = ScrollDirection::Increment;
     if (wheelEvent.y > 0)
-        dir = VerticalScrollbar::Direction::TowardsBeginning;
+        dir = ScrollDirection::Decrement;
 
-    MoveSliderInternal(dir, true);
-}
-
-void VerticalScrollbar::RaiseScrollEvent(Direction direction)
-{
-    if (m_scrollCallback != nullptr)
-        m_scrollCallback(direction);
+    ScrollContent(dir, ScrollMagnitude::Small);
 }
 
 void VerticalScrollbar::RenderImpl()
@@ -232,9 +187,47 @@ void VerticalScrollbar::RenderImpl()
         GetWindow()->DrawRectangle(m_sliderLoc, SDLColor(230, 230, 230, 0), UINT8_MAX);
 }
 
-void VerticalScrollbar::Resize(uint32_t count)
+void VerticalScrollbar::ScrollContent(ScrollDirection direction, ScrollMagnitude magnitude)
 {
-    m_count = count;
+    // get the number of items to move based on the scroll type
+    auto toMove = SmallChange();
+    if (magnitude == ScrollMagnitude::Large)
+        toMove = LargeChange();
+
+    if (direction == ScrollDirection::Decrement)
+    {
+        if (m_current < toMove)
+            toMove = static_cast<uint8_t>(m_current);
+
+        m_current -= toMove;
+    }
+    else
+    {
+        auto remaining = m_current - (m_max);
+        if (toMove > remaining)
+            toMove = static_cast<uint8_t>(remaining);
+
+        m_current += toMove;
+    }
+
+    MoveSlider();
+
+    if (m_scrollCallback != nullptr)
+    {
+        ScrollEventData scrollEvent(m_current, direction, magnitude, ScrollOrientation::Vertical);
+        m_scrollCallback(scrollEvent);
+    }
+}
+
+void VerticalScrollbar::SetCurrent(uint32_t current)
+{
+    m_current = current;
+    MoveSlider();
+}
+
+void VerticalScrollbar::SetMaximum(uint32_t max)
+{
+    m_max = max;
 
     // check the size of the control, if it's too
     // small then don't display the slider
@@ -242,7 +235,7 @@ void VerticalScrollbar::Resize(uint32_t count)
     auto myLoc = GetLocation();
     auto downButton = GetButtonBounds(false);
 
-    if (m_count > m_visible && myLoc.h > (downButton.h * 3))
+    if (myLoc.h > (downButton.h * 3))
         m_showSlider = true;
     else
         m_showSlider = false;
@@ -259,12 +252,9 @@ void VerticalScrollbar::Resize(uint32_t count)
         m_sliderLoc.y = upButton.y + upButton.h;
 
         // get the range of pixels available
-        m_range = downButton.y - (upButton.y + upButton.h);
+        auto range = downButton.y - (upButton.y + upButton.h);
         
-        double ratio = static_cast<double>(m_visible) / m_count;
-        assert(ratio <= 1.0);
-
-        m_sliderLoc.h = static_cast<int>(m_range * ratio);
+        m_sliderLoc.h = static_cast<int>(range - m_max);
         // don't let the slider get any smaller than a half button
         if (m_sliderLoc.h < downButton.h / 2)
             m_sliderLoc.h = downButton.h / 2;
