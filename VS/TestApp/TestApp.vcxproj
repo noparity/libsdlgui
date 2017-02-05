@@ -73,7 +73,7 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -88,14 +88,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\include;..\..\..\SDL\include;..\..\..\boost_1_58_0;..\..\..\SDL_image;..\..\..\SDL_ttf;..\libsdlgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\boost\;$(ProjectDir)..\..\..\SDL\include\;$(ProjectDir)..\..\..\SDL_image\;$(ProjectDir)..\..\..\SDL_ttf\</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\$(Configuration);..\..\..\SDL\VisualC\SDL\Win32\$(Configuration);..\..\..\SDL\VisualC\SDLmain\Win32\$(Configuration);..\..\..\SDL_image\VisualC\Win32\$(Configuration);..\..\..\SDL_ttf\VisualC\Win32\$(Configuration);..\..\..\boost_1_58_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libsdlgui.lib;sdl2.lib;sdl2main.lib;sdl2_image.lib;sdl2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\$(Configuration);..\..\..\SDL\VisualC\SDL\Win32\$(Configuration);..\..\..\SDL\VisualC\SDLmain\Win32\$(Configuration);..\..\..\SDL_image\VisualC\Win32\$(Configuration);..\..\..\SDL_ttf\VisualC\Win32\$(Configuration);..\..\..\boost\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libsdlgui.lib;sdl2.lib;sdl2main.lib;sdl2_image.lib;sdl2_ttf.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /y ..\..\..\SDL\VisualC\SDL\Win32\$(Configuration)\sdl2.dll $(OutDir)
@@ -115,10 +115,13 @@ copy /y ..\..\..\libpng\projects\vstudio\$(Configuration)\libpng16.pdb $(OutDir)
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\boost\;$(ProjectDir)..\..\..\SDL\include\;$(ProjectDir)..\..\..\SDL_image\;$(ProjectDir)..\..\..\SDL_ttf\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\$(Configuration);..\..\..\SDL\VisualC\SDL\Win32\$(Configuration);..\..\..\SDL\VisualC\SDLmain\Win32\$(Configuration);..\..\..\SDL_image\VisualC\Win32\$(Configuration);..\..\..\SDL_ttf\VisualC\Win32\$(Configuration);..\..\..\boost\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libsdlgui.lib;sdl2.lib;sdl2main.lib;sdl2_image.lib;sdl2_ttf.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -170,6 +173,11 @@ copy /y ..\..\..\libpng\projects\vstudio\$(Configuration)\libpng16.pdb $(OutDir)
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\TestApp\TestApp.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libsdlgui\libsdlgui.vcxproj">
+      <Project>{f13c9acd-7d9b-4fc3-8cc0-e9e7c0962dda}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
