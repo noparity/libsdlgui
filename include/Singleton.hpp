@@ -1,8 +1,6 @@
 #ifndef SINGLETON_HPP
 #define SINGLETON_HPP
 
-#include <atomic>
-
 template <class Type>
 class Singleton
 {

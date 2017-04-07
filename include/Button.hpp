@@ -2,6 +2,7 @@
 #define BUTTON_HPP
 
 #include "Control.hpp"
+#include "SdlHelpers.hpp"
 
 // represents a button control
 class Button : public Control

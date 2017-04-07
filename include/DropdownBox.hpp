@@ -3,10 +3,7 @@
 
 #include "Control.hpp"
 #include "ListBox.hpp"
-#include <memory>
 #include "SdlHelpers.hpp"
-#include <string>
-#include <vector>
 
 // Represents a drop-down box control.
 class DropdownBox : public Control

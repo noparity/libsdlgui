@@ -3,10 +3,7 @@
 
 #include "Flags.hpp"
 #include "Helpers.hpp"
-#include <memory>
 #include "SdlHelpers.hpp"
-#include <SDL_ttf.h>
-#include <string>
 
 class Font
 {

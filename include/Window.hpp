@@ -6,14 +6,14 @@
 #include "Dimentions.hpp"
 #include "Flags.hpp"
 #include "Font.hpp"
-#include "SdlHelpers.hpp"
-#include "TextAlignment.hpp"
 #include <functional>
+#include "SdlHelpers.hpp"
 #include <SDL_events.h>
 #include <SDL_pixels.h>
 #include <SDL_render.h>
 #include <SDL_video.h>
 #include <string>
+#include "TextAlignment.hpp"
 #include <vector>
 
 // forward declaration to prevent circular reference

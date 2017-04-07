@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DrawingRoutines.hpp"
+#include "Window.hpp"
 
 void DrawChevron(Window* pWindow, const SDL_Rect& bounds, const SDL_Color& color, bool pointsUp)
 {

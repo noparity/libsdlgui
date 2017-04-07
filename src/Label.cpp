@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Label.hpp"
+#include "Window.hpp"
 
 Label::Label(Window* pWindow, const SDL_Rect& location) :
     Control(pWindow, location), m_text("label")

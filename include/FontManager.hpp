@@ -1,7 +1,6 @@
 #ifndef FONTMANAGER_HPP
 #define FONTMANAGER_HPP
 
-#include <atomic>
 #include <boost/filesystem.hpp>
 #include "Font.hpp"
 #include "SdlHelpers.hpp"

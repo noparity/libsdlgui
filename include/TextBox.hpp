@@ -4,7 +4,6 @@
 #include "Caret.hpp"
 #include "Control.hpp"
 #include "SdlHelpers.hpp"
-#include "SDL_mouse.h"
 
 // represents a text box control
 class TextBox : public Control

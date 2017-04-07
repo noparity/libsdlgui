@@ -4,8 +4,6 @@
 #include "Exceptions.hpp"
 #include "FontManager.hpp"
 #include "Window.hpp"
-#include <algorithm>
-#include <memory>
 
 Window::Window(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
     m_flags(State::None), m_dims(dimentions), m_pCtrlWithFocus(nullptr), m_pCtrlUnderMouse(nullptr), m_subSystem(SDLSubSystem::Video), m_pFont(nullptr)

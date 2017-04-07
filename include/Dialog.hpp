@@ -5,10 +5,6 @@
 #include "Dimentions.hpp"
 #include "Panel.hpp"
 #include "SdlHelpers.hpp"
-#include <SDL_events.h>
-#include <SDL_render.h>
-#include <SDL_video.h>
-#include "Window.hpp"
 
 // represents a dialog control
 class Dialog : public Control

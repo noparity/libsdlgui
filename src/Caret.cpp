@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Caret.hpp"
+#include "Window.hpp"
 
 Caret::Caret(Window* pWindow, const SDL_Rect& location) :
     m_pause(false), Control(pWindow, location)

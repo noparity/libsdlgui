@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <cctype>
 #include "FontManager.hpp"
 #include "Helpers.hpp"
 

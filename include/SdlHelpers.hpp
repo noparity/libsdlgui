@@ -4,10 +4,10 @@
 #include <boost/filesystem.hpp>
 #include <SDL_error.h>
 #include <SDL_image.h>
-#include <SDL_ttf.h>
 #include <SDL_pixels.h>
 #include <SDL_rect.h>
 #include <SDL_render.h>
+#include <SDL_ttf.h>
 #include <string>
 
 // list of SDL subsystems that can be initialized

@@ -2,8 +2,7 @@
 #define LISTBOX_HPP
 
 #include "Control.hpp"
-#include <string>
-#include <vector>
+#include "SdlHelpers.hpp"
 #include "VerticalScrollbar.hpp"
 
 // Represetns a list box control.

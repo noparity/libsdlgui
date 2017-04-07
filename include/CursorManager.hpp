@@ -1,8 +1,7 @@
 #ifndef CURSORMANAGER_HPP
 #define CURSORMANAGER_HPP
 
-#include <atomic>
-#include "SDL_mouse.h"
+#include <SDL_image.h>
 #include "Singleton.hpp"
 
 namespace detail

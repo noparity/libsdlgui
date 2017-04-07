@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Dialog.hpp"
 #include "DrawingRoutines.hpp"
+#include "Window.hpp"
 
 Dialog::Dialog(Window* pWindow, const std::string& title, const Dimentions& dimentions) :
     Control(pWindow, SDLRect(0, 0, dimentions.W, dimentions.H + TitleBarHeight)),

@@ -2,7 +2,9 @@
 #define CONTROL_HPP
 
 #include "Flags.hpp"
-#include "Window.hpp"
+
+// forward declaration
+class Window;
 
 // base class from which all controls must derive
 class Control
