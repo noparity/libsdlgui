@@ -39,11 +39,11 @@ ListBox::ListBox(Window* pWindow, const SDL_Rect& location, uint32_t minVisible,
 void ListBox::AddItem(const std::string& item)
 {
     m_items.push_back(item);
-    auto default = GetWindow()->CreateTextureForText(item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+    auto texture = GetWindow()->CreateTextureForText(item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
     auto highlight = GetWindow()->CreateTextureForText(item, GetWindow()->GetFont(), GetBackgroundColor(), GetForegroundColor());
 
-    assert(static_cast<uint32_t>(default.GetHeight()) == m_itemHeight);
-    m_textures.push_back(std::tuple<SDLTexture, SDLTexture, bool>(std::move(default), std::move(highlight), false));
+    assert(static_cast<uint32_t>(texture.GetHeight()) == m_itemHeight);
+    m_textures.push_back(std::tuple<SDLTexture, SDLTexture, bool>(std::move(texture), std::move(highlight), false));
 
     // set the max based on the total item size minus the
     // max items visible paying attention to underflow

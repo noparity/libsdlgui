@@ -10,7 +10,7 @@ namespace detail
     FontManager::FontManager()
     {
         // TODO: windows-only implementation
-        m_fonts = boost::filesystem::path(SafeGetEnv("windir")) /= "fonts";
+        m_fonts = std::filesystem::path(SafeGetEnv("windir")) /= "fonts";
     }
 
     FontManager::~FontManager()

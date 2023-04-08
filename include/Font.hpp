@@ -2,7 +2,6 @@
 #define FONT_HPP
 
 #include "Flags.hpp"
-#include "Helpers.hpp"
 #include "SdlHelpers.hpp"
 
 class Font
@@ -59,7 +58,7 @@ namespace std
     {
         size_t operator()(const Font& font) const
         {
-            return std::hash<std::string>()(font.GetName() + ToString(font.GetSize()));
+            return std::hash<std::string>()(font.GetName() + std::to_string(font.GetSize()));
         }
     };
 }

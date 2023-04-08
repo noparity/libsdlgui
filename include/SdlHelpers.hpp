@@ -1,7 +1,7 @@
 #ifndef SDLHELPERS_HPP
 #define SDLHELPERS_HPP
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <SDL_error.h>
 #include <SDL_image.h>
 #include <SDL_pixels.h>
@@ -85,7 +85,7 @@ private:
     void Cleanup();
 public:
     SDLSurface() { m_pSurface = nullptr; }
-    SDLSurface(const boost::filesystem::path& fileName);
+    SDLSurface(const std::filesystem::path& fileName);
     SDLSurface(SDLSurface&& other);
     SDLSurface(SDL_Surface* pSurface);
     ~SDLSurface();
@@ -124,7 +124,7 @@ private:
     TTF_Font* m_pFont;
 
 public:
-    TTFFont(const boost::filesystem::path& fileName, int size);
+    TTFFont(const std::filesystem::path& fileName, int size);
     TTFFont(TTFFont&& other);
     ~TTFFont();
 

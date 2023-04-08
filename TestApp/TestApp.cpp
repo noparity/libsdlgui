@@ -93,7 +93,7 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
     m_dropDown = std::make_unique<DropdownBox>(this, SDLRect(340, 200, 128, 32));
 
     for (int i = 0; i < 100; ++i)
-        m_dropDown->AddItem(ToString(i));
+        m_dropDown->AddItem(std::to_string(i));
 
     m_dropDown->RegisterForSelectionChangedCallback([this](const std::string& item)
     {

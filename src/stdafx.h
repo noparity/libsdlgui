@@ -7,8 +7,7 @@
 #include <algorithm>
 #include <atomic>
 #include <boost/dynamic_bitset.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
+#include <filesystem>
 #include <cassert>
 #include <cctype>
 #include <functional>

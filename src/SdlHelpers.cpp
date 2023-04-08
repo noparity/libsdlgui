@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Exceptions.hpp"
-#include "Helpers.hpp"
 #include "SdlHelpers.hpp"
 
 SDLInit::SDLInit()
@@ -16,7 +15,7 @@ SDLInit::SDLInit(SDLSubSystem subsystem)
 {
     if (SDL_Init(static_cast<uint32_t>(subsystem)) != 0)
     {
-        auto message = "SDL_Init(" + ToString(static_cast<uint32_t>(subsystem)) + ") failed with '" + SDLGetError() + "'.";
+        auto message = "SDL_Init(" + std::to_string(static_cast<uint32_t>(subsystem)) + ") failed with '" + SDLGetError() + "'.";
         throw SDLException(message);
     }
 }
@@ -30,7 +29,7 @@ SDLInitSubSystem::SDLInitSubSystem(SDLSubSystem subsystem) : m_subsystem(subsyst
 {
     if (SDL_InitSubSystem(static_cast<uint32_t>(m_subsystem)) != 0)
     {
-        auto message = "SDL_InitSubsystem(" + ToString(static_cast<uint32_t>(subsystem)) + ") failed with '" + SDLGetError() + "'.";
+        auto message = "SDL_InitSubsystem(" + std::to_string(static_cast<uint32_t>(subsystem)) + ") failed with '" + SDLGetError() + "'.";
         throw SDLException(message);
     }
 }
@@ -47,7 +46,7 @@ IMGInit::IMGInit(IMGSubSystem subsystem)
     auto result = IMG_Init(static_cast<uint32_t>(subsystem));
     if ((result & static_cast<uint32_t>(subsystem)) != static_cast<uint32_t>(subsystem))
     {
-        auto message = "IMG_Init(" + ToString(static_cast<uint32_t>(subsystem)) + ") failed with '" + IMGGetError() + "'.";
+        auto message = "IMG_Init(" + std::to_string(static_cast<uint32_t>(subsystem)) + ") failed with '" + IMGGetError() + "'.";
         throw SDLException(message);
     }
 
@@ -74,7 +73,7 @@ TTFInit::~TTFInit()
     TTF_Quit();
 }
 
-SDLSurface::SDLSurface(const boost::filesystem::path& fileName) : m_pSurface(nullptr)
+SDLSurface::SDLSurface(const std::filesystem::path& fileName) : m_pSurface(nullptr)
 {
     assert(IMGInit::IsInit());
     m_pSurface = IMG_Load(fileName.string().c_str());
@@ -150,7 +149,7 @@ SDLTexture& SDLTexture::operator=(SDLTexture&& rhs)
     return *this = rhs;
 }
 
-TTFFont::TTFFont(const boost::filesystem::path& fileName, int size)
+TTFFont::TTFFont(const std::filesystem::path& fileName, int size)
 {
     m_pFont = TTF_OpenFont(fileName.string().c_str(), size);
     if (m_pFont == nullptr)

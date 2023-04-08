@@ -35,7 +35,7 @@ DropdownBox::DropdownBox(Window* pWindow, const SDL_Rect& location) :
     Control(pWindow, location), m_content(pWindow, SDLRect(location.x, location.y + location.h, location.w, 0), 1, 10, this)
 {
     m_content.SetHidden(true);
-    m_content.RegisterForSelectionChangedCallback([this](SelectionChangedCallback::argument_type item)
+    m_content.RegisterForSelectionChangedCallback([this](auto item)
     {
         m_texture = GetWindow()->CreateTextureForText(item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
         m_content.SetHidden(true);

@@ -2,7 +2,7 @@
 #define WINDOW_HPP
 
 #include <boost/dynamic_bitset.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include "Dimentions.hpp"
 #include "Flags.hpp"
 #include "Font.hpp"

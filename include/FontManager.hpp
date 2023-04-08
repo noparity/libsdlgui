@@ -1,7 +1,7 @@
 #ifndef FONTMANAGER_HPP
 #define FONTMANAGER_HPP
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include "Font.hpp"
 #include "SdlHelpers.hpp"
 #include "Singleton.hpp"
@@ -19,7 +19,7 @@ namespace detail
         using FontCacheItem = std::pair<std::string, FontPtr>;
         using FontCache = std::unordered_map<std::string, FontPtr>;
         TTFInit m_init;
-        boost::filesystem::path m_fonts;
+        std::filesystem::path m_fonts;
         FontCache m_cache;
 
         FontManager();
