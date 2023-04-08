@@ -1,9 +1,9 @@
 #ifndef DROPDOWNBOX_HPP
 #define DROPDOWNBOX_HPP
 
-#include "Control.hpp"
-#include "ListBox.hpp"
-#include "SdlHelpers.hpp"
+#include "control.hpp"
+#include "list_box.hpp"
+#include "sdl_helpers.hpp"
 
 // Represents a drop-down box control.
 class DropdownBox : public Control

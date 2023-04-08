@@ -1,8 +1,8 @@
 #ifndef FONT_HPP
 #define FONT_HPP
 
-#include "Flags.hpp"
-#include "SdlHelpers.hpp"
+#include "flags.hpp"
+#include "sdl_helpers.hpp"
 
 class Font
 {

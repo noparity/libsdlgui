@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "CheckBox.hpp"
-#include "Window.hpp"
+#include "check_box.hpp"
+#include "window.hpp"
 
 CheckBox::CheckBox(Window* pWindow, const SDL_Rect& location) :
     Control(pWindow, location), m_text(pWindow, location), m_checked(false)

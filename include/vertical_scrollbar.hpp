@@ -1,8 +1,8 @@
 #ifndef VERTICALSCROLLBAR_HPP
 #define VERTICALSCROLLBAR_HPP
 
-#include "Control.hpp"
-#include "ScrollEventData.hpp"
+#include "control.hpp"
+#include "scroll_event_data.hpp"
 
 class VerticalScrollbar : public Control
 {

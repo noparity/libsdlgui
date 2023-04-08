@@ -1,10 +1,10 @@
 #ifndef LABEL_HPP
 #define LABEL_HPP
 
-#include "Control.hpp"
-#include "Font.hpp"
-#include "SdlHelpers.hpp"
-#include "TextAlignment.hpp"
+#include "control.hpp"
+#include "font.hpp"
+#include "sdl_helpers.hpp"
+#include "text_alignment.hpp"
 
 class Label : public Control
 {

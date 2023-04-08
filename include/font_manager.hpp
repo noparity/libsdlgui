@@ -2,9 +2,9 @@
 #define FONTMANAGER_HPP
 
 #include <filesystem>
-#include "Font.hpp"
-#include "SdlHelpers.hpp"
-#include "Singleton.hpp"
+#include "font.hpp"
+#include "sdl_helpers.hpp"
+#include "singleton.hpp"
 #include <unordered_map>
 
 namespace detail

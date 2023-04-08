@@ -139,58 +139,58 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Button.hpp" />
-    <ClInclude Include="..\..\include\Caret.hpp" />
-    <ClInclude Include="..\..\include\CheckBox.hpp" />
-    <ClInclude Include="..\..\include\Control.hpp" />
-    <ClInclude Include="..\..\include\CursorManager.hpp" />
-    <ClInclude Include="..\..\include\Dialog.hpp" />
-    <ClInclude Include="..\..\include\Dimentions.hpp" />
-    <ClInclude Include="..\..\include\DropdownBox.hpp" />
-    <ClInclude Include="..\..\include\Exceptions.hpp" />
-    <ClInclude Include="..\..\include\Flags.hpp" />
-    <ClInclude Include="..\..\include\Font.hpp" />
-    <ClInclude Include="..\..\include\Helpers.hpp" />
-    <ClInclude Include="..\..\include\ListBox.hpp" />
-    <ClInclude Include="..\..\include\Panel.hpp" />
-    <ClInclude Include="..\..\include\ScrollEventData.hpp" />
-    <ClInclude Include="..\..\include\SdlHelpers.hpp" />
-    <ClInclude Include="..\..\include\Label.hpp" />
-    <ClInclude Include="..\..\include\Singleton.hpp" />
-    <ClInclude Include="..\..\include\VerticalScrollbar.hpp" />
-    <ClInclude Include="..\..\src\DrawingRoutines.hpp" />
+    <ClInclude Include="..\..\include\button.hpp" />
+    <ClInclude Include="..\..\include\caret.hpp" />
+    <ClInclude Include="..\..\include\check_box.hpp" />
+    <ClInclude Include="..\..\include\control.hpp" />
+    <ClInclude Include="..\..\include\cursor_manager.hpp" />
+    <ClInclude Include="..\..\include\dialog.hpp" />
+    <ClInclude Include="..\..\include\dimentions.hpp" />
+    <ClInclude Include="..\..\include\dropdown_box.hpp" />
+    <ClInclude Include="..\..\include\exceptions.hpp" />
+    <ClInclude Include="..\..\include\flags.hpp" />
+    <ClInclude Include="..\..\include\font.hpp" />
+    <ClInclude Include="..\..\include\helpers.hpp" />
+    <ClInclude Include="..\..\include\list_box.hpp" />
+    <ClInclude Include="..\..\include\panel.hpp" />
+    <ClInclude Include="..\..\include\scroll_event_data.hpp" />
+    <ClInclude Include="..\..\include\sdl_helpers.hpp" />
+    <ClInclude Include="..\..\include\label.hpp" />
+    <ClInclude Include="..\..\include\singleton.hpp" />
+    <ClInclude Include="..\..\include\vertical_scrollbar.hpp" />
+    <ClInclude Include="..\..\src\drawing_routines.hpp" />
     <ClInclude Include="..\..\src\stdafx.h" />
     <ClInclude Include="..\..\src\targetver.h" />
-    <ClInclude Include="..\..\include\TextAlignment.hpp" />
-    <ClInclude Include="..\..\include\FontManager.hpp" />
-    <ClInclude Include="..\..\include\TextBox.hpp" />
-    <ClInclude Include="..\..\include\Window.hpp" />
+    <ClInclude Include="..\..\include\text_alignment.hpp" />
+    <ClInclude Include="..\..\include\font_manager.hpp" />
+    <ClInclude Include="..\..\include\text_box.hpp" />
+    <ClInclude Include="..\..\include\window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Button.cpp" />
-    <ClCompile Include="..\..\src\Caret.cpp" />
-    <ClCompile Include="..\..\src\CheckBox.cpp" />
-    <ClCompile Include="..\..\src\Control.cpp" />
-    <ClCompile Include="..\..\src\CursorManager.cpp" />
-    <ClCompile Include="..\..\src\Dialog.cpp" />
-    <ClCompile Include="..\..\src\DrawingRoutines.cpp" />
-    <ClCompile Include="..\..\src\DropdownBox.cpp" />
-    <ClCompile Include="..\..\src\Font.cpp" />
-    <ClCompile Include="..\..\src\Helpers.cpp" />
-    <ClCompile Include="..\..\src\ListBox.cpp" />
-    <ClCompile Include="..\..\src\Panel.cpp" />
-    <ClCompile Include="..\..\src\SdlHelpers.cpp" />
-    <ClCompile Include="..\..\src\Label.cpp" />
+    <ClCompile Include="..\..\src\button.cpp" />
+    <ClCompile Include="..\..\src\caret.cpp" />
+    <ClCompile Include="..\..\src\check_box.cpp" />
+    <ClCompile Include="..\..\src\control.cpp" />
+    <ClCompile Include="..\..\src\cursor_manager.cpp" />
+    <ClCompile Include="..\..\src\dialog.cpp" />
+    <ClCompile Include="..\..\src\drawing_routines.cpp" />
+    <ClCompile Include="..\..\src\dropdown_box.cpp" />
+    <ClCompile Include="..\..\src\font.cpp" />
+    <ClCompile Include="..\..\src\helpers.cpp" />
+    <ClCompile Include="..\..\src\list_box.cpp" />
+    <ClCompile Include="..\..\src\panel.cpp" />
+    <ClCompile Include="..\..\src\sdl_helpers.cpp" />
+    <ClCompile Include="..\..\src\label.cpp" />
     <ClCompile Include="..\..\src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\src\FontManager.cpp" />
-    <ClCompile Include="..\..\src\TextBox.cpp" />
-    <ClCompile Include="..\..\src\VerticalScrollbar.cpp" />
-    <ClCompile Include="..\..\src\Window.cpp" />
+    <ClCompile Include="..\..\src\font_manager.cpp" />
+    <ClCompile Include="..\..\src\text_box.cpp" />
+    <ClCompile Include="..\..\src\vertical_scrollbar.cpp" />
+    <ClCompile Include="..\..\src\window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

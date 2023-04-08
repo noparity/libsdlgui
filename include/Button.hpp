@@ -1,8 +1,8 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 
-#include "Control.hpp"
-#include "SdlHelpers.hpp"
+#include "control.hpp"
+#include "sdl_helpers.hpp"
 
 // represents a button control
 class Button : public Control

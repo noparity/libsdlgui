@@ -1,8 +1,8 @@
 #ifndef CHECKBOX_HPP
 #define CHECKBOX_HPP
 
-#include "Control.hpp"
-#include "Label.hpp"
+#include "control.hpp"
+#include "label.hpp"
 
 // Represents a check box control.
 class CheckBox : public Control

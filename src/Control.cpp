@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Control.hpp"
-#include "SdlHelpers.hpp"
-#include "Window.hpp"
+#include "control.hpp"
+#include "sdl_helpers.hpp"
+#include "window.hpp"
 
 Control::Control(Window* pWindow, const SDL_Rect& location, Control* parent) :
     m_pWindow(pWindow), m_pParent(parent), m_flags(State::None), m_loc(location), m_borderSize(0), m_zOrder(0)

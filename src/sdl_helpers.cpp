@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Exceptions.hpp"
-#include "SdlHelpers.hpp"
+#include "exceptions.hpp"
+#include "sdl_helpers.hpp"
 
 SDLInit::SDLInit()
 {

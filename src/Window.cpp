@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "Control.hpp"
-#include "CursorManager.hpp"
-#include "Exceptions.hpp"
-#include "FontManager.hpp"
-#include "Window.hpp"
+#include "control.hpp"
+#include "cursor_manager.hpp"
+#include "exceptions.hpp"
+#include "font_manager.hpp"
+#include "window.hpp"
 
 Window::Window(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
     m_flags(State::None), m_dims(dimentions), m_pCtrlWithFocus(nullptr), m_pCtrlUnderMouse(nullptr), m_subSystem(SDLSubSystem::Video), m_pFont(nullptr)

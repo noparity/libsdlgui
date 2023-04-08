@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "CursorManager.hpp"
-#include "TextBox.hpp"
-#include "Window.hpp"
+#include "cursor_manager.hpp"
+#include "text_box.hpp"
+#include "window.hpp"
 
 TextBox::TextBox(Window* pWindow, const SDL_Rect& location) :
     Control(pWindow, location),

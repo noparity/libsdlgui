@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "CursorManager.hpp"
+#include "cursor_manager.hpp"
 
 CursorManager::CountType CursorManager::s_count = 0;
 CursorManager::UnderlyingType CursorManager::s_instance = nullptr;

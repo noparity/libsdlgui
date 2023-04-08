@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "FontManager.hpp"
-#include "SdlHelpers.hpp"
-#include "TestApp.hpp"
+#include "font_manager.hpp"
+#include "sdl_helpers.hpp"
+#include "test_app.hpp"
 #include <SDL_keycode.h>
 
 TestControl::TestControl(Window* pWindow, const SDL_Rect& location) :
@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
 {
     SDLInit sdlInit;
 
-    TestWindow win("Test App", Dimentions(1024, 768), static_cast<SDL_WindowFlags>(SDL_WINDOW_RESIZABLE));
+    TestWindow win("Test App", Dimentions(1024, 768), SDL_WINDOW_RESIZABLE);
 
     bool quit = false;
     while (!quit)

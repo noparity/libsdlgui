@@ -1,7 +1,7 @@
 #ifndef CONTROL_HPP
 #define CONTROL_HPP
 
-#include "Flags.hpp"
+#include "flags.hpp"
 
 // forward declaration
 class Window;

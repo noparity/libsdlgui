@@ -1,15 +1,15 @@
 #ifndef TESTAPP_HPP
 #define TESTAPP_HPP
 
-#include "Button.hpp"
-#include "CheckBox.hpp"
-#include "Dialog.hpp"
-#include "DropdownBox.hpp"
-#include "Label.hpp"
-#include "ListBox.hpp"
-#include "Panel.hpp"
-#include "TextBox.hpp"
-#include "Window.hpp"
+#include "button.hpp"
+#include "check_box.hpp"
+#include "dialog.hpp"
+#include "dropdown_box.hpp"
+#include "label.hpp"
+#include "list_box.hpp"
+#include "panel.hpp"
+#include "text_box.hpp"
+#include "window.hpp"
 
 class TestControl : public Panel
 {

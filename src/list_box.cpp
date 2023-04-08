@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "ListBox.hpp"
-#include "Window.hpp"
+#include "list_box.hpp"
+#include "window.hpp"
 
 ListBox::ListBox(Window* pWindow, const SDL_Rect& location, uint32_t minVisible, uint32_t maxVisible,
     Control* parent, bool highlightOnMouseMotion, bool scrollRequiresFocus) :

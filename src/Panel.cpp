@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Panel.hpp"
-#include "SdlHelpers.hpp"
+#include "panel.hpp"
+#include "sdl_helpers.hpp"
 
 Panel::Panel(Window* pWindow, const SDL_Rect& location) :
     Control(pWindow, location)

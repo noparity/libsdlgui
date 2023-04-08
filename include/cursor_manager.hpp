@@ -2,7 +2,7 @@
 #define CURSORMANAGER_HPP
 
 #include <SDL_image.h>
-#include "Singleton.hpp"
+#include "singleton.hpp"
 
 namespace detail
 {

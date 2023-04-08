@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Helpers.hpp"
+#include "helpers.hpp"
 
 std::string SafeGetEnv(const std::string& name)
 {

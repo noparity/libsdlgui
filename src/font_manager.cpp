@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "FontManager.hpp"
-#include "Helpers.hpp"
+#include "font_manager.hpp"
+#include "helpers.hpp"
 
 FontManager::CountType FontManager::s_count = 0;
 FontManager::UnderlyingType FontManager::s_instance = nullptr;

@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "DrawingRoutines.hpp"
-#include "VerticalScrollbar.hpp"
-#include "Window.hpp"
+#include "drawing_routines.hpp"
+#include "vertical_scrollbar.hpp"
+#include "window.hpp"
 
 VerticalScrollbar::VerticalScrollbar(Window* pWindow, const SDL_Rect& location, Control* parent) :
     Control(pWindow, location, parent),

@@ -1,7 +1,7 @@
 #ifndef PANEL_HPP
 #define PANEL_HPP
 
-#include "Control.hpp"
+#include "control.hpp"
 
 // represents a collection of controls whose
 // locations are relative to the panel

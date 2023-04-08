@@ -1,9 +1,9 @@
 #ifndef LISTBOX_HPP
 #define LISTBOX_HPP
 
-#include "Control.hpp"
-#include "SdlHelpers.hpp"
-#include "VerticalScrollbar.hpp"
+#include "control.hpp"
+#include "sdl_helpers.hpp"
+#include "vertical_scrollbar.hpp"
 
 // Represetns a list box control.
 class ListBox : public Control

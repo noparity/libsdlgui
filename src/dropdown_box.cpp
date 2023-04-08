@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "DrawingRoutines.hpp"
-#include "DropdownBox.hpp"
-#include "Window.hpp"
+#include "drawing_routines.hpp"
+#include "dropdown_box.hpp"
+#include "window.hpp"
 
 DropdownBox::ContentBox::ContentBox(Window* pWindow, const SDL_Rect& location, uint32_t minVisible, uint32_t maxVisible, Control* parent) :
     ListBox(pWindow, location, minVisible, maxVisible, parent, true, false)

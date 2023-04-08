@@ -1,10 +1,10 @@
 #ifndef DIALOG_HPP
 #define DIALOG_HPP
 
-#include "Control.hpp"
-#include "Dimentions.hpp"
-#include "Panel.hpp"
-#include "SdlHelpers.hpp"
+#include "control.hpp"
+#include "dimentions.hpp"
+#include "panel.hpp"
+#include "sdl_helpers.hpp"
 
 // represents a dialog control
 class Dialog : public Control

@@ -26,12 +26,12 @@
     <ClCompile Include="..\..\TestApp\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\TestApp\TestApp.cpp">
+    <ClCompile Include="..\..\TestApp\test_app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\TestApp\TestApp.hpp">
+    <None Include="..\..\TestApp\test_app.hpp">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

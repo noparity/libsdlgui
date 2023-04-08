@@ -1,9 +1,9 @@
 #ifndef TEXTBOX_HPP
 #define TEXTBOX_HPP
 
-#include "Caret.hpp"
-#include "Control.hpp"
-#include "SdlHelpers.hpp"
+#include "caret.hpp"
+#include "control.hpp"
+#include "sdl_helpers.hpp"
 
 // represents a text box control
 class TextBox : public Control

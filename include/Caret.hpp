@@ -1,7 +1,7 @@
 #ifndef CARET_HPP
 #define CARET_HPP
 
-#include "Control.hpp"
+#include "control.hpp"
 
 // represents a caret control
 class Caret : public Control

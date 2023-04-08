@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Button.hpp"
-#include "Window.hpp"
+#include "button.hpp"
+#include "window.hpp"
 
 Button::Button(Window* pWindow, const SDL_Rect& location) :
     Control(pWindow, location)

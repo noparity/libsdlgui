@@ -3,17 +3,17 @@
 
 #include <boost/dynamic_bitset.hpp>
 #include <filesystem>
-#include "Dimentions.hpp"
-#include "Flags.hpp"
-#include "Font.hpp"
+#include "dimentions.hpp"
+#include "flags.hpp"
+#include "font.hpp"
 #include <functional>
-#include "SdlHelpers.hpp"
+#include "sdl_helpers.hpp"
 #include <SDL_events.h>
 #include <SDL_pixels.h>
 #include <SDL_render.h>
 #include <SDL_video.h>
 #include <string>
-#include "TextAlignment.hpp"
+#include "text_alignment.hpp"
 #include <vector>
 
 // forward declaration to prevent circular reference
