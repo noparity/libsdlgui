@@ -24,9 +24,9 @@ namespace libsdlgui
         {
             // make a copy of name so we can normalize it
             auto lowerName = name;
-            std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), [](unsigned char c)
+            std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), [](uint8_t c)
                 {
-                    return std::tolower(c);
+                    return static_cast<uint8_t>(std::tolower(c));
                 });
 
             auto fontIter = m_cache.find(lowerName);

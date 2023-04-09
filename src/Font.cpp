@@ -9,7 +9,7 @@ namespace libsdlgui
         // empty
     }
 
-    size_t Font::GetCharSize(char c)
+    uint32_t Font::GetCharSize(char c)
     {
         int minx, maxx, miny, maxy, advance;
         auto result = TTF_GlyphMetrics(m_ttf, c, &minx, &maxx, &miny, &maxy, &advance);
@@ -18,17 +18,17 @@ namespace libsdlgui
         return advance;
     }
 
-    size_t Font::GetHeight()
+    uint32_t Font::GetHeight()
     {
         return TTF_FontHeight(m_ttf);
     }
 
-    size_t Font::GetLineSkipHeight()
+    uint32_t Font::GetLineSkipHeight()
     {
         return TTF_FontLineSkip(m_ttf);
     }
 
-    size_t Font::GetTextSize(const char* text)
+    uint32_t Font::GetTextSize(const char* text)
     {
         int w, h;
         auto result = TTF_SizeText(m_ttf, text, &w, &h);

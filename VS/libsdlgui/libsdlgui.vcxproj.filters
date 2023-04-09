@@ -70,15 +70,6 @@
     <ClInclude Include="..\..\include\dimentions.hpp">
       <Filter>Public Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\detail\drawing_routines.hpp">
-      <Filter>detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\detail\cursor_manager.hpp">
-      <Filter>detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\detail\helpers.hpp">
-      <Filter>detail</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\flags.hpp">
       <Filter>detail</Filter>
     </ClInclude>
@@ -93,6 +84,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\caret.hpp">
       <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\inc\cursor_manager.hpp">
+      <Filter>Internal Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\inc\drawing_routines.hpp">
+      <Filter>Internal Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\inc\helpers.hpp">
+      <Filter>Internal Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

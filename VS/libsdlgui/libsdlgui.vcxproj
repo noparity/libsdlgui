@@ -96,9 +96,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\src\detail;\src\boost;\src\SDL2\include;\src\SDL2_image\include;\src\SDL2_ttf\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\src\inc;\src\boost;\src\SDL2\include;\src\SDL2_image\include;\src\SDL2_ttf\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ConformanceMode>true</ConformanceMode>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,9 +159,9 @@
     <ClInclude Include="..\..\include\label.hpp" />
     <ClInclude Include="..\..\include\singleton.hpp" />
     <ClInclude Include="..\..\include\vertical_scrollbar.hpp" />
-    <ClInclude Include="..\..\src\detail\cursor_manager.hpp" />
-    <ClInclude Include="..\..\src\detail\drawing_routines.hpp" />
-    <ClInclude Include="..\..\src\detail\helpers.hpp" />
+    <ClInclude Include="..\..\src\inc\cursor_manager.hpp" />
+    <ClInclude Include="..\..\src\inc\drawing_routines.hpp" />
+    <ClInclude Include="..\..\src\inc\helpers.hpp" />
     <ClInclude Include="..\..\src\stdafx.h" />
     <ClInclude Include="..\..\src\targetver.h" />
     <ClInclude Include="..\..\include\text_alignment.hpp" />

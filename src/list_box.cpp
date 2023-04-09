@@ -49,11 +49,11 @@ namespace libsdlgui
 
         // set the max based on the total item size minus the
         // max items visible paying attention to underflow
-        uint32_t vertMax = m_items.size() - m_maxVisible;
+        auto vertMax = m_items.size() - m_maxVisible;
         if (vertMax > m_items.size())
             vertMax = 0;
 
-        m_vertScrollbar.SetMaximum(vertMax);
+        m_vertScrollbar.SetMaximum(static_cast<uint32_t>(vertMax));
 
         // if the count of items is greater than the minimum
         // number to display we need to resize the control up
@@ -61,7 +61,7 @@ namespace libsdlgui
         if (m_items.size() > m_minVisible && m_items.size() <= m_maxVisible)
         {
             auto myLoc = GetLocation();
-            myLoc.h = m_itemHeight * m_items.size();
+            myLoc.h = m_itemHeight * static_cast<uint32_t>(m_items.size());
             SetLocation(myLoc);
         }
 
@@ -97,7 +97,7 @@ namespace libsdlgui
         else if (visCount < m_minVisible)
             visCount = m_minVisible;
 
-        return visCount;
+        return static_cast<uint32_t>(visCount);
     }
 
     void ListBox::OnHiddenChanged(bool isHidden)
