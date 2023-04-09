@@ -7,29 +7,33 @@
 #include "singleton.hpp"
 #include <unordered_map>
 
-namespace detail
+namespace libsdlgui
 {
-    class FontManager
+    namespace detail
     {
-    private:
-        friend void Singleton<FontManager>::Initialize();
-        friend void Singleton<FontManager>::Destroy();
+        class FontManager
+        {
+        private:
+            friend void Singleton<FontManager>::Initialize();
+            friend void Singleton<FontManager>::Destroy();
 
-        using FontPtr = std::unique_ptr<Font>;
-        using FontCacheItem = std::pair<std::string, FontPtr>;
-        using FontCache = std::unordered_map<std::string, FontPtr>;
-        TTFInit m_init;
-        std::filesystem::path m_fonts;
-        FontCache m_cache;
+            using FontPtr = std::unique_ptr<Font>;
+            using FontCacheItem = std::pair<std::string, FontPtr>;
+            using FontCache = std::unordered_map<std::string, FontPtr>;
+            TTFInit m_init;
+            std::filesystem::path m_fonts;
+            FontCache m_cache;
 
-        FontManager();
-        ~FontManager();
+            FontManager();
+            ~FontManager();
 
-    public:
-        Font* GetOrLoadFont(const std::string& name, uint8_t size, Font::Attributes attributes = Font::Attributes::Normal);
-    };
-}
+        public:
+            Font* GetOrLoadFont(const std::string& name, uint8_t size, Font::Attributes attributes = Font::Attributes::Normal);
+        };
+    }
 
-using FontManager = Singleton<detail::FontManager>;
+    using FontManager = libsdlgui::detail::Singleton<detail::FontManager>;
+
+} // namespace libsdlgui
 
 #endif // FONTMANAGER_HPP

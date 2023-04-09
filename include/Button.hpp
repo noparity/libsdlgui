@@ -4,38 +4,42 @@
 #include "control.hpp"
 #include "sdl_helpers.hpp"
 
-// represents a button control
-class Button : public Control
+namespace libsdlgui
 {
-public:
-    using ButtonClickCallback = std::function<void()>;
+    // represents a button control
+    class Button : public Control
+    {
+    public:
+        using ButtonClickCallback = std::function<void()>;
 
-private:
-    SDLTexture m_texture;
-    ButtonClickCallback m_onClick;
+    private:
+        SDLTexture m_texture;
+        ButtonClickCallback m_onClick;
 
-    virtual void OnFocusAcquired();
-    virtual void OnFocusLost();
-    virtual void OnLeftClick(const SDL_Point&);
-    virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
-    virtual void OnMouseEnter();
-    virtual void OnMouseExit();
-    virtual void RenderImpl();
+        virtual void OnFocusAcquired();
+        virtual void OnFocusLost();
+        virtual void OnLeftClick(const SDL_Point&);
+        virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
+        virtual void OnMouseEnter();
+        virtual void OnMouseExit();
+        virtual void RenderImpl();
 
-    void SetDefaultColorScheme();
-    void SetMouseOverColorScheme();
+        void SetDefaultColorScheme();
+        void SetMouseOverColorScheme();
 
-public:
-    Button(Window* pWindow, const SDL_Rect& location);
+    public:
+        Button(Window* pWindow, const SDL_Rect& location);
 
-    // registers a callback to be invoked when the button is clicked
-    void RegisterForClickCallback(const ButtonClickCallback& callback);
+        // registers a callback to be invoked when the button is clicked
+        void RegisterForClickCallback(const ButtonClickCallback& callback);
 
-    // sets the texture to be rendered on the button
-    void SetTexture(SDLTexture& texture);
+        // sets the texture to be rendered on the button
+        void SetTexture(SDLTexture& texture);
 
-    // sets the texture to be rendered on the button
-    void SetTexture(SDLTexture&& texture);
-};
+        // sets the texture to be rendered on the button
+        void SetTexture(SDLTexture&& texture);
+    };
+
+} // namespace libsdlgui
 
 #endif // BUTTON_HPP

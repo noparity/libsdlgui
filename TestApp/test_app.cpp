@@ -4,39 +4,39 @@
 #include "test_app.hpp"
 #include <SDL_keycode.h>
 
-TestControl::TestControl(Window* pWindow, const SDL_Rect& location) :
+TestControl::TestControl(libsdlgui::Window* pWindow, const SDL_Rect& location) :
     Panel(pWindow, location)
 {
-    m_label1 = std::make_unique<Label>(pWindow, SDLRect(0, 0, 64, 32, location));
-    m_label1->SetBorderColor(SDLColor(255, 0, 0, 0));
+    m_label1 = std::make_unique<libsdlgui::Label>(pWindow, libsdlgui::SDLRect(0, 0, 64, 32, location));
+    m_label1->SetBorderColor(libsdlgui::SDLColor(255, 0, 0, 0));
     m_label1->SetBorderSize(1);
     AddControl(m_label1.get());
 
-    m_label2 = std::make_unique<Label>(pWindow, SDLRect(location.w - 64, 0, 64, 32, location));
-    m_label2->SetBorderColor(SDLColor(0, 0, 255, 0));
+    m_label2 = std::make_unique<libsdlgui::Label>(pWindow, libsdlgui::SDLRect(location.w - 64, 0, 64, 32, location));
+    m_label2->SetBorderColor(libsdlgui::SDLColor(0, 0, 255, 0));
     m_label2->SetBorderSize(1);
-    m_label2->SetAlignment(TextAlignment::TopRight);
+    m_label2->SetAlignment(libsdlgui::TextAlignment::TopRight);
     AddControl(m_label2.get());
 
-    m_label3 = std::make_unique<Label>(pWindow, SDLRect((location.w / 2) - 32, ((location.h / 2) - 32), 64, 32, location));
-    m_label3->SetBorderColor(SDLColor(0, 255, 255, 0));
+    m_label3 = std::make_unique<libsdlgui::Label>(pWindow, libsdlgui::SDLRect((location.w / 2) - 32, ((location.h / 2) - 32), 64, 32, location));
+    m_label3->SetBorderColor(libsdlgui::SDLColor(0, 255, 255, 0));
     m_label3->SetBorderSize(1);
-    m_label3->SetAlignment(TextAlignment::MiddleCenter);
+    m_label3->SetAlignment(libsdlgui::TextAlignment::MiddleCenter);
     AddControl(m_label3.get());
 
-    m_label4 = std::make_unique<Label>(pWindow, SDLRect(0, location.h - 32, 64, 32, location));
-    m_label4->SetBorderColor(SDLColor(255, 0, 0, 0));
+    m_label4 = std::make_unique<libsdlgui::Label>(pWindow, libsdlgui::SDLRect(0, location.h - 32, 64, 32, location));
+    m_label4->SetBorderColor(libsdlgui::SDLColor(255, 0, 0, 0));
     m_label4->SetBorderSize(1);
-    m_label4->SetAlignment(TextAlignment::BottomLeft);
+    m_label4->SetAlignment(libsdlgui::TextAlignment::BottomLeft);
     AddControl(m_label4.get());
 
-    m_label5 = std::make_unique<Label>(pWindow, SDLRect(location.w - 64, location.h - 32, 64, 32, location));
-    m_label5->SetBorderColor(SDLColor(0, 0, 255, 0));
+    m_label5 = std::make_unique<libsdlgui::Label>(pWindow, libsdlgui::SDLRect(location.w - 64, location.h - 32, 64, 32, location));
+    m_label5->SetBorderColor(libsdlgui::SDLColor(0, 0, 255, 0));
     m_label5->SetBorderSize(1);
-    m_label5->SetAlignment(TextAlignment::BottomRight);
+    m_label5->SetAlignment(libsdlgui::TextAlignment::BottomRight);
     AddControl(m_label5.get());
 
-    SetBackgroundColor(SDLColor(63, 63, 63, 0));
+    SetBackgroundColor(libsdlgui::SDLColor(63, 63, 63, 0));
 }
 
 void TestControl::RenderImpl()
@@ -44,11 +44,11 @@ void TestControl::RenderImpl()
     GetWindow()->DrawRectangle(GetLocation(), GetBackgroundColor(), UINT8_MAX);
 }
 
-TestDialog::TestDialog(Window* pWindow, const std::string& title, const Dimentions& dimentions) :
+TestDialog::TestDialog(libsdlgui::Window* pWindow, const std::string& title, const libsdlgui::Dimentions& dimentions) :
     Dialog(pWindow, title, dimentions),
-    m_buttonOK(pWindow, SDLRect(dimentions.W - 68, dimentions.H - 36, 64, 32, GetContentLoc())),
-    m_buttonCancel(pWindow, SDLRect(dimentions.W - 68 - 70, dimentions.H - 36, 64, 32, GetContentLoc())),
-    m_text(pWindow, SDLRect(32, 64, 128, 32, GetContentLoc()))
+    m_buttonOK(pWindow, libsdlgui::SDLRect(dimentions.W - 68, dimentions.H - 36, 64, 32, GetContentLoc())),
+    m_buttonCancel(pWindow, libsdlgui::SDLRect(dimentions.W - 68 - 70, dimentions.H - 36, 64, 32, GetContentLoc())),
+    m_text(pWindow, libsdlgui::SDLRect(32, 64, 128, 32, GetContentLoc()))
 {
     AddControl(&m_buttonOK);
     AddControl(&m_buttonCancel);
@@ -67,30 +67,30 @@ TestDialog::TestDialog(Window* pWindow, const std::string& title, const Dimentio
     });
 }
 
-TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags) :
+TestWindow::TestWindow(const std::string& title, const libsdlgui::Dimentions& dimentions, SDL_WindowFlags windowFlags) :
     m_frameNumber(0), Window(title, dimentions, windowFlags)
 {
-    m_label1 = std::make_unique<Label>(this, SDLRect(420, 128, 150, 32));
+    m_label1 = std::make_unique<libsdlgui::Label>(this, libsdlgui::SDLRect(420, 128, 150, 32));
     m_label1->SetText("Nothing selected");
-    m_label1->SetAlignment(TextAlignment::MiddleCenter);
-    m_dialog = std::make_unique<TestDialog>(this, "Test Dialog", Dimentions(400, 300));
-    m_button1 = std::make_unique<Button>(this, SDLRect(32, 32, 64, 32));
+    m_label1->SetAlignment(libsdlgui::TextAlignment::MiddleCenter);
+    m_dialog = std::make_unique<TestDialog>(this, "Test Dialog", libsdlgui::Dimentions(400, 300));
+    m_button1 = std::make_unique<libsdlgui::Button>(this, libsdlgui::SDLRect(32, 32, 64, 32));
     m_button1->RegisterForClickCallback([this]()
     {
         this->m_dialog->CenterDialog();
         this->m_dialog->SetHidden(false);
     });
-    m_button1->SetTexture(this->CreateTextureForText("click", GetFont(), SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor()));
+    m_button1->SetTexture(this->CreateTextureForText("click", GetFont(), libsdlgui::SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor()));
 
-    m_button2 = std::make_unique<Button>(this, SDLRect(128, 64, 64, 32));
+    m_button2 = std::make_unique<libsdlgui::Button>(this, libsdlgui::SDLRect(128, 64, 64, 32));
     m_button2->RegisterForClickCallback([this]()
     {
         this->NextFrame();
     });
-    m_button2->SetTexture(this->CreateTextureForText("next", GetFont(), SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor()));
+    m_button2->SetTexture(this->CreateTextureForText("next", GetFont(), libsdlgui::SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor()));
 
-    m_textBox = std::make_unique<TextBox>(this, SDLRect(32, 128, 128, 32));
-    m_dropDown = std::make_unique<DropdownBox>(this, SDLRect(340, 200, 128, 32));
+    m_textBox = std::make_unique<libsdlgui::TextBox>(this, libsdlgui::SDLRect(32, 128, 128, 32));
+    m_dropDown = std::make_unique<libsdlgui::DropdownBox>(this, libsdlgui::SDLRect(340, 200, 128, 32));
 
     for (int i = 0; i < 100; ++i)
         m_dropDown->AddItem(std::to_string(i));
@@ -100,7 +100,7 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
         m_label1->SetText(std::string("Selected ") + item);
     });
 
-    m_checkBox1 = std::make_unique<CheckBox>(this, SDLRect(32, 178, 128, 32));
+    m_checkBox1 = std::make_unique<libsdlgui::CheckBox>(this, libsdlgui::SDLRect(32, 178, 128, 32));
     m_checkBox1->Text()->SetText("Check me!");
     m_checkBox1->RegisterForCheckedChangedCallback([this](bool checked)
     {
@@ -114,10 +114,10 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
     panelLoc.y = (dimentions.H / 2) - (panelLoc.h / 2);
 
     m_panel = std::make_unique<TestControl>(this, panelLoc);
-    m_panel->SetBorderColor(SDLColor(0, 255, 0, 0));
+    m_panel->SetBorderColor(libsdlgui::SDLColor(0, 255, 0, 0));
     m_panel->SetBorderSize(1);
 
-    m_listBox = std::make_unique<ListBox>(this, SDLRect(40, 280, 128, 32), 3, 3);
+    m_listBox = std::make_unique<libsdlgui::ListBox>(this, libsdlgui::SDLRect(40, 280, 128, 32), 3, 3);
     m_listBox->AddItem("some");
     m_listBox->AddItem("things");
     m_listBox->AddItem("to");
@@ -130,30 +130,30 @@ TestWindow::TestWindow(const std::string& title, const Dimentions& dimentions, S
 
 void TestWindow::FrameOne()
 {
-    auto frame = std::make_unique<Label>(this, SDLRect((GetDimentions().W / 2) - 64, 0, 128, 32));
+    auto frame = std::make_unique<libsdlgui::Label>(this, libsdlgui::SDLRect((GetDimentions().W / 2) - 64, 0, 128, 32));
     frame->SetText("Frame One");
-    frame->SetAlignment(TextAlignment::BottomCenter);
-    frame->SetBorderColor(SDLColor(255, 0, 0, 0));
+    frame->SetAlignment(libsdlgui::TextAlignment::BottomCenter);
+    frame->SetBorderColor(libsdlgui::SDLColor(255, 0, 0, 0));
     frame->SetBorderSize(1);
     m_frame = std::move(frame);
 }
 
 void TestWindow::FrameTwo()
 {
-    auto frame = std::make_unique<Label>(this, SDLRect((GetDimentions().W / 2) - 64, 0, 128, 32));
+    auto frame = std::make_unique<libsdlgui::Label>(this, libsdlgui::SDLRect((GetDimentions().W / 2) - 64, 0, 128, 32));
     frame->SetText("Frame Two");
-    frame->SetAlignment(TextAlignment::BottomCenter);
-    frame->SetBorderColor(SDLColor(0, 255, 0, 0));
+    frame->SetAlignment(libsdlgui::TextAlignment::BottomCenter);
+    frame->SetBorderColor(libsdlgui::SDLColor(0, 255, 0, 0));
     frame->SetBorderSize(1);
     m_frame = std::move(frame);
 }
 
 void TestWindow::FrameThree()
 {
-    auto frame = std::make_unique<Label>(this, SDLRect((GetDimentions().W / 2) - 64, 0, 128, 32));
+    auto frame = std::make_unique<libsdlgui::Label>(this, libsdlgui::SDLRect((GetDimentions().W / 2) - 64, 0, 128, 32));
     frame->SetText("Frame Three");
-    frame->SetAlignment(TextAlignment::BottomCenter);
-    frame->SetBorderColor(SDLColor(0, 0, 255, 0));
+    frame->SetAlignment(libsdlgui::TextAlignment::BottomCenter);
+    frame->SetBorderColor(libsdlgui::SDLColor(0, 0, 255, 0));
     frame->SetBorderSize(1);
     m_frame = std::move(frame);
 }
@@ -180,9 +180,9 @@ void TestWindow::NextFrame()
 
 int main(int argc, char* argv[])
 {
-    SDLInit sdlInit;
+    libsdlgui::SDLInit sdlInit;
 
-    TestWindow win("Test App", Dimentions(1024, 768), SDL_WINDOW_RESIZABLE);
+    TestWindow win("Test App", libsdlgui::Dimentions(1024, 768), SDL_WINDOW_RESIZABLE);
 
     bool quit = false;
     while (!quit)

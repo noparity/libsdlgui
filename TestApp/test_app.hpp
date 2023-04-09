@@ -11,45 +11,45 @@
 #include "text_box.hpp"
 #include "window.hpp"
 
-class TestControl : public Panel
+class TestControl : public libsdlgui::Panel
 {
 private:
-    std::unique_ptr<Label> m_label1;
-    std::unique_ptr<Label> m_label2;
-    std::unique_ptr<Label> m_label3;
-    std::unique_ptr<Label> m_label4;
-    std::unique_ptr<Label> m_label5;
+    std::unique_ptr<libsdlgui::Label> m_label1;
+    std::unique_ptr<libsdlgui::Label> m_label2;
+    std::unique_ptr<libsdlgui::Label> m_label3;
+    std::unique_ptr<libsdlgui::Label> m_label4;
+    std::unique_ptr<libsdlgui::Label> m_label5;
 
     virtual void RenderImpl();
 
 public:
-    TestControl(Window* pWindow, const SDL_Rect& location);
+    TestControl(libsdlgui::Window* pWindow, const SDL_Rect& location);
 };
 
-class TestDialog : public Dialog
+class TestDialog : public libsdlgui::Dialog
 {
 private:
-    Button m_buttonOK;
-    Button m_buttonCancel;
-    Label m_text;
+    libsdlgui::Button m_buttonOK;
+    libsdlgui::Button m_buttonCancel;
+    libsdlgui::Label m_text;
 
 public:
-    TestDialog(Window* pWindow, const std::string& title, const Dimentions& dimentions);
+    TestDialog(libsdlgui::Window* pWindow, const std::string& title, const libsdlgui::Dimentions& dimentions);
 };
 
-class TestWindow : public Window
+class TestWindow : public libsdlgui::Window
 {
 private:
     std::unique_ptr<TestControl> m_panel;
-    std::unique_ptr<Label> m_label1;
-    std::unique_ptr<Button> m_button1;
-    std::unique_ptr<Button> m_button2;
-    std::unique_ptr<Control> m_frame;
-    std::unique_ptr<TextBox> m_textBox;
+    std::unique_ptr<libsdlgui::Label> m_label1;
+    std::unique_ptr<libsdlgui::Button> m_button1;
+    std::unique_ptr<libsdlgui::Button> m_button2;
+    std::unique_ptr<libsdlgui::Control> m_frame;
+    std::unique_ptr<libsdlgui::TextBox> m_textBox;
     std::unique_ptr<TestDialog> m_dialog;
-    std::unique_ptr<DropdownBox> m_dropDown;
-    std::unique_ptr<CheckBox> m_checkBox1;
-    std::unique_ptr<ListBox> m_listBox;
+    std::unique_ptr<libsdlgui::DropdownBox> m_dropDown;
+    std::unique_ptr<libsdlgui::CheckBox> m_checkBox1;
+    std::unique_ptr<libsdlgui::ListBox> m_listBox;
 
     int m_frameNumber;
 
@@ -59,7 +59,7 @@ private:
     void NextFrame();
 
 public:
-    TestWindow(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags);
+    TestWindow(const std::string& title, const libsdlgui::Dimentions& dimentions, SDL_WindowFlags windowFlags);
 };
 
 #endif // TESTAPP_HPP

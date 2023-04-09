@@ -2,71 +2,75 @@
 #include "drawing_routines.hpp"
 #include "window.hpp"
 
-void DrawChevron(Window* pWindow, const SDL_Rect& bounds, const SDL_Color& color, bool pointsUp)
+namespace libsdlgui::detail
 {
-    const int Size = 2;
-
-    // start in the middle of the bounds
-    SDL_Point midPoint;
-    midPoint.x = bounds.x + (bounds.w / 2);
-    midPoint.y = bounds.y + (bounds.h / 2);
-    SDL_Point endPoint = midPoint;
-
-    if (pointsUp)
+    void DrawChevron(Window* pWindow, const SDL_Rect& bounds, const SDL_Color& color, bool pointsUp)
     {
-        endPoint.y += Size;
-        midPoint.y -= Size;
-    }
-    else
-    {
-        endPoint.y -= Size;
-        midPoint.y += Size;
-    }
+        const int Size = 2;
 
-    for (int i = 0; i < 2; ++i)
-    {
-        if (i == 0)
-            endPoint.x -= (Size * 2);
+        // start in the middle of the bounds
+        SDL_Point midPoint;
+        midPoint.x = bounds.x + (bounds.w / 2);
+        midPoint.y = bounds.y + (bounds.h / 2);
+        SDL_Point endPoint = midPoint;
+
+        if (pointsUp)
+        {
+            endPoint.y += Size;
+            midPoint.y -= Size;
+        }
         else
-            endPoint.x -= (Size * 4);
+        {
+            endPoint.y -= Size;
+            midPoint.y += Size;
+        }
 
-        pWindow->DrawLine(midPoint, endPoint, color);
+        for (int i = 0; i < 2; ++i)
+        {
+            if (i == 0)
+                endPoint.x -= (Size * 2);
+            else
+                endPoint.x -= (Size * 4);
 
-        // move endPoint to the other side
-        endPoint.x += (Size * 4);
-        pWindow->DrawLine(midPoint, endPoint, color);
+            pWindow->DrawLine(midPoint, endPoint, color);
 
-        // move down
-        ++endPoint.y;
-        ++midPoint.y;
+            // move endPoint to the other side
+            endPoint.x += (Size * 4);
+            pWindow->DrawLine(midPoint, endPoint, color);
+
+            // move down
+            ++endPoint.y;
+            ++midPoint.y;
+        }
     }
-}
 
-void DrawX(Window* pWindow, const SDL_Rect& bounds, const SDL_Color& color)
-{
-    const int Size = 5;
+    void DrawX(Window* pWindow, const SDL_Rect& bounds, const SDL_Color& color)
+    {
+        const int Size = 5;
 
-    // start in the middle of the bounds
-    SDL_Point endOne;
-    endOne.x = bounds.x + (bounds.w / 2);
-    endOne.y = bounds.y + (bounds.h / 2);
-    SDL_Point endTwo = endOne;
+        // start in the middle of the bounds
+        SDL_Point endOne;
+        endOne.x = bounds.x + (bounds.w / 2);
+        endOne.y = bounds.y + (bounds.h / 2);
+        SDL_Point endTwo = endOne;
 
-    endOne.x -= Size;
-    endOne.y -= Size;
-    endTwo.x += Size;
-    endTwo.y += Size;
+        endOne.x -= Size;
+        endOne.y -= Size;
+        endTwo.x += Size;
+        endTwo.y += Size;
 
-    pWindow->DrawLine(endOne, endTwo, color);
-    endOne.x += 1;
-    endTwo.x += 1;
-    pWindow->DrawLine(endOne, endTwo, color);
+        pWindow->DrawLine(endOne, endTwo, color);
+        endOne.x += 1;
+        endTwo.x += 1;
+        pWindow->DrawLine(endOne, endTwo, color);
 
-    endOne.x += (Size * 2);
-    endTwo.x -= (Size * 2);
+        endOne.x += (Size * 2);
+        endTwo.x -= (Size * 2);
 
-    pWindow->DrawLine(endOne, endTwo, color);
-    endOne.x -= 1;
-    endTwo.x -= 1;
-    pWindow->DrawLine(endOne, endTwo, color);
-}
+        pWindow->DrawLine(endOne, endTwo, color);
+        endOne.x -= 1;
+        endTwo.x -= 1;
+        pWindow->DrawLine(endOne, endTwo, color);
+    }
+
+} // namespace libsdlgui::detail

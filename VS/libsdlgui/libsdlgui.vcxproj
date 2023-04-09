@@ -92,12 +92,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;\src\boost;\src\SDL2\include;\src\SDL2_image\include;\src\SDL2_ttf\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\src\detail;\src\boost;\src\SDL2\include;\src\SDL2_image\include;\src\SDL2_ttf\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,14 +144,12 @@
     <ClInclude Include="..\..\include\caret.hpp" />
     <ClInclude Include="..\..\include\check_box.hpp" />
     <ClInclude Include="..\..\include\control.hpp" />
-    <ClInclude Include="..\..\include\cursor_manager.hpp" />
     <ClInclude Include="..\..\include\dialog.hpp" />
     <ClInclude Include="..\..\include\dimentions.hpp" />
     <ClInclude Include="..\..\include\dropdown_box.hpp" />
     <ClInclude Include="..\..\include\exceptions.hpp" />
     <ClInclude Include="..\..\include\flags.hpp" />
     <ClInclude Include="..\..\include\font.hpp" />
-    <ClInclude Include="..\..\include\helpers.hpp" />
     <ClInclude Include="..\..\include\list_box.hpp" />
     <ClInclude Include="..\..\include\panel.hpp" />
     <ClInclude Include="..\..\include\scroll_event_data.hpp" />
@@ -158,7 +157,9 @@
     <ClInclude Include="..\..\include\label.hpp" />
     <ClInclude Include="..\..\include\singleton.hpp" />
     <ClInclude Include="..\..\include\vertical_scrollbar.hpp" />
-    <ClInclude Include="..\..\src\drawing_routines.hpp" />
+    <ClInclude Include="..\..\src\detail\cursor_manager.hpp" />
+    <ClInclude Include="..\..\src\detail\drawing_routines.hpp" />
+    <ClInclude Include="..\..\src\detail\helpers.hpp" />
     <ClInclude Include="..\..\src\stdafx.h" />
     <ClInclude Include="..\..\src\targetver.h" />
     <ClInclude Include="..\..\include\text_alignment.hpp" />
