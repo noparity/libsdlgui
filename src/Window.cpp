@@ -171,7 +171,7 @@ namespace libsdlgui
     void Window::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
     {
         if (m_pCtrlWithFocus != nullptr)
-            m_pCtrlWithFocus->NotificationKeyboard(keyboardEvent);
+            detail::NotificationKeyboard(m_pCtrlWithFocus, keyboardEvent);
     }
 
     void Window::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
@@ -193,17 +193,17 @@ namespace libsdlgui
             auto controlLoc = m_controls[i]->GetLocation();
             if (SDLPointInRect(clickPoint, controlLoc))
             {
-                if (m_controls[i]->NotificationMouseButton(buttonEvent))
+                if (detail::NotificationMouseButton(m_controls[i], buttonEvent))
                 {
                     // remove focus from the previous control and give it to the selected one
                     if (m_pCtrlWithFocus != nullptr && m_controls[i] != m_pCtrlWithFocus)
-                        m_pCtrlWithFocus->NotificationFocusLost();
+                        detail::NotificationFocusLost(m_pCtrlWithFocus);
 
                     // if this control already has focus don't notify it again
                     if (m_controls[i] != m_pCtrlWithFocus)
                     {
                         m_pCtrlWithFocus = m_controls[i];
-                        m_pCtrlWithFocus->NotificationFocusAcquired();
+                        detail::NotificationFocusAcquired(m_pCtrlWithFocus);
                     }
 
                     // a control that took focus was clicked, no need to notify
@@ -220,7 +220,7 @@ namespace libsdlgui
         }
 
         if (m_pCtrlWithFocus != nullptr && notifyCtrl)
-            m_pCtrlWithFocus->NotificationMouseButtonExternal(buttonEvent, pClickedCtrl);
+            detail::NotificationMouseButtonExternal(m_pCtrlWithFocus, buttonEvent, pClickedCtrl);
     }
 
     void Window::OnMouseMotion(const SDL_MouseMotionEvent& motionEvent)
@@ -252,16 +252,16 @@ namespace libsdlgui
             {
                 // notify the previous control the mouse has left it
                 if (m_pCtrlUnderMouse != nullptr && m_pCtrlUnderMouse != m_controls[i])
-                    m_pCtrlUnderMouse->NotificationMouseExit();
+                    detail::NotificationMouseExit(m_pCtrlUnderMouse);
 
                 // if this control is already under the mouse don't notify it again
                 if (m_pCtrlUnderMouse != m_controls[i])
                 {
                     m_pCtrlUnderMouse = m_controls[i];
-                    m_pCtrlUnderMouse->NotificationMouseEnter();
+                    detail::NotificationMouseEnter(m_pCtrlUnderMouse);
                 }
 
-                m_pCtrlUnderMouse->NotificationMouseMotion(motionEvent);
+                detail::NotificationMouseMotion(m_pCtrlUnderMouse, motionEvent);
                 isOverControl = true;
 
                 // mouse can't be over more than one control so exit
@@ -273,7 +273,7 @@ namespace libsdlgui
         // then notify that control that it has exited it.
         if (!isOverControl && m_pCtrlUnderMouse != nullptr)
         {
-            m_pCtrlUnderMouse->NotificationMouseExit();
+            detail::NotificationMouseExit(m_pCtrlUnderMouse);
             m_pCtrlUnderMouse = nullptr;
         }
     }
@@ -281,14 +281,14 @@ namespace libsdlgui
     void Window::OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent)
     {
         if (m_pCtrlUnderMouse != nullptr)
-            m_pCtrlUnderMouse->NotificationMouseWheel(wheelEvent);
+            detail::NotificationMouseWheel(m_pCtrlUnderMouse, wheelEvent);
     }
 
     void Window::OnTextInput(const SDL_TextInputEvent& textEvent)
     {
         // should have a control with focus (e.g. a text box)
         assert(m_pCtrlWithFocus != nullptr);
-        m_pCtrlWithFocus->NotificationTextInput(textEvent);
+        detail::NotificationTextInput(m_pCtrlWithFocus, textEvent);
     }
 
     void Window::OnWindowResized(const SDL_WindowEvent& windowEvent)
@@ -303,7 +303,7 @@ namespace libsdlgui
 
         // notify all controls of the change
         for (auto control : m_controls)
-            control->NotificationWindowChanged();
+            detail::NotificationWindowChanged(control);
     }
 
     void Window::RemoveAllControls()
@@ -323,7 +323,7 @@ namespace libsdlgui
             if (currentTime - timeElapsed >= timeRequested)
             {
                 std::get<2>(control) = currentTime;
-                std::get<0>(control)->NotificationElapsedTime();
+                detail::NotificationElapsedTime(std::get<0>(control));
             }
         }
 

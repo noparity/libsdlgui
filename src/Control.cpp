@@ -44,99 +44,6 @@ namespace libsdlgui
         return buttonEvent.state == SDL_RELEASED && buttonEvent.button == SDL_BUTTON_LEFT;
     }
 
-    void Control::NotificationElapsedTime()
-    {
-        OnElapsedTime();
-    }
-
-    void Control::NotificationFocusAcquired()
-    {
-        m_flags |= State::Focused;
-        OnFocusAcquired();
-    }
-
-    void Control::NotificationFocusLost()
-    {
-        m_flags ^= State::Focused;
-        OnFocusLost();
-    }
-
-    void Control::NotificationKeyboard(const SDL_KeyboardEvent& keyboardEvent)
-    {
-        OnKeyboard(keyboardEvent);
-    }
-
-    bool Control::NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent)
-    {
-        // raise the mouse button event before the click event
-        auto result = OnMouseButton(buttonEvent);
-
-        if (buttonEvent.state == SDL_PRESSED)
-        {
-            m_flags |= State::MouseDown;
-        }
-        else if (m_flags & State::MouseDown && buttonEvent.state == SDL_RELEASED)
-        {
-            auto clickLoc = SDLPoint(buttonEvent.x, buttonEvent.y);
-            if (buttonEvent.button == SDL_BUTTON_LEFT)
-                OnLeftClick(clickLoc);
-            else if (buttonEvent.button == SDL_BUTTON_RIGHT)
-                OnRightClick(clickLoc);
-            else if (buttonEvent.button == SDL_BUTTON_MIDDLE)
-                OnMiddleClick(clickLoc);
-
-            m_flags ^= State::MouseDown;
-        }
-
-        return result;
-    }
-
-    void Control::NotificationMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl)
-    {
-        OnMouseButtonExternal(buttonEvent, pControl);
-    }
-
-    void Control::NotificationMouseEnter()
-    {
-        OnMouseEnter();
-    }
-
-    void Control::NotificationMouseExit()
-    {
-        // if the mouse leaves the control while a button is down
-        // clear the button down flag.  this prevents clicks from
-        // being triggered in the following scenario
-        // 
-        // button A has the mouse button down then the mouse is moved out
-        // mouse is pressed down someplace else then moved back over button A
-        // mouse button is released over button A
-        //
-        // this behavior is slightly different from desktop window managers
-        // but IMO is a reasonable compromise.
-        m_flags ^= State::MouseDown;
-        OnMouseExit();
-    }
-
-    void Control::NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent)
-    {
-        OnMouseMotion(motionEvent);
-    }
-
-    void Control::NotificationMouseWheel(const SDL_MouseWheelEvent& wheelEvent)
-    {
-        OnMouseWheel(wheelEvent);
-    }
-
-    void Control::NotificationTextInput(const SDL_TextInputEvent& textEvent)
-    {
-        OnTextInput(textEvent);
-    }
-
-    void Control::NotificationWindowChanged()
-    {
-        OnWindowChanged();
-    }
-
     void Control::OnElapsedTime()
     {
         // empty
@@ -307,5 +214,102 @@ namespace libsdlgui
         m_zOrder = zOrder;
         OnZOrderChanged();
     }
+
+    namespace detail
+    {
+        void NotificationElapsedTime(Control* pControl)
+        {
+            pControl->OnElapsedTime();
+        }
+
+        void NotificationFocusAcquired(Control* pControl)
+        {
+            pControl->m_flags |= Control::State::Focused;
+            pControl->OnFocusAcquired();
+        }
+
+        void NotificationFocusLost(Control* pControl)
+        {
+            pControl->m_flags ^= Control::State::Focused;
+            pControl->OnFocusLost();
+        }
+
+        void NotificationKeyboard(Control* pControl, const SDL_KeyboardEvent& keyboardEvent)
+        {
+            pControl->OnKeyboard(keyboardEvent);
+        }
+
+        bool NotificationMouseButton(Control* pControl, const SDL_MouseButtonEvent& buttonEvent)
+        {
+            // raise the mouse button event before the click event
+            auto result = pControl->OnMouseButton(buttonEvent);
+
+            if (buttonEvent.state == SDL_PRESSED)
+            {
+                pControl->m_flags |= Control::State::MouseDown;
+            }
+            else if (pControl->m_flags & Control::State::MouseDown && buttonEvent.state == SDL_RELEASED)
+            {
+                auto clickLoc = SDLPoint(buttonEvent.x, buttonEvent.y);
+                if (buttonEvent.button == SDL_BUTTON_LEFT)
+                    pControl->OnLeftClick(clickLoc);
+                else if (buttonEvent.button == SDL_BUTTON_RIGHT)
+                    pControl->OnRightClick(clickLoc);
+                else if (buttonEvent.button == SDL_BUTTON_MIDDLE)
+                    pControl->OnMiddleClick(clickLoc);
+
+                pControl->m_flags ^= Control::State::MouseDown;
+            }
+
+            return result;
+        }
+
+        void NotificationMouseButtonExternal(Control* pControl, const SDL_MouseButtonEvent& buttonEvent, Control* pOtherControl)
+        {
+            pControl->OnMouseButtonExternal(buttonEvent, pOtherControl);
+        }
+
+        void NotificationMouseEnter(Control* pControl)
+        {
+            pControl->OnMouseEnter();
+        }
+
+        void NotificationMouseExit(Control* pControl)
+        {
+            // if the mouse leaves the control while a button is down
+            // clear the button down flag.  this prevents clicks from
+            // being triggered in the following scenario
+            // 
+            // button A has the mouse button down then the mouse is moved out
+            // mouse is pressed down someplace else then moved back over button A
+            // mouse button is released over button A
+            //
+            // this behavior is slightly different from desktop window managers
+            // but IMO is a reasonable compromise.
+            pControl->m_flags ^= Control::State::MouseDown;
+            pControl->OnMouseExit();
+        }
+
+        void NotificationMouseMotion(Control* pControl, const SDL_MouseMotionEvent& motionEvent)
+        {
+            pControl->OnMouseMotion(motionEvent);
+        }
+
+        void NotificationMouseWheel(Control* pControl, const SDL_MouseWheelEvent& wheelEvent)
+        {
+            pControl->OnMouseWheel(wheelEvent);
+        }
+
+        void NotificationTextInput(Control* pControl, const SDL_TextInputEvent& textEvent)
+        {
+            pControl->OnTextInput(textEvent);
+        }
+
+        void NotificationWindowChanged(Control* pControl)
+        {
+            pControl->OnWindowChanged();
+        }
+
+    } // namespace detail
 
 } // namespace libsdlgui

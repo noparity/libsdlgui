@@ -169,7 +169,7 @@ namespace libsdlgui
     void ListBox::OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent)
     {
         if (HasFocus() || !m_scrollRequiredFocus)
-            m_vertScrollbar.NotificationMouseWheel(wheelEvent);
+            detail::NotificationMouseWheel(&m_vertScrollbar, wheelEvent);
     }
 
     void ListBox::OnResize(int deltaH, int)

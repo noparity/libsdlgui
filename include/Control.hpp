@@ -9,6 +9,51 @@ namespace libsdlgui
     // forward declaration
     class Window;
 
+    // forward declaration for detail namespace
+    class Control;
+
+    namespace detail
+    {
+        // notifies the control that its timer has elapsed
+        void NotificationElapsedTime(Control* pControl);
+
+        // notifies the control that it has acquired focus
+        void NotificationFocusAcquired(Control* pControl);
+
+        // notifies the control that it has lost focus
+        void NotificationFocusLost(Control* pControl);
+
+        // sends keyboard event data to the control
+        void NotificationKeyboard(Control* pControl, const SDL_KeyboardEvent& keyboardEvent);
+
+        // sends mouse button event data to the control (e.g. was clicked).  if
+        // the function returns true it means the control should acquire focus.
+        bool NotificationMouseButton(Control* pControl, const SDL_MouseButtonEvent& buttonEvent);
+
+        // sends mouse button event data to the control when the event
+        // happens outside the bounds of the control.  if the event happens
+        // on a control a pointer to that control is provided.
+        void NotificationMouseButtonExternal(Control* pControl, const SDL_MouseButtonEvent& buttonEvent, Control* pOtherControl);
+
+        // notifies the control that the mouse has entered its bounding area
+        void NotificationMouseEnter(Control* pControl);
+
+        // notifies the control that the mouse has left its bounding area
+        void NotificationMouseExit(Control* pControl);
+
+        // sends mouse motion event data to the control (e.g. mouse is moving within the control)
+        void NotificationMouseMotion(Control* pControl, const SDL_MouseMotionEvent& motionEvent);
+
+        // sends mouse wheel event data to the control (e.g. scroll direction)
+        void NotificationMouseWheel(Control* pControl, const SDL_MouseWheelEvent& wheelEvent);
+
+        // sends text input events to the control (e.g. typing in a text box)
+        void NotificationTextInput(Control* pControl, const SDL_TextInputEvent& textEvent);
+
+        // notifies the control that its owning window has changed (e.g. was resized)
+        void NotificationWindowChanged(Control* pControl);
+    }
+
     // base class from which all controls must derive
     class Control
     {
@@ -56,6 +101,19 @@ namespace libsdlgui
 
         virtual void RenderImpl() = 0;
 
+        friend void detail::NotificationElapsedTime(Control* pControl);
+        friend void detail::NotificationFocusAcquired(Control* pControl);
+        friend void detail::NotificationFocusLost(Control* pControl);
+        friend void detail::NotificationKeyboard(Control* pControl, const SDL_KeyboardEvent& keyboardEvent);
+        friend bool detail::NotificationMouseButton(Control* pControl, const SDL_MouseButtonEvent& buttonEvent);
+        friend void detail::NotificationMouseButtonExternal(Control* pControl, const SDL_MouseButtonEvent& buttonEvent, Control* pOtherControl);
+        friend void detail::NotificationMouseEnter(Control* pControl);
+        friend void detail::NotificationMouseExit(Control* pControl);
+        friend void detail::NotificationMouseMotion(Control* pControl, const SDL_MouseMotionEvent& motionEvent);
+        friend void detail::NotificationMouseWheel(Control* pControl, const SDL_MouseWheelEvent& wheelEvent);
+        friend void detail::NotificationTextInput(Control* pControl, const SDL_TextInputEvent& textEvent);
+        friend void detail::NotificationWindowChanged(Control* pControl);
+
     protected:
         // returns the window that owns the control
         Window* GetWindow() const { return m_pWindow; }
@@ -93,45 +151,6 @@ namespace libsdlgui
 
         // gets the Z-order of the control.  controls are rendered in ascending Z-order
         uint8_t GetZOrder() const { return m_zOrder; }
-
-        // notifies the control that its timer has elapsed
-        void NotificationElapsedTime();
-
-        // notifies the control that it has acquired focus
-        void NotificationFocusAcquired();
-
-        // notifies the control that it has lost focus
-        void NotificationFocusLost();
-
-        // sends keyboard event data to the control
-        void NotificationKeyboard(const SDL_KeyboardEvent& keyboardEvent);
-
-        // sends mouse button event data to the control (e.g. was clicked).  if
-        // the function returns true it means the control should acquire focus.
-        bool NotificationMouseButton(const SDL_MouseButtonEvent& buttonEvent);
-
-        // sends mouse button event data to the control when the event
-        // happens outside the bounds of the control.  if the event happens
-        // on a control a pointer to that control is provided.
-        void NotificationMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl);
-
-        // notifies the control that the mouse has entered its bounding area
-        void NotificationMouseEnter();
-
-        // notifies the control that the mouse has left its bounding area
-        void NotificationMouseExit();
-
-        // sends mouse motion event data to the control (e.g. mouse is moving within the control)
-        void NotificationMouseMotion(const SDL_MouseMotionEvent& motionEvent);
-
-        // sends mouse wheel event data to the control (e.g. scroll direction)
-        void NotificationMouseWheel(const SDL_MouseWheelEvent& wheelEvent);
-
-        // sends text input events to the control (e.g. typing in a text box)
-        void NotificationTextInput(const SDL_TextInputEvent& textEvent);
-
-        // notifies the control that its owning window has changed (e.g. was resized)
-        void NotificationWindowChanged();
 
         // render the control
         void Render();

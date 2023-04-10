@@ -72,7 +72,7 @@ namespace libsdlgui
     void DropdownBox::OnKeyboard(const SDL_KeyboardEvent& keyboardEvent)
     {
         // forward to the underlying ListBox to handle arrow keys
-        m_content.NotificationKeyboard(keyboardEvent);
+        detail::NotificationKeyboard(&m_content, keyboardEvent);
     }
 
     void DropdownBox::OnLeftClick(const SDL_Point& clickLoc)
