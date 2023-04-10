@@ -41,8 +41,8 @@ namespace libsdlgui
     void ListBox::AddItem(const std::string& item)
     {
         m_items.push_back(item);
-        auto texture = GetWindow()->CreateTextureForText(item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
-        auto highlight = GetWindow()->CreateTextureForText(item, GetWindow()->GetFont(), GetBackgroundColor(), GetForegroundColor());
+        auto texture = detail::CreateTextureForText(GetWindow(), item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+        auto highlight = detail::CreateTextureForText(GetWindow(), item, GetWindow()->GetFont(), GetBackgroundColor(), GetForegroundColor());
 
         assert(static_cast<uint32_t>(texture.GetHeight()) == m_itemHeight);
         m_textures.push_back(std::tuple<SDLTexture, SDLTexture, bool>(std::move(texture), std::move(highlight), false));

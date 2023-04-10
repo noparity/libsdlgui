@@ -73,4 +73,20 @@ namespace libsdlgui::detail
         pWindow->DrawLine(endOne, endTwo, color);
     }
 
+    SDLTexture CreateTextureForText(Window const* pWindow, const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor)
+    {
+        // if there is no text then bail
+        if (text.length() == 0)
+            return SDLTexture();
+
+        auto currentStyle = static_cast<Font::Attributes>(TTF_GetFontStyle(font->GetTtf()));
+        if (currentStyle != font->GetAttributes())
+            TTF_SetFontStyle(font->GetTtf(), static_cast<int>(font->GetAttributes()));
+
+        auto textSurface = SDLSurface(TTF_RenderText_Shaded(font->GetTtf(), text.c_str(),
+            fgColor, bgColor));
+
+        return SDLTexture(SDL_CreateTextureFromSurface(pWindow->m_renderer, textSurface), textSurface->w, textSurface->h);
+    }
+
 } // namespace libsdlgui::detail

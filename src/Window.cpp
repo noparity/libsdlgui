@@ -45,34 +45,6 @@ namespace libsdlgui
         SDL_DestroyWindow(m_window);
     }
 
-    void Window::AddControl(Control* pControl)
-    {
-        assert(std::find(m_controls.begin(), m_controls.end(), pControl) == m_controls.end());
-        m_controls.push_back(pControl);
-
-        // sort the list by descending z-order
-        std::sort(m_controls.begin(), m_controls.end(), [](Control* lhs, Control* rhs)
-            {
-                return lhs->GetZOrder() > rhs->GetZOrder();
-            });
-    }
-
-    SDLTexture Window::CreateTextureForText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor)
-    {
-        // if there is no text then bail
-        if (text.length() == 0)
-            return SDLTexture();
-
-        auto currentStyle = static_cast<Font::Attributes>(TTF_GetFontStyle(font->GetTtf()));
-        if (currentStyle != font->GetAttributes())
-            TTF_SetFontStyle(font->GetTtf(), static_cast<int>(font->GetAttributes()));
-
-        auto textSurface = SDLSurface(TTF_RenderText_Shaded(font->GetTtf(), text.c_str(),
-            fgColor, bgColor));
-
-        return SDLTexture(SDL_CreateTextureFromSurface(m_renderer, textSurface), textSurface->w, textSurface->h);
-    }
-
     void Window::DrawLine(const SDL_Point& p1, const SDL_Point& p2, const SDL_Color& color)
     {
         SDLColorHolder colorHolder(m_renderer, color);
@@ -334,45 +306,10 @@ namespace libsdlgui
             control->NotificationWindowChanged();
     }
 
-    void Window::RegisterForElapsedTimeNotification(Control* pControl, uint32_t ticks)
-    {
-        // check if the control is already registered, if
-        // it is then update the frequency and start ticks.
-
-        std::vector<ControlElapsedTime>::iterator iter;
-        for (iter = m_ctrlsElapsedTime.begin(); iter != m_ctrlsElapsedTime.end(); ++iter)
-        {
-            if (std::get<0>(*iter) == pControl)
-                break;
-        }
-
-        if (iter == m_ctrlsElapsedTime.end())
-        {
-            m_ctrlsElapsedTime.push_back(ControlElapsedTime(pControl, ticks, SDL_GetTicks()));
-        }
-        else
-        {
-            // update the value and start time
-            std::get<1>(*iter) = ticks;
-            std::get<2>(*iter) = SDL_GetTicks();
-        }
-    }
-
     void Window::RemoveAllControls()
     {
         m_controls.clear();
         m_ctrlsElapsedTime.clear();
-    }
-
-    void Window::RemoveControl(Control* pControl)
-    {
-        auto controlIter = std::find(m_controls.begin(), m_controls.end(), pControl);
-        assert(controlIter != m_controls.end());
-        if (controlIter != m_controls.end())
-        {
-            UnregisterForElapsedTimeNotification(*controlIter);
-            m_controls.erase(controlIter);
-        }
     }
 
     void Window::Render()
@@ -545,16 +482,67 @@ namespace libsdlgui
         return quit;
     }
 
-    void Window::UnregisterForElapsedTimeNotification(Control* pControl)
+    namespace detail
     {
-        for (auto iter = m_ctrlsElapsedTime.begin(); iter != m_ctrlsElapsedTime.end(); ++iter)
+        void AddControl(Window* pWindow, Control* pControl)
         {
-            if (std::get<0>(*iter) == pControl)
+            assert(std::find(pWindow->m_controls.begin(), pWindow->m_controls.end(), pControl) == pWindow->m_controls.end());
+            pWindow->m_controls.push_back(pControl);
+
+            // sort the list by descending z-order
+            std::sort(pWindow->m_controls.begin(), pWindow->m_controls.end(), [](Control* lhs, Control* rhs)
+                {
+                    return lhs->GetZOrder() > rhs->GetZOrder();
+                });
+        }
+
+        void RegisterForElapsedTimeNotification(Window* pWindow, Control* pControl, uint32_t ticks)
+        {
+            // check if the control is already registered, if
+            // it is then update the frequency and start ticks.
+
+            std::vector<Window::ControlElapsedTime>::iterator iter;
+            for (iter = pWindow->m_ctrlsElapsedTime.begin(); iter != pWindow->m_ctrlsElapsedTime.end(); ++iter)
             {
-                m_ctrlsElapsedTime.erase(iter);
-                break;
+                if (std::get<0>(*iter) == pControl)
+                    break;
+            }
+
+            if (iter == pWindow->m_ctrlsElapsedTime.end())
+            {
+                pWindow->m_ctrlsElapsedTime.push_back(Window::ControlElapsedTime(pControl, ticks, SDL_GetTicks()));
+            }
+            else
+            {
+                // update the value and start time
+                std::get<1>(*iter) = ticks;
+                std::get<2>(*iter) = SDL_GetTicks();
             }
         }
-    }
+
+        void RemoveControl(Window* pWindow, Control* pControl)
+        {
+            auto controlIter = std::find(pWindow->m_controls.begin(), pWindow->m_controls.end(), pControl);
+            assert(controlIter != pWindow->m_controls.end());
+            if (controlIter != pWindow->m_controls.end())
+            {
+                detail::UnregisterForElapsedTimeNotification(pWindow, *controlIter);
+                pWindow->m_controls.erase(controlIter);
+            }
+        }
+
+        void UnregisterForElapsedTimeNotification(Window* pWindow, Control* pControl)
+        {
+            for (auto iter = pWindow->m_ctrlsElapsedTime.begin(); iter != pWindow->m_ctrlsElapsedTime.end(); ++iter)
+            {
+                if (std::get<0>(*iter) == pControl)
+                {
+                    pWindow->m_ctrlsElapsedTime.erase(iter);
+                    break;
+                }
+            }
+        }
+
+    } // namespace detail
 
 } // namespace libsdlgui

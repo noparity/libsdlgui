@@ -2,6 +2,7 @@
 #define BUTTON_HPP
 
 #include "control.hpp"
+#include "font.hpp"
 #include "sdl_helpers.hpp"
 
 namespace libsdlgui
@@ -32,6 +33,9 @@ namespace libsdlgui
 
         // registers a callback to be invoked when the button is clicked
         void RegisterForClickCallback(const ButtonClickCallback& callback);
+
+        // sets the text to be rendered on the button
+        void SetText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
 
         // sets the texture to be rendered on the button
         void SetTexture(SDLTexture& texture);

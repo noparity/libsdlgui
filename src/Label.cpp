@@ -10,7 +10,7 @@ namespace libsdlgui
         // default font is inherited from the window
         m_pFont = pWindow->GetFont();
         assert(m_pFont != nullptr);
-        m_texture = pWindow->CreateTextureForText(m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
+        m_texture = detail::CreateTextureForText(pWindow, m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
     }
 
     void Label::RenderImpl()
@@ -29,7 +29,7 @@ namespace libsdlgui
         if (pFont != m_pFont)
         {
             m_pFont = pFont;
-            m_texture = GetWindow()->CreateTextureForText(m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
+            m_texture = detail::CreateTextureForText(GetWindow(), m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
         }
     }
 
@@ -38,7 +38,7 @@ namespace libsdlgui
         if (text != m_text)
         {
             m_text = text;
-            m_texture = GetWindow()->CreateTextureForText(m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
+            m_texture = detail::CreateTextureForText(GetWindow(), m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
         }
     }
 

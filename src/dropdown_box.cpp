@@ -39,7 +39,7 @@ namespace libsdlgui
         m_content.SetHidden(true);
         m_content.RegisterForSelectionChangedCallback([this](auto item)
             {
-                m_texture = GetWindow()->CreateTextureForText(item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+                m_texture = detail::CreateTextureForText(GetWindow(), item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
                 m_content.SetHidden(true);
 
                 if (m_callback != nullptr)
@@ -50,7 +50,7 @@ namespace libsdlgui
         SetBorderSize(1);
         SetBorderColor(SDLColor(0, 128, 0, 0));
         // set the default text
-        m_texture = GetWindow()->CreateTextureForText("select...", GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+        m_texture = detail::CreateTextureForText(GetWindow(), "select...", GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
     }
 
     void DropdownBox::AddItem(const std::string& item)

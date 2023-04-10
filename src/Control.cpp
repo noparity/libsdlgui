@@ -15,12 +15,12 @@ namespace libsdlgui
         m_bColor = m_pWindow->GetBackgroundColor();
         m_fColor = m_pWindow->GetForegroundColor();
 
-        m_pWindow->AddControl(this);
+        detail::AddControl(m_pWindow, this);
     }
 
     Control::~Control()
     {
-        m_pWindow->RemoveControl(this);
+        detail::RemoveControl(m_pWindow, this);
     }
 
     bool Control::CanDrag() const

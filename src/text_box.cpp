@@ -32,7 +32,7 @@ namespace libsdlgui
         else
             m_text.erase(m_position - 1, 1);
 
-        m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+        m_texture = detail::CreateTextureForText(GetWindow(), m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
         --m_position;
 
         // don't move the caret if the string is bigger than the text box
@@ -61,7 +61,7 @@ namespace libsdlgui
         if (m_position < m_text.size())
         {
             m_text.erase(m_position, 1);
-            m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+            m_texture = detail::CreateTextureForText(GetWindow(), m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
         }
     }
 
@@ -285,7 +285,7 @@ namespace libsdlgui
         MoveCaret(charWidth);
 
         ++m_position;
-        m_texture = GetWindow()->CreateTextureForText(m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+        m_texture = detail::CreateTextureForText(GetWindow(), m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
     }
 
     void TextBox::RenderImpl()

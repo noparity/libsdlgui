@@ -21,6 +21,28 @@ namespace libsdlgui
     // forward declaration to prevent circular reference
     class Control;
 
+    // forward declaration for detail namespace
+    class Window;
+
+    namespace detail
+    {
+        // adds a control to the window so it can be rendered and receive events
+        void AddControl(Window* pWindow, Control* pControl);
+
+        // create an SDLTexture object for the specified text
+        SDLTexture CreateTextureForText(Window const* pWindow, const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
+
+        // registers a control to receive a callback on the specified interval.
+        // doing subsequent calls with the same control will change the interval.
+        void RegisterForElapsedTimeNotification(Window* pWindow, Control* pControl, uint32_t ticks);
+
+        // removes the specified control from the window
+        void RemoveControl(Window* pWindow, Control* pControl);
+
+        // unregisters the elapsed time callback for the specified control
+        void UnregisterForElapsedTimeNotification(Window* pWindow, Control* pControl);
+    }
+
     // class that represents the app's window
     class Window
     {
@@ -56,6 +78,12 @@ namespace libsdlgui
         void OnWindowResized(const SDL_WindowEvent& windowEvent);
         bool ShouldRender();
 
+        friend void detail::AddControl(Window* pWindow, Control* pControl);
+        friend SDLTexture detail::CreateTextureForText(Window const* pWindow, const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
+        friend void detail::RegisterForElapsedTimeNotification(Window* pWindow, Control* pControl, uint32_t ticks);
+        friend void detail::RemoveControl(Window* pWindow, Control* pControl);
+        friend void detail::UnregisterForElapsedTimeNotification(Window* pWindow, Control* pControl);
+
     protected:
         // returns true if the cursor is hidden
         bool GetCursorHidden() const { return (m_flags & State::CursorHidden) == State::CursorHidden; }
@@ -63,12 +91,6 @@ namespace libsdlgui
     public:
         Window(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags);
         virtual ~Window();
-
-        // adds a control to the window so it can be rendered and receive events
-        void AddControl(Control* pControl);
-
-        // create an SDLTexture object for the specified text
-        SDLTexture CreateTextureForText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
 
         // draws a line of the specified color
         void DrawLine(const SDL_Point& p1, const SDL_Point& p2, const SDL_Color& color);
@@ -97,15 +119,8 @@ namespace libsdlgui
         // removes all controls from the window
         void RemoveAllControls();
 
-        // removes the specified control from the window
-        void RemoveControl(Control* pControl);
-
         // render the window and its contents
         void Render();
-
-        // registers a control to receive a callback on the specified interval.
-        // doing subsequent calls with the same control will change the interval.
-        void RegisterForElapsedTimeNotification(Control* pControl, uint32_t ticks);
 
         // sets the cursor's hidden state
         void SetCursorHidden(bool hidden);
@@ -122,9 +137,6 @@ namespace libsdlgui
         // processes the specified SDL_Event and should be called in the
         // app's main loop.  returns true if the quit event has been posted.
         bool TranslateEvent(const SDL_Event& sdlEvent);
-
-        // unregisters the elapsed time callback for the specified control
-        void UnregisterForElapsedTimeNotification(Control* pControl);
     };
 
 } // namespace libsdlgui

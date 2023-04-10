@@ -103,7 +103,7 @@ namespace libsdlgui::detail
         ScrollContent(GetScrollDirForButton(m_held), ScrollMagnitude::Small);
 
         if (accelerate)
-            GetWindow()->RegisterForElapsedTimeNotification(this, 100);
+            detail::RegisterForElapsedTimeNotification(GetWindow(), this, 100);
     }
 
     bool VerticalScrollbar::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
@@ -123,7 +123,7 @@ namespace libsdlgui::detail
                     // just started.
 
                     m_held = static_cast<ButtonClicked>(static_cast<uint8_t>(buttonClicked) | 0x80);
-                    GetWindow()->RegisterForElapsedTimeNotification(this, 500);
+                    detail::RegisterForElapsedTimeNotification(GetWindow(), this, 500);
                 }
                 else
                 {
@@ -138,7 +138,7 @@ namespace libsdlgui::detail
             // if the slider is being drug there is no need
             // to unregister our button-down callback
             if (!m_dragSlider)
-                GetWindow()->UnregisterForElapsedTimeNotification(this);
+                detail::UnregisterForElapsedTimeNotification(GetWindow(), this);
 
             m_dragSlider = false;
         }
@@ -148,7 +148,7 @@ namespace libsdlgui::detail
 
     void VerticalScrollbar::OnMouseExit()
     {
-        GetWindow()->UnregisterForElapsedTimeNotification(this);
+        detail::UnregisterForElapsedTimeNotification(GetWindow(), this);
         m_held = ButtonClicked::None;
     }
 

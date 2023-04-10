@@ -42,12 +42,12 @@ namespace libsdlgui::detail
     {
         SetHidden(false);
         // blink every second
-        GetWindow()->RegisterForElapsedTimeNotification(this, 1000);
+        detail::RegisterForElapsedTimeNotification(GetWindow(), this, 1000);
     }
 
     void Caret::StopAnimation()
     {
-        GetWindow()->UnregisterForElapsedTimeNotification(this);
+        detail::UnregisterForElapsedTimeNotification(GetWindow(), this);
         SetHidden(true);
     }
 
