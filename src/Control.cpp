@@ -23,11 +23,6 @@ namespace libsdlgui
         detail::RemoveControl(m_pWindow, this);
     }
 
-    bool Control::CanDrag() const
-    {
-        return CanDragImpl();
-    }
-
     bool Control::CanDragImpl() const
     {
         return false;
@@ -140,18 +135,6 @@ namespace libsdlgui
         // empty
     }
 
-    void Control::Render()
-    {
-        if (!GetHidden())
-        {
-            RenderImpl();
-
-            // border drawn last so it overlays the control's content
-            if (m_borderSize > 0)
-                m_pWindow->DrawRectangle(GetLocation(), m_borderColor, m_borderSize);
-        }
-    }
-
     void Control::SetBackgroundColor(const SDL_Color& color)
     {
         m_bColor = color;
@@ -211,6 +194,11 @@ namespace libsdlgui
 
     namespace detail
     {
+        bool CanDrag(Control const* pControl)
+        {
+            return pControl->CanDragImpl();
+        }
+
         uint8_t GetZOrder(Control const* pControl)
         {
             return pControl->m_zOrder;
@@ -307,6 +295,18 @@ namespace libsdlgui
         void NotificationWindowChanged(Control* pControl)
         {
             pControl->OnWindowChanged();
+        }
+
+        void Render(Control* pControl)
+        {
+            if (!pControl->GetHidden())
+            {
+                pControl->RenderImpl();
+
+                // border drawn last so it overlays the control's content
+                if (pControl->m_borderSize > 0)
+                    pControl->m_pWindow->DrawRectangle(pControl->GetLocation(), pControl->m_borderColor, pControl->m_borderSize);
+            }
         }
 
         void SetZOrder(Control* pControl, uint8_t zOrder)

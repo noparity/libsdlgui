@@ -232,7 +232,7 @@ namespace libsdlgui
             SetCursorHidden(false);
         }
 
-        if (motionEvent.state == SDL_PRESSED && m_pCtrlWithFocus != nullptr && m_pCtrlWithFocus->CanDrag())
+        if (motionEvent.state == SDL_PRESSED && m_pCtrlWithFocus != nullptr && detail::CanDrag(m_pCtrlWithFocus))
         {
             auto controlLoc = m_pCtrlWithFocus->GetLocation();
             controlLoc.x += motionEvent.xrel;
@@ -335,8 +335,7 @@ namespace libsdlgui
 
             for (auto const control : m_controls)
             {
-                if (!control->GetHidden())
-                    control->Render();
+                detail::Render(control);
             }
 
             SDL_RenderPresent(m_renderer);

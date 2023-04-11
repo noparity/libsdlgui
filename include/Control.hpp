@@ -14,6 +14,9 @@ namespace libsdlgui
 
     namespace detail
     {
+        // returns true if the control can be dragged
+        bool CanDrag(Control const* pControl);
+
         // gets the Z-order of the control.  controls are rendered in ascending Z-order
         uint8_t GetZOrder(Control const* pControl);
 
@@ -55,6 +58,9 @@ namespace libsdlgui
 
         // notifies the control that its owning window has changed (e.g. was resized)
         void NotificationWindowChanged(Control* pControl);
+
+        // render the control
+        void Render(Control* pControl);
 
         // sets the control's z-order. zero is the bottom and is the default value
         void SetZOrder(Control* pControl, uint8_t zOrder);
@@ -107,6 +113,7 @@ namespace libsdlgui
 
         virtual void RenderImpl() = 0;
 
+        friend bool detail::CanDrag(Control const* pControl);
         friend uint8_t detail::GetZOrder(Control const* pControl);
         friend void detail::NotificationElapsedTime(Control* pControl);
         friend void detail::NotificationFocusAcquired(Control* pControl);
@@ -120,6 +127,7 @@ namespace libsdlgui
         friend void detail::NotificationMouseWheel(Control* pControl, const SDL_MouseWheelEvent& wheelEvent);
         friend void detail::NotificationTextInput(Control* pControl, const SDL_TextInputEvent& textEvent);
         friend void detail::NotificationWindowChanged(Control* pControl);
+        friend void detail::Render(Control* pControl);
         friend void detail::SetZOrder(Control* pControl, uint8_t zOrder);
 
     protected:
@@ -139,9 +147,6 @@ namespace libsdlgui
         Control(Window* pWindow, const SDL_Rect& location, Control* parent = nullptr);
         virtual ~Control();
 
-        // returns true if the control can be dragged
-        bool CanDrag() const;
-
         // gets the background color for the control
         SDL_Color GetBackgroundColor() const { return m_bColor; }
 
@@ -156,9 +161,6 @@ namespace libsdlgui
 
         // gets this control's parent, can be nullptr
         Control* GetParent() const { return m_pParent; }
-
-        // render the control
-        void Render();
 
         // sets the control's background color
         void SetBackgroundColor(const SDL_Color& color);
