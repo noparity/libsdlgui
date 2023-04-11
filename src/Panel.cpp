@@ -19,7 +19,13 @@ namespace libsdlgui
         m_controls.push_back(pControl);
 
         // place the control just above the panel
-        pControl->SetZOrder(GetZOrder() + 1);
+        detail::SetZOrder(pControl, detail::GetZOrder(this) + 1);
+
+        // sort the controls in ascending z-order
+        std::sort(m_controls.begin(), m_controls.end(), [](Control* lhs, Control* rhs)
+            {
+                return detail::GetZOrder(lhs) < detail::GetZOrder(rhs);
+            });
 
         // if the panel is hidden then hide the control too
         if (GetHidden())
@@ -46,7 +52,7 @@ namespace libsdlgui
     void Panel::OnZOrderChanged()
     {
         for (auto& control : m_controls)
-            control->SetZOrder(GetZOrder() + 1);
+            detail::SetZOrder(control, detail::GetZOrder(this) + 1);
     }
 
     void Panel::RenderImpl()

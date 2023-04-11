@@ -33,6 +33,7 @@ namespace libsdlgui
         virtual void OnMouseEnter();
         virtual void OnMouseExit();
         virtual void OnTextInput(const SDL_TextInputEvent& textEvent);
+        virtual void OnZOrderChanged();
         virtual void RenderImpl();
 
     public:

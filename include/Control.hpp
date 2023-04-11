@@ -14,6 +14,9 @@ namespace libsdlgui
 
     namespace detail
     {
+        // gets the Z-order of the control.  controls are rendered in ascending Z-order
+        uint8_t GetZOrder(Control const* pControl);
+
         // notifies the control that its timer has elapsed
         void NotificationElapsedTime(Control* pControl);
 
@@ -52,6 +55,9 @@ namespace libsdlgui
 
         // notifies the control that its owning window has changed (e.g. was resized)
         void NotificationWindowChanged(Control* pControl);
+
+        // sets the control's z-order. zero is the bottom and is the default value
+        void SetZOrder(Control* pControl, uint8_t zOrder);
     }
 
     // base class from which all controls must derive
@@ -101,6 +107,7 @@ namespace libsdlgui
 
         virtual void RenderImpl() = 0;
 
+        friend uint8_t detail::GetZOrder(Control const* pControl);
         friend void detail::NotificationElapsedTime(Control* pControl);
         friend void detail::NotificationFocusAcquired(Control* pControl);
         friend void detail::NotificationFocusLost(Control* pControl);
@@ -113,6 +120,7 @@ namespace libsdlgui
         friend void detail::NotificationMouseWheel(Control* pControl, const SDL_MouseWheelEvent& wheelEvent);
         friend void detail::NotificationTextInput(Control* pControl, const SDL_TextInputEvent& textEvent);
         friend void detail::NotificationWindowChanged(Control* pControl);
+        friend void detail::SetZOrder(Control* pControl, uint8_t zOrder);
 
     protected:
         // returns the window that owns the control
@@ -149,9 +157,6 @@ namespace libsdlgui
         // gets this control's parent, can be nullptr
         Control* GetParent() const { return m_pParent; }
 
-        // gets the Z-order of the control.  controls are rendered in ascending Z-order
-        uint8_t GetZOrder() const { return m_zOrder; }
-
         // render the control
         void Render();
 
@@ -172,9 +177,6 @@ namespace libsdlgui
 
         // sets the control's location with respect to its owning window
         void SetLocation(const SDL_Rect& location);
-
-        // sets the control's z-order. zero is the bottom and is the default value
-        void SetZOrder(uint8_t zOrder);
     };
 
 } // namespace libsdlgui

@@ -15,8 +15,13 @@ namespace libsdlgui
         SetBorderColor(SDLColor(255, 255, 255, 0));
         SetBorderSize(1);
         SetHidden(true);
-        SetZOrder(128);
-        m_panel.SetZOrder(GetZOrder() + 1);
+
+        // the window's z-order is 0, which means all of its controls also have a z-order of 0.
+        // set the dialog above them. we go a bit higher to leave room for things like drop-downs etc.
+        detail::SetZOrder(this, 10);
+
+        // now set the z-order of the panel above the dialog.
+        detail::SetZOrder(&m_panel, detail::GetZOrder(this) + 1);
     }
 
     void Dialog::AddControl(Control* pControl)

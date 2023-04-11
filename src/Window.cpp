@@ -183,9 +183,10 @@ namespace libsdlgui
         bool notifyCtrl = buttonEvent.state == SDL_PRESSED;
         Control* pClickedCtrl = nullptr;
 
-        for (size_t i = 0; i < m_controls.size(); ++i)
+        // must iterate in descending z-order
+        for (auto i = static_cast<int>(m_controls.size()) - 1; i > -1; --i)
         {
-            if (m_occlusionMap[i] == 1 || m_controls[i]->GetHidden())
+            if (m_controls[i]->GetHidden())
                 continue;
 
             // find the control that was clicked on then dispatch the event
@@ -241,9 +242,9 @@ namespace libsdlgui
 
         bool isOverControl = false;
         // must iterate in descending z-order
-        for (size_t i = 0; i < m_controls.size(); ++i)
+        for (auto i = static_cast<int>(m_controls.size()) - 1; i > -1; --i)
         {
-            if (m_occlusionMap[i] == 1 || m_controls[i]->GetHidden())
+            if (m_controls[i]->GetHidden())
                 continue;
 
             auto clickPoint = SDLPoint(motionEvent.x, motionEvent.y);
@@ -330,87 +331,12 @@ namespace libsdlgui
         // only render if the window is visible
         if (ShouldRender())
         {
-            // resize occlusion map as required
-            if (m_occlusionMap.size() != m_controls.size())
-                m_occlusionMap.resize(m_controls.size());
-
-            // calculate all of the z-order partitions.  each tuple
-            // represents a range of descending z-orders [beginning, end).
-            std::vector<std::tuple<size_t, size_t>> partitions;
-            {
-                size_t beginning = 0;
-                uint8_t currentZ = 0;
-                for (size_t i = beginning; i < m_controls.size(); ++i)
-                {
-                    auto zOrder = m_controls[i]->GetZOrder();
-                    if (zOrder > currentZ)
-                    {
-                        currentZ = m_controls[i]->GetZOrder();
-                    }
-                    else if (zOrder < currentZ)
-                    {
-                        partitions.push_back(std::tuple<size_t, size_t>(beginning, i));
-                        beginning = i;
-                        currentZ = m_controls[i]->GetZOrder();
-                    }
-
-                    // if we hit zero no need to process any further
-                    if (currentZ == 0)
-                        break;
-                }
-                // don't add the last partition as it can't occlude anything
-                //partitions.push_back(std::tuple<size_t, size_t>(beginning, m_controls.size()));
-            }
-
-            if (partitions.size() > 1)
-            {
-                // iterate over the partitions finding all occluded controls
-                for (auto partition : partitions)
-                {
-                    auto beginning = std::get<0>(partition);
-                    auto end = std::get<1>(partition);
-                    assert(beginning < end);
-
-                    // for each control in the partition check if it
-                    // occludes any controls in the lower partitions
-                    for (auto top = beginning; top < end; ++top)
-                    {
-                        // don't skip hidden controls, it prevents us from
-                        // properly clearing the occlusion bit when a control
-                        // was occluded but no longer is.
-                        //if (m_controls[top]->GetHidden())
-                        //	continue;
-
-                        // if this control is occluded then don't bother testing if it
-                        // occludes any controls; the control that occluded it would have
-                        // occluded any controls under this one.
-                        if (m_occlusionMap[top] == 1)
-                            continue;
-
-                        auto topControlLoc = m_controls[top]->GetLocation();
-                        for (auto bottom = end; bottom < m_controls.size(); ++bottom)
-                        {
-                            auto bottomControlLoc = m_controls[bottom]->GetLocation();
-
-                            // if the bottom control is fully occluded then set the bit
-                            // in the map else clear it.  this handles the case when the
-                            // control was occluded but now isn't.
-                            if (SDLRectOcclusion(topControlLoc, bottomControlLoc) && !m_controls[top]->GetHidden())
-                                m_occlusionMap[bottom] = 1;
-                            else
-                                m_occlusionMap[bottom] = 0;
-                        }
-                    }
-                }
-            }
-
             SDL_RenderClear(m_renderer);
 
-            // render controls in ascending z-order
-            for (size_t i = m_controls.size() - 1; i < m_controls.size(); --i)
+            for (auto const control : m_controls)
             {
-                if (m_occlusionMap[i] == 0)
-                    m_controls[i]->Render();
+                if (!control->GetHidden())
+                    control->Render();
             }
 
             SDL_RenderPresent(m_renderer);
@@ -489,10 +415,10 @@ namespace libsdlgui
             assert(std::find(pWindow->m_controls.begin(), pWindow->m_controls.end(), pControl) == pWindow->m_controls.end());
             pWindow->m_controls.push_back(pControl);
 
-            // sort the list by descending z-order
+            // sort the controls in ascending z-order
             std::sort(pWindow->m_controls.begin(), pWindow->m_controls.end(), [](Control* lhs, Control* rhs)
                 {
-                    return lhs->GetZOrder() > rhs->GetZOrder();
+                    return detail::GetZOrder(lhs) < detail::GetZOrder(rhs);
                 });
         }
 

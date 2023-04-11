@@ -28,7 +28,8 @@ namespace libsdlgui
         SetBorderColor(SDLColor(0, 128, 0, 0));
         SetBorderSize(1);
 
-        m_vertScrollbar.SetZOrder(GetZOrder() + 1);
+        // default the z-order to be above us
+        detail::SetZOrder(&m_vertScrollbar, detail::GetZOrder(this) + 1);
         m_vertScrollbar.RegisterForScrollCallback([this](const detail::ScrollEventData& eventData)
             {
                 m_visStart = eventData.NewValue();
@@ -182,7 +183,8 @@ namespace libsdlgui
 
     void ListBox::OnZOrderChanged()
     {
-        m_vertScrollbar.SetZOrder(GetZOrder() + 1);
+        // our z-order changed, keep the vertical scrollbar just above us
+        detail::SetZOrder(&m_vertScrollbar, detail::GetZOrder(this) + 1);
     }
 
     void ListBox::RenderImpl()

@@ -209,14 +209,13 @@ namespace libsdlgui
         }
     }
 
-    void Control::SetZOrder(uint8_t zOrder)
-    {
-        m_zOrder = zOrder;
-        OnZOrderChanged();
-    }
-
     namespace detail
     {
+        uint8_t GetZOrder(Control const* pControl)
+        {
+            return pControl->m_zOrder;
+        }
+
         void NotificationElapsedTime(Control* pControl)
         {
             pControl->OnElapsedTime();
@@ -308,6 +307,12 @@ namespace libsdlgui
         void NotificationWindowChanged(Control* pControl)
         {
             pControl->OnWindowChanged();
+        }
+
+        void SetZOrder(Control* pControl, uint8_t zOrder)
+        {
+            pControl->m_zOrder = zOrder;
+            pControl->OnZOrderChanged();
         }
 
     } // namespace detail

@@ -1,7 +1,6 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include <boost/dynamic_bitset.hpp>
 #include <filesystem>
 #include "dimentions.hpp"
 #include "flags.hpp"
@@ -77,7 +76,6 @@ namespace libsdlgui
         SDLSubSystem m_subSystem;
         Font* m_pFont;
         std::vector<ControlElapsedTime> m_ctrlsElapsedTime;
-        boost::dynamic_bitset<> m_occlusionMap;
 
         // returns true if the cursor is hidden
         bool GetCursorHidden() const { return (m_flags & State::CursorHidden) == State::CursorHidden; }

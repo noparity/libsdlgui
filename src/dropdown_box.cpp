@@ -45,7 +45,9 @@ namespace libsdlgui
                 if (m_callback != nullptr)
                     m_callback(item);
             });
-        m_content.SetZOrder(32);
+
+        // default the z-order to be above us
+        detail::SetZOrder(&m_content, detail::GetZOrder(this) + 1);
 
         SetBorderSize(1);
         SetBorderColor(SDLColor(0, 128, 0, 0));
@@ -125,6 +127,12 @@ namespace libsdlgui
 
             OnKeyboard(keyboardEvent);
         }
+    }
+
+    void DropdownBox::OnZOrderChanged()
+    {
+        // our z-order changed, keep the content box just above us
+        detail::SetZOrder(&m_content, detail::GetZOrder(this)+1);
     }
 
     void DropdownBox::RegisterForSelectionChangedCallback(const SelectionChangedCallback& callback)

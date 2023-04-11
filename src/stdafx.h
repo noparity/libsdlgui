@@ -6,7 +6,6 @@
 
 #include <algorithm>
 #include <atomic>
-#include <boost/dynamic_bitset.hpp>
 #include <filesystem>
 #include <cassert>
 #include <cctype>

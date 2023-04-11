@@ -16,7 +16,7 @@ namespace libsdlgui
         SetBorderSize(1);
 
         // place the caret above the text box
-        m_caret.SetZOrder(GetZOrder() + 1);
+        detail::SetZOrder(&m_caret, detail::GetZOrder(this) + 1);
     }
 
     void TextBox::KeydownBackspace()
@@ -286,6 +286,12 @@ namespace libsdlgui
 
         ++m_position;
         m_texture = detail::CreateTextureForText(GetWindow(), m_text, detail::GetFont(GetWindow()), GetForegroundColor(), GetBackgroundColor());
+    }
+
+    void TextBox::OnZOrderChanged()
+    {
+        // our z-order changed, keep the caret above us
+        detail::SetZOrder(&m_caret, detail::GetZOrder(this) + 1);
     }
 
     void TextBox::RenderImpl()

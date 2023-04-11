@@ -38,6 +38,7 @@ namespace libsdlgui
         virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
         virtual void OnMouseButtonExternal(const SDL_MouseButtonEvent& buttonEvent, Control* pControl);
         virtual void OnMouseWheel(const SDL_MouseWheelEvent& wheelEvent);
+        virtual void OnZOrderChanged();
         virtual void RenderImpl();
 
     public:
