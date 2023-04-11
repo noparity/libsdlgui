@@ -55,9 +55,9 @@ TestDialog::TestDialog(libsdlgui::Window* pWindow, const std::string& title, con
     AddControl(&m_text);
     m_text.SetText("Click one");
 
-    m_buttonOK.SetText("OK", pWindow->GetFont(), GetForegroundColor(), m_buttonOK.GetBackgroundColor());
+    m_buttonOK.SetText("OK", GetForegroundColor(), m_buttonOK.GetBackgroundColor());
 
-    m_buttonCancel.SetText("Cancel", pWindow->GetFont(), GetForegroundColor(), m_buttonCancel.GetBackgroundColor());
+    m_buttonCancel.SetText("Cancel", GetForegroundColor(), m_buttonCancel.GetBackgroundColor());
 
     m_buttonCancel.RegisterForClickCallback([this]()
     {
@@ -78,14 +78,14 @@ TestWindow::TestWindow(const std::string& title, const libsdlgui::Dimentions& di
         this->m_dialog->CenterDialog();
         this->m_dialog->SetHidden(false);
     });
-    m_button1->SetText("click", GetFont(), libsdlgui::SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor());
+    m_button1->SetText("click", libsdlgui::SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor());
 
     m_button2 = std::make_unique<libsdlgui::Button>(this, libsdlgui::SDLRect(128, 64, 64, 32));
     m_button2->RegisterForClickCallback([this]()
     {
         this->NextFrame();
     });
-    m_button2->SetText("next", GetFont(), libsdlgui::SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor());
+    m_button2->SetText("next", libsdlgui::SDLColor(255, 255, 255, 0), m_button1->GetBackgroundColor());
 
     m_textBox = std::make_unique<libsdlgui::TextBox>(this, libsdlgui::SDLRect(32, 128, 128, 32));
     m_dropDown = std::make_unique<libsdlgui::DropdownBox>(this, libsdlgui::SDLRect(340, 200, 128, 32));

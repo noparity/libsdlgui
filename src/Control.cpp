@@ -12,8 +12,8 @@ namespace libsdlgui
         m_borderColor = { 0, 0, 0, 0 };
 
         // inherit from window
-        m_bColor = m_pWindow->GetBackgroundColor();
-        m_fColor = m_pWindow->GetForegroundColor();
+        m_bColor = detail::GetBackgroundColor(m_pWindow);
+        m_fColor = detail::GetForegroundColor(m_pWindow);
 
         detail::AddControl(m_pWindow, this);
     }

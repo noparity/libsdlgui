@@ -10,7 +10,7 @@ namespace libsdlgui
         m_panel(pWindow, SDLRect(0, TitleBarHeight, dimentions.W, dimentions.H)),
         m_canDrag(false)
     {
-        m_titleTexture = detail::CreateTextureForText(pWindow, title, pWindow->GetFont(), SDLColor(0, 0, 0, 0), SDLColor(255, 255, 255, 0));
+        m_titleTexture = detail::CreateTextureForText(pWindow, title, detail::GetFont(pWindow), SDLColor(0, 0, 0, 0), SDLColor(255, 255, 255, 0));
         SetBackgroundColor(SDLColor(128, 128, 128, 0));
         SetBorderColor(SDLColor(255, 255, 255, 0));
         SetBorderSize(1);

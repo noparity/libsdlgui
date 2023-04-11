@@ -35,7 +35,7 @@ namespace libsdlgui
         void RegisterForClickCallback(const ButtonClickCallback& callback);
 
         // sets the text to be rendered on the button
-        void SetText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
+        void SetText(const std::string& text, const SDL_Color& fgColor, const SDL_Color& bgColor);
 
         // sets the texture to be rendered on the button
         void SetTexture(SDLTexture& texture);

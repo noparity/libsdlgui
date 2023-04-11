@@ -22,7 +22,7 @@ namespace libsdlgui
         m_vertScrollbar.SetLocation(SDLRect(myLoc.x + myLoc.w - (VertScrollbarWidth + 1), myLoc.y + 1, VertScrollbarWidth, myLoc.h - 2));
 
         // set the height of the control based on the item height and min visible count
-        m_itemHeight = GetWindow()->GetFont()->GetHeight();
+        m_itemHeight = detail::GetFont(GetWindow())->GetHeight();
         myLoc.h = m_itemHeight * m_minVisible;
         SetLocation(myLoc);
         SetBorderColor(SDLColor(0, 128, 0, 0));
@@ -41,8 +41,8 @@ namespace libsdlgui
     void ListBox::AddItem(const std::string& item)
     {
         m_items.push_back(item);
-        auto texture = detail::CreateTextureForText(GetWindow(), item, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
-        auto highlight = detail::CreateTextureForText(GetWindow(), item, GetWindow()->GetFont(), GetBackgroundColor(), GetForegroundColor());
+        auto texture = detail::CreateTextureForText(GetWindow(), item, detail::GetFont(GetWindow()), GetForegroundColor(), GetBackgroundColor());
+        auto highlight = detail::CreateTextureForText(GetWindow(), item, detail::GetFont(GetWindow()), GetBackgroundColor(), GetForegroundColor());
 
         assert(static_cast<uint32_t>(texture.GetHeight()) == m_itemHeight);
         m_textures.push_back(std::tuple<SDLTexture, SDLTexture, bool>(std::move(texture), std::move(highlight), false));

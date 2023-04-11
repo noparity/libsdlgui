@@ -8,7 +8,7 @@ namespace libsdlgui
         Control(pWindow, location), m_text("label")
     {
         // default font is inherited from the window
-        m_pFont = pWindow->GetFont();
+        m_pFont = detail::GetFont(pWindow);
         assert(m_pFont != nullptr);
         m_texture = detail::CreateTextureForText(pWindow, m_text, m_pFont, GetForegroundColor(), GetBackgroundColor());
     }

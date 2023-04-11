@@ -32,6 +32,15 @@ namespace libsdlgui
         // create an SDLTexture object for the specified text
         SDLTexture CreateTextureForText(Window const* pWindow, const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
 
+        // gets the window's background color
+        SDL_Color GetBackgroundColor(Window const* pWindow);
+
+        // gets the window's font
+        Font* GetFont(Window const* pWindow);
+
+        // gets the window's foreground color
+        SDL_Color GetForegroundColor(Window const* pWindow);
+
         // registers a control to receive a callback on the specified interval.
         // doing subsequent calls with the same control will change the interval.
         void RegisterForElapsedTimeNotification(Window* pWindow, Control* pControl, uint32_t ticks);
@@ -70,6 +79,9 @@ namespace libsdlgui
         std::vector<ControlElapsedTime> m_ctrlsElapsedTime;
         boost::dynamic_bitset<> m_occlusionMap;
 
+        // returns true if the cursor is hidden
+        bool GetCursorHidden() const { return (m_flags & State::CursorHidden) == State::CursorHidden; }
+
         void OnKeyboard(const SDL_KeyboardEvent& keyboardEvent);
         void OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
         void OnMouseMotion(const SDL_MouseMotionEvent& motionEvent);
@@ -80,13 +92,12 @@ namespace libsdlgui
 
         friend void detail::AddControl(Window* pWindow, Control* pControl);
         friend SDLTexture detail::CreateTextureForText(Window const* pWindow, const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor);
+        friend SDL_Color detail::GetBackgroundColor(Window const* pWindow);
+        friend Font* detail::GetFont(Window const* pWindow);
+        friend SDL_Color detail::GetForegroundColor(Window const* pWindow);
         friend void detail::RegisterForElapsedTimeNotification(Window* pWindow, Control* pControl, uint32_t ticks);
         friend void detail::RemoveControl(Window* pWindow, Control* pControl);
         friend void detail::UnregisterForElapsedTimeNotification(Window* pWindow, Control* pControl);
-
-    protected:
-        // returns true if the cursor is hidden
-        bool GetCursorHidden() const { return (m_flags & State::CursorHidden) == State::CursorHidden; }
 
     public:
         Window(const std::string& title, const Dimentions& dimentions, SDL_WindowFlags windowFlags);
@@ -104,17 +115,8 @@ namespace libsdlgui
         // draws the specified texture at the specified location with an optional clipping rectangle
         void DrawTexture(const SDL_Rect& location, const SDLTexture& texture, SDL_Rect const* clip);
 
-        // gets the window's background color
-        SDL_Color GetBackgroundColor() const { return m_bColor; }
-
         // gets the window's dimentions
         Dimentions GetDimentions() const { return m_dims; }
-
-        // gets the window's font
-        Font* GetFont() const { return m_pFont; }
-
-        // gets the window's foreground color
-        SDL_Color GetForegroundColor() const { return m_fColor; }
 
         // removes all controls from the window
         void RemoveAllControls();

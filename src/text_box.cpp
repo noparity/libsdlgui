@@ -24,7 +24,7 @@ namespace libsdlgui
         if (m_position == 0)
             return;
 
-        auto charWidth = static_cast<int>(GetWindow()->GetFont()->GetCharSize(m_text[m_position - 1]));
+        auto charWidth = static_cast<int>(detail::GetFont(GetWindow())->GetCharSize(m_text[m_position - 1]));
         assert(charWidth > 0);
 
         if (m_position == m_text.size())
@@ -32,7 +32,7 @@ namespace libsdlgui
         else
             m_text.erase(m_position - 1, 1);
 
-        m_texture = detail::CreateTextureForText(GetWindow(), m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+        m_texture = detail::CreateTextureForText(GetWindow(), m_text, detail::GetFont(GetWindow()), GetForegroundColor(), GetBackgroundColor());
         --m_position;
 
         // don't move the caret if the string is bigger than the text box
@@ -61,7 +61,7 @@ namespace libsdlgui
         if (m_position < m_text.size())
         {
             m_text.erase(m_position, 1);
-            m_texture = detail::CreateTextureForText(GetWindow(), m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+            m_texture = detail::CreateTextureForText(GetWindow(), m_text, detail::GetFont(GetWindow()), GetForegroundColor(), GetBackgroundColor());
         }
     }
 
@@ -70,7 +70,7 @@ namespace libsdlgui
         if (m_position > 0)
         {
             --m_position;
-            auto charWidth = static_cast<int>(GetWindow()->GetFont()->GetCharSize(m_text[m_position]));
+            auto charWidth = static_cast<int>(detail::GetFont(GetWindow())->GetCharSize(m_text[m_position]));
             assert(charWidth > 0);
             MoveCaret(-charWidth);
         }
@@ -80,7 +80,7 @@ namespace libsdlgui
     {
         if (m_position < m_text.size())
         {
-            auto charWidth = GetWindow()->GetFont()->GetCharSize(m_text[m_position]);
+            auto charWidth = detail::GetFont(GetWindow())->GetCharSize(m_text[m_position]);
             ++m_position;
             MoveCaret(charWidth);
         }
@@ -205,7 +205,7 @@ namespace libsdlgui
                     else if (pos > m_text.size())
                         break;
 
-                    auto charWidth = GetWindow()->GetFont()->GetCharSize(m_text[pos]);
+                    auto charWidth = detail::GetFont(GetWindow())->GetCharSize(m_text[pos]);
                     assert(charWidth > 0);
                     pos += direction;
 
@@ -281,11 +281,11 @@ namespace libsdlgui
         else
             m_text.insert(m_position, textEvent.text);
 
-        auto charWidth = GetWindow()->GetFont()->GetTextSize(textEvent.text);
+        auto charWidth = detail::GetFont(GetWindow())->GetTextSize(textEvent.text);
         MoveCaret(charWidth);
 
         ++m_position;
-        m_texture = detail::CreateTextureForText(GetWindow(), m_text, GetWindow()->GetFont(), GetForegroundColor(), GetBackgroundColor());
+        m_texture = detail::CreateTextureForText(GetWindow(), m_text, detail::GetFont(GetWindow()), GetForegroundColor(), GetBackgroundColor());
     }
 
     void TextBox::RenderImpl()

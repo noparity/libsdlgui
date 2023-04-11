@@ -496,6 +496,21 @@ namespace libsdlgui
                 });
         }
 
+        SDL_Color GetBackgroundColor(Window const* pWindow)
+        {
+            return pWindow->m_bColor;
+        }
+
+        Font* GetFont(Window const* pWindow)
+        {
+            return pWindow->m_pFont;
+        }
+
+        SDL_Color GetForegroundColor(Window const* pWindow)
+        {
+            return pWindow->m_fColor;
+        }
+
         void RegisterForElapsedTimeNotification(Window* pWindow, Control* pControl, uint32_t ticks)
         {
             // check if the control is already registered, if

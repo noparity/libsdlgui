@@ -90,9 +90,9 @@ namespace libsdlgui
         SetBorderSize(1);
     }
 
-    void Button::SetText(const std::string& text, Font const* font, const SDL_Color& fgColor, const SDL_Color& bgColor)
+    void Button::SetText(const std::string& text, const SDL_Color& fgColor, const SDL_Color& bgColor)
     {
-        SetTexture(detail::CreateTextureForText(GetWindow(), text, font, fgColor, bgColor));
+        SetTexture(detail::CreateTextureForText(GetWindow(), text, detail::GetFont(GetWindow()), fgColor, bgColor));
     }
 
     void Button::SetTexture(SDLTexture& texture)
