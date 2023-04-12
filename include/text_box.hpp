@@ -28,7 +28,6 @@ namespace libsdlgui
         virtual void OnFocusAcquired();
         virtual void OnFocusLost();
         virtual void OnKeyboard(const SDL_KeyboardEvent& keyboardEvent);
-        virtual void OnLeftClick(const SDL_Point& clickLoc);
         virtual bool OnMouseButton(const SDL_MouseButtonEvent& buttonEvent);
         virtual void OnMouseEnter();
         virtual void OnMouseExit();

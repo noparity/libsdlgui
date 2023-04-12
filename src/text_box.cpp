@@ -169,17 +169,15 @@ namespace libsdlgui
 
     bool TextBox::OnMouseButton(const SDL_MouseButtonEvent& buttonEvent)
     {
-        return LeftMouseButtonDown(buttonEvent);
-    }
+        if (!LeftMouseButtonDown(buttonEvent))
+            return false;
 
-    void TextBox::OnLeftClick(const SDL_Point& clickLoc)
-    {
         if (m_text.size() > 0)
         {
             auto loc = GetLocation();
             auto caretLoc = m_caret.GetLocation();
 
-            if (clickLoc.x < m_texture.GetWidth() + loc.x + TextOffsetX && clickLoc.x != caretLoc.x)
+            if (buttonEvent.x < m_texture.GetWidth() + loc.x + TextOffsetX && buttonEvent.x != caretLoc.x)
             {
                 // move the caret to the location that was clicked
 
@@ -188,7 +186,7 @@ namespace libsdlgui
                 // direction of travel when iterating though m_text.
                 // -1 means the click location was to the left of the caret.
                 int direction = -1;
-                if (caretLoc.x < clickLoc.x)
+                if (caretLoc.x < buttonEvent.x)
                     direction = 1;
 
                 // if a character is clicked track the x value on each side.  the
@@ -198,9 +196,9 @@ namespace libsdlgui
 
                 while (true)
                 {
-                    if (direction < 0 && leftX < clickLoc.x)
+                    if (direction < 0 && leftX < buttonEvent.x)
                         break;
-                    else if (direction > 0 && rightX > clickLoc.x)
+                    else if (direction > 0 && rightX > buttonEvent.x)
                         break;
                     else if (pos > m_text.size())
                         break;
@@ -211,14 +209,14 @@ namespace libsdlgui
 
                     if (direction < 0)
                     {
-                        if (static_cast<int>(leftX - charWidth) < clickLoc.x)
+                        if (static_cast<int>(leftX - charWidth) < buttonEvent.x)
                             rightX = leftX;
 
                         leftX += (charWidth * direction);
                     }
                     else
                     {
-                        if (static_cast<int>(rightX + charWidth) > clickLoc.x)
+                        if (static_cast<int>(rightX + charWidth) > buttonEvent.x)
                             leftX = rightX;
 
                         rightX += (charWidth * direction);
@@ -226,7 +224,7 @@ namespace libsdlgui
                 }
 
                 // check which is closest to the click location
-                if (rightX - clickLoc.x < clickLoc.x - leftX)
+                if (rightX - buttonEvent.x < buttonEvent.x - leftX)
                 {
                     caretLoc.x = rightX;
                     m_position = pos;
@@ -245,7 +243,7 @@ namespace libsdlgui
                 assert(caretLoc.x >= loc.x && caretLoc.x <= loc.x + loc.w);
                 m_caret.SetLocation(caretLoc);
             }
-            else if (clickLoc.x > m_texture.GetWidth() && m_position < m_text.size())
+            else if (buttonEvent.x > m_texture.GetWidth() && m_position < m_text.size())
             {
                 // move the caret to the end of the text
                 caretLoc.x = loc.x + TextOffsetX + m_texture.GetWidth();
@@ -253,6 +251,8 @@ namespace libsdlgui
                 m_position = m_text.size();
             }
         }
+
+        return true;
     }
 
     void TextBox::OnMouseEnter()
